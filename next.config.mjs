@@ -1,4 +1,10 @@
+import pkg from "@vanilla-extract/next-plugin";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 
-export default nextConfig;
+const withVanillaExtract = pkg.createVanillaExtractPlugin({
+  identifiers: "debug",
+});
+
+export default withVanillaExtract(nextConfig);
