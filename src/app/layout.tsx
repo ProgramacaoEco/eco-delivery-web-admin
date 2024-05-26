@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Roboto } from "next/font/google";
-import "./globals.css";
+import { Roboto } from "next/font/google";
+import Image from "next/image";
+import { cn } from "@/utils/classNames";
+import { layout } from "./layout.css";
 
 const roboto = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -15,8 +17,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={roboto.className}>{children}</body>
+    <html lang="pt">
+      <body className={cn(roboto.className, layout)}>
+        <Image
+          alt="Logo ECO"
+          src="/logo.png"
+          width={512}
+          height={512}
+          style={{
+            zIndex: "-1",
+            position: "fixed",
+            bottom: -90,
+            right: -120,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
