@@ -1,6 +1,6 @@
-import { viewPort } from "@/theme/constants";
-import { themeVars } from "@/theme/theme.css";
 import { style } from "@vanilla-extract/css";
+import { themeVars } from "@/theme/theme.css";
+import { viewPort } from "@/theme/constants";
 
 export const drawerContentContainer = style({
   display: "flex",
@@ -61,7 +61,7 @@ export const drawerHeader = style({
 export const drawerHeaderCloseButton = style({
   display: "none",
   position: "absolute",
-  right: 0,
+  right: 10,
   "@media": {
     [viewPort.small]: {
       display: "flex",
