@@ -2,10 +2,6 @@ import { style } from "@vanilla-extract/css";
 import { themeVars } from "@/theme/theme.css";
 
 export const googleButton = style({
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  gap: "13px",
   width: "100%",
   height: "40px",
   borderRadius: "100px",
