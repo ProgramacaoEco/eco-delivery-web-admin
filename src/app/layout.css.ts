@@ -18,6 +18,11 @@ globalStyle(".Mui-checked ~ .MuiSwitch-track", {
   backgroundColor: "#00FF00 !important",
 });
 
+export const loginLayout = style({
+  backgroundColor: themeVars.color.background,
+  height: "100%",
+});
+
 export const layout = style({
   width: "100%",
   minHeight: "100vh",
