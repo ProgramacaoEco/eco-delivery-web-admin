@@ -1,7 +1,10 @@
-import { PropsWithChildren } from "react";
 import { drawerHeader, drawerHeaderCloseButton } from "./style.css";
+
+import { Close } from "@icons/index";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Image from "next/image";
+import { PropsWithChildren } from "react";
+import { Typography } from "../../Typography";
 
 interface DrawerHeaderProps {
   onClose: () => void;
@@ -13,19 +16,13 @@ export default function DrawerHeader({
 }: PropsWithChildren<DrawerHeaderProps>) {
   return (
     <div className={drawerHeader}>
-      <div>{children}</div>{" "}
+      <Typography.TitleBold>{children}</Typography.TitleBold>{" "}
       <IconButton
         color="primary"
         className={drawerHeaderCloseButton}
         onClick={onClose}
       >
-        <Image
-          src="/icons/close.svg"
-          width={48}
-          height={48}
-          alt="Fechar"
-          draggable={false}
-        />
+        <Close fontSize={36} />
       </IconButton>
     </div>
   );
