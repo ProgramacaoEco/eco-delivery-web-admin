@@ -13,5 +13,9 @@ export const themeVars = createGlobalTheme(":root", {
   color: {
     card: "#676767",
     background: "#404040",
+    common: {
+      white: "white",
+      black: "black",
+    },
   },
 });
