@@ -1,9 +1,6 @@
 import { storeClosed, storeOpenColor } from "./style.css";
 
-import { Roboto } from "next/font/google";
 import { Switch } from "@mui/material";
-import { Typography } from "../Typography";
-import { cn } from "@utils/classNames";
 import { useState } from "react";
 
 interface StoreSwitchProps {
