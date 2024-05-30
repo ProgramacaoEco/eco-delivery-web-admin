@@ -21,9 +21,10 @@
       "@/*": ["./src/*"],
       "@theme/*": ["./src/theme/*"],
       "@utils/*": ["./src/utils/*"],
-      "@components/*": ["./src/components/"],
-      "@hooks/*": ["./src/hooks/"],
-      "@helpers/*": ["./src/hooks/"]
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@icons/*": ["./build/icons/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
