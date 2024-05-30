@@ -8,9 +8,12 @@ export default function Caption({
   children,
   color = themeVars.color.common.white,
   className = undefined,
+  isAnchor = false,
 }: PropsWithChildren<TypographyProps>) {
   const captionStyle: React.CSSProperties = {
     color: color,
+    textDecorationColor: color,
+    textDecoration: isAnchor ? "underline" : "none",
   };
 
   return (
