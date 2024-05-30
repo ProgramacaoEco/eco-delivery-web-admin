@@ -1,11 +1,13 @@
-import { viewPort } from "@/theme/constants";
-import { themeVars } from "@/theme/theme.css";
 import { globalStyle, style } from "@vanilla-extract/css";
+
+import { themeVars } from "@/theme/theme.css";
+import { viewPort } from "@/theme/constants";
 
 globalStyle("*", {
   padding: "0",
   margin: "0",
   boxSizing: "border-box",
+  color: themeVars.color.common.white,
 });
 
 globalStyle(".Mui-checked > .MuiSwitch-thumb", {
