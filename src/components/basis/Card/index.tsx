@@ -1,28 +1,21 @@
-import Link from "next/link";
+import { IconType } from "@/utils/IconType";
 import Image from "next/image";
+import Link from "next/link";
+import { Typography } from "../Typography";
 import { card } from "./style.css";
-import { cn } from "@/utils/classNames";
-import useMediaQuery from "@/hooks/useMediaQuery";
-import { viewPort } from "@/theme/constants";
 
 interface CardProps {
   label: string;
-  iconUrl: string;
+  Icon: IconType;
   shadow?: string;
 }
 
-export default function Card({
-  iconUrl,
-  label,
-  shadow = undefined,
-}: CardProps) {
-  const iconSize = 48;
-
+export default function Card({ Icon, label, shadow = undefined }: CardProps) {
   return (
     <Link href="#" className={card} style={{ boxShadow: shadow }}>
       <div>
-        <Image alt={iconUrl} src={iconUrl} width={iconSize} height={iconSize} />
-        <div>{label}</div>
+        <Icon fontSize={36} />
+        <Typography.TitleRegular>{label}</Typography.TitleRegular>
       </div>
     </Link>
   );
