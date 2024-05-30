@@ -10,7 +10,7 @@ export const drawerContentContainer = style({
 });
 
 export const drawerSettingsContent = style({
-  width: "300px",
+  width: "350px",
   backgroundColor: "white",
   "@media": {
     [viewPort.small]: {
@@ -49,6 +49,12 @@ export const drawerHeader = style({
   position: "relative",
   display: "flex",
   justifyContent: "center",
+  "@media": {
+    [viewPort.small]: {
+      display: "flex !important",
+      justifyContent: "space-between",
+    },
+  },
   alignItems: "center",
   width: "100%",
   padding: "30px",
@@ -59,12 +65,10 @@ export const drawerHeader = style({
 });
 
 export const drawerHeaderCloseButton = style({
-  display: "none",
-  position: "absolute",
-  right: 10,
+  display: "none !important",
   "@media": {
     [viewPort.small]: {
-      display: "flex",
+      display: "flex !important",
     },
   },
 });
