@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
 import Image from "next/image";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
 import { cn } from "@/utils/classNames";
 import { layout } from "./layout.css";
 
-const roboto = Roboto({ subsets: ["latin"], weight: "400" });
+const roboto = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
