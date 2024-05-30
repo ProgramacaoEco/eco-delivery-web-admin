@@ -1,14 +1,17 @@
-import Drawer from "@mui/material/Drawer/Drawer";
+import { PropsWithChildren, ReactNode } from "react";
 import {
   drawerCloseButtonMobile,
   drawerContentContainer,
   drawerFooter,
   drawerSettingsContent,
 } from "./style.css";
-import { PropsWithChildren, ReactNode } from "react";
+
+import Drawer from "@mui/material/Drawer/Drawer";
+import DrawerHeader from "./drawerHeader";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
-import DrawerHeader from "./drawerHeader";
+import { Typography } from "../../Typography";
+import { themeVars } from "@/theme/theme.css";
 
 interface DrawerSettingsProps {
   open: boolean;
@@ -28,7 +31,12 @@ export default function DrawerSettings({
         <div className={drawerSettingsContent}>
           <DrawerHeader onClose={onClose}>Olá, Fulaninho</DrawerHeader>
           {children}
-          <div className={drawerFooter}>{footerTile}</div>
+          <Typography.DisplayLargeRegular
+            color={themeVars.color.background}
+            className={drawerFooter}
+          >
+            {footerTile}
+          </Typography.DisplayLargeRegular>
         </div>
       </div>
     </Drawer>
