@@ -2,7 +2,6 @@ import { drawerHeader, drawerHeaderCloseButton } from "./style.css";
 
 import { Close } from "@icons/index";
 import IconButton from "@mui/material/IconButton/IconButton";
-import Image from "next/image";
 import { PropsWithChildren } from "react";
 import { Typography } from "../../Typography";
 
