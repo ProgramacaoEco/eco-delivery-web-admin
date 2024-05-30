@@ -9,12 +9,12 @@ export default function DisplayLarge({
   color = themeVars.color.common.white,
   className = undefined,
 }: PropsWithChildren<TypographyProps>) {
-  const captionStyles: React.CSSProperties = {
+  const displayStyle: React.CSSProperties = {
     color: color,
   };
 
   return (
-    <h2 className={cn(displayLarge, className)} style={captionStyles}>
+    <h2 className={cn(displayLarge, className)} style={displayStyle}>
       {children}
     </h2>
   );
