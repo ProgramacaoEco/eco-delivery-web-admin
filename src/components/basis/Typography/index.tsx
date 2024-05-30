@@ -8,6 +8,7 @@ import TitleRegular from "./regular/Title";
 export interface TypographyProps {
   color?: string;
   className?: string;
+  isAnchor?: boolean;
 }
 
 export const Typography = {
