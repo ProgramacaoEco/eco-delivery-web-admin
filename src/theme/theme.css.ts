@@ -11,6 +11,7 @@ export const themeVars = createGlobalTheme(":root", {
     googleBorder: "#747775",
   },
   color: {
+    accent: "#F26623",
     card: "#676767",
     background: "#404040",
     common: {
