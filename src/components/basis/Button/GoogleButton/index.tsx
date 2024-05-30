@@ -1,24 +1,25 @@
-import { ComponentProps, PropsWithChildren } from "react";
-
 import GoogleLogo from "@icons/GoogleLogo";
+import Link from "next/link";
 import { Typography } from "../../Typography";
 import { googleButton } from "./style.css";
 import { themeVars } from "@/theme/theme.css";
 
-export default function GoogleButton({
-  children,
-  ...props
-}: PropsWithChildren<ComponentProps<"button">>) {
+interface GoogleButtonProps {
+  href: string;
+  onClick?: () => void;
+}
+
+export default function GoogleButton({ ...props }: GoogleButtonProps) {
   return (
-    <button className={googleButton} {...props}>
+    <Link className={googleButton} {...props}>
       <div>
         <GoogleLogo
           style={{ verticalAlign: "text-top", marginRight: "0.8125rem" }}
         />{" "}
         <Typography.Caption color={themeVars.color.background}>
-          {children}
+          Continuar com o Google
         </Typography.Caption>
       </div>
-    </button>
+    </Link>
   );
 }
