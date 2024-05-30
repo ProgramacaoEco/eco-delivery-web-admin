@@ -9,12 +9,12 @@ export default function Title({
   color = themeVars.color.common.white,
   className = undefined,
 }: PropsWithChildren<TypographyProps>) {
-  const captionStyles: React.CSSProperties = {
+  const titleStyle: React.CSSProperties = {
     color: color,
   };
 
   return (
-    <h1 className={cn(title, className)} style={captionStyles}>
+    <h1 className={cn(title, className)} style={titleStyle}>
       {children}
     </h1>
   );
