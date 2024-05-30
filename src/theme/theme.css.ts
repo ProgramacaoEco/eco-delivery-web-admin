@@ -7,6 +7,9 @@ export const themeVars = createGlobalTheme(":root", {
     shadowOrange: "inset 0 4px 0px 0 #F68751",
     shadowWhite: "inset 0 4px 0px 0 #FFFFFF",
   },
+  border: {
+    googleBorder: "#747775",
+  },
   color: {
     card: "#676767",
     background: "#404040",
