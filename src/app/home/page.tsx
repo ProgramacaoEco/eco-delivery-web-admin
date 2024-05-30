@@ -1,16 +1,27 @@
 "use client";
 
-import Card from "@/components/basis/Card";
-import { themeVars } from "@/theme/theme.css";
+import {
+  Assignment,
+  AssignmentCheck,
+  Campaign,
+  Liquor,
+  LocalShipping,
+  Logout,
+  Person,
+  Report,
+  Settings,
+  Warehouse,
+} from "@icons/index";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
-import Image from "next/image";
 
-import SettingsButton from "@/components/basis/Button/SettingsButton";
-import { useState } from "react";
-
+import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
+import { IconButton } from "@mui/material";
+import Image from "next/image";
 import StoreSwitch from "@/components/basis/StoreSwitch";
+import { themeVars } from "@/theme/theme.css";
+import { useState } from "react";
 
 export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -20,7 +31,9 @@ export default function Page() {
       <div className={homeContainer}>
         <div className={homeGrid}>
           <div className={homeHeader}>
-            <SettingsButton onClick={() => setOpenDrawer(true)} />
+            <IconButton onClick={() => setOpenDrawer(true)}>
+              <Settings />
+            </IconButton>
             <StoreSwitch />
             <Image
               src="/test_logo.png"
@@ -31,32 +44,32 @@ export default function Page() {
           </div>
           <Card
             shadow={themeVars.shadow.shadowBlue}
-            iconUrl="icons/assignment.svg"
+            Icon={Assignment}
             label="Pedidos"
           />
           <Card
             shadow={themeVars.shadow.shadowBlue}
-            iconUrl="icons/assignment_check.svg"
+            Icon={AssignmentCheck}
             label="Pedidos faturados"
           />
           <Card
             shadow={themeVars.shadow.shadowOrange}
-            iconUrl="icons/liquor.svg"
+            Icon={Liquor}
             label="Produtos"
           />
           <Card
             shadow={themeVars.shadow.shadowOrange}
-            iconUrl="icons/warehouse.svg"
+            Icon={Warehouse}
             label="Estoque"
           />
           <Card
             shadow={themeVars.shadow.shadowLightBlue}
-            iconUrl="icons/local_shipping.svg"
+            Icon={LocalShipping}
             label="Bairros"
           />
           <Card
             shadow={themeVars.shadow.shadowWhite}
-            iconUrl="icons/campaign.svg"
+            Icon={Campaign}
             label="Campanhas"
           />
         </div>
@@ -65,15 +78,11 @@ export default function Page() {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         footerTile={
-          <DrawerTile
-            href="#"
-            iconUrl="/icons/logout.svg"
-            label="Sair do sistema"
-          />
+          <DrawerTile href="#" Icon={Logout} label="Sair do sistema" />
         }
       >
-        <DrawerTile href="#" iconUrl="/icons/person.svg" label="Usuários" />
-        <DrawerTile href="#" iconUrl="/icons/report.svg" label="Relatórios" />
+        <DrawerTile href="#" Icon={Person} label="Usuários" />
+        <DrawerTile href="#" Icon={Report} label="Relatórios" />
       </DrawerSettings>
     </>
   );
