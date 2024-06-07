@@ -12,10 +12,11 @@ import GoogleButton from "@/components/basis/Button/GoogleButton";
 import Image from "next/image";
 import LinkButton from "@/components/basis/LinkButton/LinkButton";
 import { Typography } from "@/components/basis/Typography";
+import { signIn } from "next-auth/react";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { viewPort } from "@/theme/constants";
 
-const Login = () => {
+export default function SignIn() {
   const matchMedia = useMediaQuery(viewPort.small);
 
   return (
@@ -53,12 +54,10 @@ const Login = () => {
           <Typography.TitleLight>
             É sempre bom vê-lo novamente.
           </Typography.TitleLight>
-          <GoogleButton href="/home" onClick={() => {}} />
+          <GoogleButton action={signIn} />
           <LinkButton href="#">Precisa de ajuda?</LinkButton>
         </div>
       </div>
     </main>
   );
-};
-
-export default Login;
+}
