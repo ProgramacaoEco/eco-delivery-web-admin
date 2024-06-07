@@ -8,12 +8,17 @@ import { themeVars } from "@/theme/theme.css";
 interface DrawerTileProps {
   Icon: IconType;
   label: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
+  type: "link" | "button";
 }
 
-export default function DrawerTile({ Icon, label, href }: DrawerTileProps) {
+const Tile = ({
+  Icon,
+  label,
+}: Omit<DrawerTileProps, "href" | "onClick" | "type">) => {
   return (
-    <Link href={href} className={drawerTile}>
+    <>
       <Icon fontSize={36} />
       <Typography.DisplayLargeRegular
         color={themeVars.color.background}
@@ -21,6 +26,24 @@ export default function DrawerTile({ Icon, label, href }: DrawerTileProps) {
       >
         {label}
       </Typography.DisplayLargeRegular>
+    </>
+  );
+};
+
+export default function DrawerTile({
+  Icon,
+  label,
+  href,
+  type,
+  onClick,
+}: DrawerTileProps) {
+  return type === "button" ? (
+    <div onClick={onClick} className={drawerTile}>
+      <Tile Icon={Icon} label={label} />
+    </div>
+  ) : (
+    <Link href={href!} className={drawerTile}>
+      <Tile Icon={Icon} label={label} />
     </Link>
   );
 }
