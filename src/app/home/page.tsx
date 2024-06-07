@@ -20,6 +20,7 @@ import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import StoreSwitch from "@/components/basis/StoreSwitch";
+import { signOut } from "next-auth/react";
 import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 
@@ -78,11 +79,16 @@ export default function Page() {
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         footerTile={
-          <DrawerTile href="#" Icon={Logout} label="Sair do sistema" />
+          <DrawerTile
+            type="button"
+            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+            Icon={Logout}
+            label="Sair do sistema"
+          />
         }
       >
-        <DrawerTile href="#" Icon={Person} label="Usuários" />
-        <DrawerTile href="#" Icon={Report} label="Relatórios" />
+        <DrawerTile type="link" href="#" Icon={Person} label="Usuários" />
+        <DrawerTile type="link" href="#" Icon={Report} label="Relatórios" />
       </DrawerSettings>
     </>
   );
