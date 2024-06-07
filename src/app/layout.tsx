@@ -1,19 +1,24 @@
 "use client";
 
 import { layout, loginLayout } from "./layout.css";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import { cn } from "@/utils/classNames";
-import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: {
+    session: Session;
+  };
 }>) {
   const pathname = usePathname();
 
@@ -40,7 +45,7 @@ export default function RootLayout({
             right: -120,
           }}
         />
-        {children}
+        <SessionProvider session={params.session}>{children}</SessionProvider>
       </body>
     </html>
   );
