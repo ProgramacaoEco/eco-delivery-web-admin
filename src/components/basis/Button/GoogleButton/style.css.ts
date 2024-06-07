@@ -3,6 +3,7 @@ import { themeVars } from "@/theme/theme.css";
 
 export const googleButton = style({
   display: "flex",
+  cursor: "pointer",
   justifyContent: "center",
   alignItems: "center",
   width: "100%",
