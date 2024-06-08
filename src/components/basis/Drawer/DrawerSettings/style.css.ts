@@ -34,6 +34,7 @@ export const drawerTile = style({
   display: "flex",
   width: "100%",
   fontSize: "1.4rem",
+  cursor: "pointer",
   alignItems: "center",
   backgroundColor: "#F2F2F2",
   textDecoration: "none",
