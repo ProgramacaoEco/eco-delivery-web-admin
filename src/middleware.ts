@@ -5,7 +5,12 @@ export default auth((req) => {
   const isAuth = !!req.auth;
   const pathname = req.nextUrl.pathname;
 
-  if (!isAuth && pathname !== "/" && !pathname.startsWith("/signin")) {
+  if (
+    !isAuth &&
+    pathname !== "/" &&
+    !pathname.startsWith("/signin") &&
+    !pathname.startsWith("/error")
+  ) {
     return Response.redirect(new URL("/", req.url));
   }
 
