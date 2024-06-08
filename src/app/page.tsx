@@ -10,7 +10,7 @@ import {
 
 import GoogleButton from "@/components/basis/Button/GoogleButton";
 import Image from "next/image";
-import LinkButton from "@/components/basis/LinkButton/LinkButton";
+import LinkButton from "@/components/basis/LinkButton";
 import { Typography } from "@/components/basis/Typography";
 import { signIn } from "next-auth/react";
 import useMediaQuery from "@/hooks/useMediaQuery";
