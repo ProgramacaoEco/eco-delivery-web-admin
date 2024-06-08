@@ -10,7 +10,13 @@ export const themeVars = createGlobalTheme(":root", {
   border: {
     googleBorder: "#747775",
   },
+  height: {
+    appbarDefaultHeight: "5rem",
+  },
   color: {
+    users: {
+      appbarColor: "#7A7A7A",
+    },
     accent: "#F26623",
     card: "#676767",
     background: "#404040",
