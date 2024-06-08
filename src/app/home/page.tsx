@@ -87,7 +87,7 @@ export default function Page() {
           />
         }
       >
-        <DrawerTile type="link" href="#" Icon={Person} label="Usuários" />
+        <DrawerTile type="link" href="/users" Icon={Person} label="Usuários" />
         <DrawerTile type="link" href="#" Icon={Report} label="Relatórios" />
       </DrawerSettings>
     </>
