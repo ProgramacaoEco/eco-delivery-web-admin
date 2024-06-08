@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "generate-icons": "svgr --typescript --icon --no-prettier --out-dir build/icons -- public/icons",
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "npm run generate-icons && next dev",
+    "build": "npm run generate-icons && next build",
+    "start": "npm run generate-icons && next start",
     "lint": "next lint"
   },
   "dependencies": {
