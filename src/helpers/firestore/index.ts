@@ -1,13 +1,15 @@
-import { app } from "@/firebase-config";
 import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   setDoc,
 } from "firebase/firestore";
+
 import { Collections } from "./collections";
+import { app } from "@/firebase-config";
 
 const db = getFirestore(app);
 
@@ -18,6 +20,17 @@ async function get(currentCollection: Collections) {
     return data;
   } catch (error) {
     console.error(error);
+    return null;
+  }
+}
+
+async function getBy(id: string, currentCollection: Collections) {
+  try {
+    const docRef = doc(db, currentCollection, id);
+    const snapshot = await getDoc(docRef);
+    return snapshot.data();
+  } catch (error) {
+    console.log(error);
     return null;
   }
 }
@@ -46,4 +59,4 @@ async function set<T extends BaseModel>(
   }
 }
 
-export const FirestoreHelper = { get, set, remove };
+export const FirestoreHelper = { get, getBy, set, remove };
