@@ -81,7 +81,7 @@ jobs:
           echo NEXT_PUBLIC_MEASUREMENT_ID=${{ secrets.MEASUREMENT_ID }} >> .env.local
           echo NEXT_PUBLIC_DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env.local
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env.local
-          ${{ steps.detect-package-manager.outputs.runner }} npm run generate-icons && next build
+          ${{ steps.detect-package-manager.outputs.runner }} npm run build
   #     - name: Upload artifact
   #       uses: actions/upload-pages-artifact@v3
   #       with:
