@@ -23,6 +23,7 @@ export default function PageTitle({ color, onClose, title }: PageTitleProps) {
     width: "100%",
     verticalAlign: "middle",
     marginBottom: themeVars.height.appbarDefaultHeight,
+    textOverflow: "ellipsis",
   };
 
   const closeIconButton: React.CSSProperties = {
