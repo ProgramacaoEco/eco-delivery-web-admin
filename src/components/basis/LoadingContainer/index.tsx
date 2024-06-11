@@ -12,7 +12,7 @@ export default function LoadingContainer({
   loading,
   children,
 }: PropsWithChildren<LoadingContainerProps>) {
-  if (!loading && error) {
+  if (error) {
     return (
       <div className={loadingContainer}>
         <Typography.TitleBold>
