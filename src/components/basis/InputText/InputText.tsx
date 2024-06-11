@@ -1,3 +1,4 @@
+import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import {
   TextField,
   ThemeProvider,
@@ -5,7 +6,6 @@ import {
   outlinedInputClasses,
 } from "@mui/material";
 
-import { ChangeEvent } from "react";
 import { themeVars } from "@/theme/theme.css";
 
 const inputTextColor = themeVars.color.common.white;
@@ -48,21 +48,29 @@ const inputTextTheme = createTheme({
     },
   },
 });
+type InputFieldProps<T extends FieldValues> = ControllerRenderProps<T, any>;
 
-interface InputTextProps {
+interface InputTextProps<T extends FieldValues> {
+  field: InputFieldProps<T>;
   label: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  error?: boolean;
 }
 
-export default function InputText({ label, onChange, value }: InputTextProps) {
+export default function InputText<T extends FieldValues>({
+  label,
+  error = false,
+  field,
+}: InputTextProps<T>) {
   return (
     <ThemeProvider theme={inputTextTheme}>
       <TextField
+        style={{ width: "100%" }}
+        autoComplete="off"
         variant="outlined"
         label={label}
-        value={value}
-        onChange={onChange}
+        error={error}
+        {...field}
+        ref={field.ref}
       />
     </ThemeProvider>
   );
