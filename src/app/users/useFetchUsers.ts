@@ -10,6 +10,7 @@ export default function useFetchUsers() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setError(false);
     setLoading(true);
 
     FirestoreHelper.get(Collections.Usuarios)
