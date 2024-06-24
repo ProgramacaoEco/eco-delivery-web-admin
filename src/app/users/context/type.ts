@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { User } from "@/helpers/firestore/model/user";
 
 export type UserContextType = {
-  data?: User[];
+  data: User[];
   successMessage?: string;
   success?: boolean;
   errorMessage?: string;
@@ -12,7 +12,7 @@ export type UserContextType = {
   setSuccess: Dispatch<SetStateAction<boolean | undefined>>;
   setSuccessMessage: Dispatch<SetStateAction<string | undefined>>;
   setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
-  setData: Dispatch<SetStateAction<User[] | undefined>>;
+  setData: Dispatch<SetStateAction<User[]>>;
   setError: Dispatch<SetStateAction<boolean>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   reset: () => void;
