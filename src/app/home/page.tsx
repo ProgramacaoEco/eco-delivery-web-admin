@@ -13,6 +13,7 @@ import {
   Warehouse,
 } from "@icons/index";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { signOut, useSession } from "next-auth/react";
 
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
@@ -20,12 +21,13 @@ import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import StoreSwitch from "@/components/basis/StoreSwitch";
-import { signOut } from "next-auth/react";
 import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 
 export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const session = useSession();
 
   return (
     <>
@@ -76,6 +78,7 @@ export default function Page() {
         </div>
       </div>
       <DrawerSettings
+        userLogged={session.data?.user?.name?.split(" ")[0] ?? ""}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         footerTile={
