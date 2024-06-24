@@ -1,37 +1,43 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import { FirestoreHelper } from "@/helpers/firestore";
 import { User } from "@/helpers/firestore/model/user";
+import { UserContext } from "./context";
 
 export default function useFetchUsers() {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<User[]>([]);
-  const [error, setError] = useState(false);
+  const { setError, setLoading, setData, success } = useContext(UserContext);
 
   useEffect(() => {
     setError(false);
     setLoading(true);
 
-    FirestoreHelper.get(Collections.Usuarios)
-      .then((users) => {
-        if (!!users) {
-          setData(
-            users.map((user) => new User(user.id, user.email, user.name))
-          );
-        } else {
-          setData([]);
+    if (success || typeof success === "undefined") {
+      FirestoreHelper.get(Collections.Usuarios)
+        .then((users) => {
+          if (!!users) {
+            setData(
+              users.map(
+                (user) => new User(user.id, user.email, user.name, user.isAdmin)
+              )
+            );
+            setData((prevState) =>
+              prevState.sort((a, b) => +b.isAdmin - +a.isAdmin)
+            );
+          } else {
+            setData(undefined);
+            setError(true);
+          }
+        })
+        .catch((error) => {
           setError(true);
-        }
-      })
-      .catch((error) => {
-        setError(true);
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+          setData(undefined);
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  return { loading, data, error };
 }
