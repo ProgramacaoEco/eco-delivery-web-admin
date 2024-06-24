@@ -25,13 +25,13 @@ export default function useFetchUsers() {
               prevState.sort((a, b) => +b.isAdmin - +a.isAdmin)
             );
           } else {
-            setData(undefined);
+            setData([]);
             setError(true);
           }
         })
         .catch((error) => {
           setError(true);
-          setData(undefined);
+          setData([]);
           console.error(error);
         })
         .finally(() => {
