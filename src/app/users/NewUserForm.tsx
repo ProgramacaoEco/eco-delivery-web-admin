@@ -3,6 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import Check from "@icons/Check";
 import { IconButton } from "@mui/material";
 import InputText from "@/components/basis/InputText/InputText";
+import { User } from "@/helpers/firestore/model/user";
 import { emailVerificationRegex } from "../../../constants";
 
 type NewUserFormType = {
@@ -10,8 +11,12 @@ type NewUserFormType = {
   name: string;
 };
 
-export default function NewUserForm() {
-  const { handleSubmit, control } = useForm<NewUserFormType>({
+interface NewUserFormProps {
+  onSubmit: (user: User) => void;
+}
+
+export default function NewUserForm({ onSubmit }: NewUserFormProps) {
+  const { handleSubmit, control, reset } = useForm<NewUserFormType>({
     defaultValues: {
       email: "",
       name: "",
@@ -20,7 +25,10 @@ export default function NewUserForm() {
 
   return (
     <form
-      onSubmit={handleSubmit((data) => console.log(data))}
+      onSubmit={handleSubmit(({ email, name }) => {
+        onSubmit(new User(email, email, name));
+        reset();
+      })}
       style={{
         display: "flex",
         alignItems: "center",
