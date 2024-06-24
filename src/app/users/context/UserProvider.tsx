@@ -4,7 +4,7 @@ import { User } from "@/helpers/firestore/model/user";
 import { UserContext } from "./";
 
 export default function UserProvider({ children }: PropsWithChildren) {
-  const [data, setData] = useState<User[] | undefined>([]);
+  const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean | undefined>(undefined);
