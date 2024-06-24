@@ -16,11 +16,13 @@ import { themeVars } from "@/theme/theme.css";
 interface DrawerSettingsProps {
   open: boolean;
   onClose: () => void;
+  userLogged: string;
   footerTile: ReactNode;
 }
 
 export default function DrawerSettings({
   open,
+  userLogged,
   onClose,
   children,
   footerTile,
@@ -29,7 +31,7 @@ export default function DrawerSettings({
     <Drawer open={open} onClose={onClose}>
       <div className={drawerContentContainer}>
         <div className={drawerSettingsContent}>
-          <DrawerHeader onClose={onClose}>Olá, Fulaninho</DrawerHeader>
+          <DrawerHeader onClose={onClose}>Olá, {userLogged}</DrawerHeader>
           {children}
           <Typography.DisplayLargeRegular
             color={themeVars.color.background}
