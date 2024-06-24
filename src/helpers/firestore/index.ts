@@ -38,7 +38,7 @@ async function getBy(id: string, currentCollection: Collections) {
 async function remove(id: string, currentCollection: Collections) {
   try {
     const docRef = doc(db, currentCollection, id);
-    const result = await deleteDoc(docRef);
+    await deleteDoc(docRef);
     return true;
   } catch (error) {
     console.error(error);
@@ -51,7 +51,7 @@ async function set<T extends BaseModel>(
   data: T
 ) {
   try {
-    await setDoc(doc(db, currentCollection, data._id), data);
+    await setDoc(doc(db, currentCollection, data._id), data.toJson());
     return true;
   } catch (error) {
     console.error(error);
