@@ -1,5 +1,10 @@
-import { style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
+
 import { viewPort } from "@/theme/constants";
+
+globalStyle(".MuiSnackbarContent-root", {
+  backgroundColor: "red",
+});
 
 export const users = style({
   display: "flex",
