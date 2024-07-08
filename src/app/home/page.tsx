@@ -56,6 +56,7 @@ export default function Page() {
             label="Pedidos faturados"
           />
           <Card
+            href="/products"
             shadow={themeVars.shadow.shadowOrange}
             Icon={Liquor}
             label="Produtos"
