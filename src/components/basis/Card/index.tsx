@@ -8,11 +8,17 @@ interface CardProps {
   label: string;
   Icon: IconType;
   shadow?: string;
+  href?: string;
 }
 
-export default function Card({ Icon, label, shadow = undefined }: CardProps) {
+export default function Card({
+  href,
+  Icon,
+  label,
+  shadow = undefined,
+}: CardProps) {
   return (
-    <Link href="#" className={card} style={{ boxShadow: shadow }}>
+    <Link href={href ?? "#"} className={card} style={{ boxShadow: shadow }}>
       <div>
         <Icon fontSize={36} />
         <Typography.TitleRegular>{label}</Typography.TitleRegular>
