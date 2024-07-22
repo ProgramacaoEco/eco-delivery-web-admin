@@ -17,6 +17,9 @@ export const themeVars = createGlobalTheme(":root", {
     users: {
       appbarColor: "#7A7A7A",
     },
+    faturados: {
+      orderCard: "#666666",
+    },
     accent: "#F26623",
     card: "#676767",
     tileEven: "#7A7A7A",

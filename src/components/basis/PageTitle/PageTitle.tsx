@@ -8,10 +8,16 @@ import { useRouter } from "next/navigation";
 interface PageTitleProps {
   color: string;
   onClose?: () => void;
+  route?: string;
   title: string;
 }
 
-export default function PageTitle({ color, onClose, title }: PageTitleProps) {
+export default function PageTitle({
+  color,
+  onClose,
+  title,
+  route,
+}: PageTitleProps) {
   const router = useRouter();
 
   const appbarStyle: React.CSSProperties = {
@@ -44,7 +50,7 @@ export default function PageTitle({ color, onClose, title }: PageTitleProps) {
               if (!!onClose) {
                 onClose();
               }
-              return router.replace("/");
+              return router.replace(route ?? "/");
             }}
           >
             <Close />
