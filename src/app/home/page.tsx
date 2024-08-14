@@ -53,7 +53,7 @@ export default function Page() {
           <Card
             shadow={themeVars.shadow.shadowBlue}
             Icon={AssignmentCheck}
-            href="/faturados"
+            href="/invoiced"
             label="Pedidos faturados"
           />
           <Card

@@ -9,6 +9,7 @@ export interface TypographyProps {
   color?: string;
   className?: string;
   isAnchor?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const Typography = {

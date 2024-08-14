@@ -7,6 +7,7 @@ import { title } from "./style.css";
 export default function Title({
   children,
   color = themeVars.color.common.white,
+  style,
   className = undefined,
 }: PropsWithChildren<TypographyProps>) {
   const titleStyle: React.CSSProperties = {
@@ -14,7 +15,7 @@ export default function Title({
   };
 
   return (
-    <h1 className={cn(title, className)} style={titleStyle}>
+    <h1 className={cn(title, className)} style={{ ...titleStyle, ...style }}>
       {children}
     </h1>
   );

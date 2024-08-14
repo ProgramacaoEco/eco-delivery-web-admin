@@ -1,26 +1,87 @@
+import "@egjs/react-flicking/dist/flicking.css";
+
 import OrderHeader from "./OrderHeader";
 import OrderTable from "./OrderTable";
 import RoundedButton from "../Button/RoundedButton";
-import { themeVars } from "@/theme/theme.css";
+import { cn } from "@/utils/classNames";
+import { orderCard } from "./style.css";
 
 export default function OrderCard() {
   return (
-    <article
-      style={{
-        width: "50%",
-        borderRadius: "25px",
-        border: "1px solid white",
-        height: "750px",
-        backgroundColor: themeVars.color.faturados.orderCard,
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        justifyContent: "space-around",
-      }}
-    >
+    <article className={cn(orderCard, "panel")}>
       <OrderHeader />
       <OrderTable
         items={[
+          {
+            code: "6728027123456",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
+          {
+            code: "6728027",
+            description: "CERVEJA STELLA ARTOIS 473ML",
+            quantity: 100,
+          },
           {
             code: "6728027",
             description: "CERVEJA STELLA ARTOIS 473ML",

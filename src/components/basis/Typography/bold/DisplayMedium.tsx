@@ -7,6 +7,7 @@ import { themeVars } from "@/theme/theme.css";
 export default function DisplayMedium({
   children,
   color = themeVars.color.common.white,
+  style,
   className = undefined,
 }: PropsWithChildren<TypographyProps>) {
   const displayStyle: React.CSSProperties = {
@@ -14,7 +15,10 @@ export default function DisplayMedium({
   };
 
   return (
-    <h3 className={cn(displayMedium, className)} style={displayStyle}>
+    <h3
+      className={cn(displayMedium, className)}
+      style={{ ...displayStyle, ...style }}
+    >
       {children}
     </h3>
   );

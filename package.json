@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@egjs/react-flicking": "^4.11.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@lottiefiles/dotlottie-react": "^0.6.3",

@@ -17,7 +17,7 @@ export default function Products() {
     >
       <PageTitle color="orange" title="Cadastro de produtos" />
       <div style={{ display: "flex", gap: "100px" }}>
-        <Link href="/products/new" style={{all: "unset"}}>
+        <Link href="/products/new" style={{ all: "unset" }}>
           <div
             style={{
               display: "flex",
@@ -34,7 +34,7 @@ export default function Products() {
             <div>Cadastrar novo produto</div>
           </div>
         </Link>
-        <button style={{ all: "unset" }}>
+        <Link href="/products/edit" style={{ all: "unset" }}>
           <div
             style={{
               display: "flex",
@@ -50,7 +50,7 @@ export default function Products() {
             <Grocery fontSize={150} />
             <div>Ver ou editar produtos</div>
           </div>
-        </button>
+        </Link>
       </div>
     </div>
   );
