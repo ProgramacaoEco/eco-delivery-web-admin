@@ -1,28 +1,24 @@
-import { getSession, useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 
 import ActionFeedback from "@/components/basis/ActionFeedback";
+import { FirebaseContext } from "@/helpers/firestore/context";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import NewUserForm from "./NewUserForm";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import { User } from "@/helpers/firestore/model/user";
-import { UserContext } from "./context";
 import { themeVars } from "@/theme/theme.css";
-import useAddUser from "./useAddUser";
-import useFetchUsers from "./useFetchUsers";
-import useRemoveUsers from "./useRemoveUsers";
+import { useSession } from "next-auth/react";
+import useUser from "./useUser";
 import { users } from "./style.css";
 
 export default function UsersComponent() {
-  useFetchUsers();
-
-  const { removeUser } = useRemoveUsers();
-  const { addUser } = useAddUser();
+  const { getUser, removeUser, setUser } = useUser();
 
   const { loading, error, success, data, successMessage, errorMessage } =
-    useContext(UserContext);
+    useContext(FirebaseContext);
+
   const { data: sessionData } = useSession();
 
   const [existingUser, setExistingUser] = useState(false);
@@ -37,13 +33,17 @@ export default function UsersComponent() {
   }
 
   useEffect(() => {
+    getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (!loading) {
       if (users.length <= 0) {
-        console.log(loading);
-        console.log(data.length);
         setPageHasError(true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading]);
 
   return (
@@ -62,7 +62,7 @@ export default function UsersComponent() {
                 return;
               }
 
-              await addUser(usr);
+              await setUser(usr);
             }}
           />
         </div>
@@ -71,7 +71,7 @@ export default function UsersComponent() {
           {data &&
             data.map(({ userName, isAdmin, _id }, index) => (
               <Tile
-                key={userName}
+                key={_id}
                 count={index}
                 isDeletable={!isAdmin && currentUser.isAdmin}
                 onDelete={() => removeUser(_id)}

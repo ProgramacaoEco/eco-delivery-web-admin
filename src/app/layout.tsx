@@ -3,6 +3,7 @@
 import { layout, loginLayout } from "./layout.css";
 import { usePathname, useRouter } from "next/navigation";
 
+import FirebaseProvider from "@/helpers/firestore/context/FirebaseProvider";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Session } from "next-auth";
@@ -45,7 +46,9 @@ export default function RootLayout({
             right: -120,
           }}
         />
-        <SessionProvider session={params.session}>{children}</SessionProvider>
+        <FirebaseProvider>
+          <SessionProvider session={params.session}>{children}</SessionProvider>
+        </FirebaseProvider>
       </body>
     </html>
   );
