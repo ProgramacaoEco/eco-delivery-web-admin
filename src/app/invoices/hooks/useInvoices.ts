@@ -1,12 +1,12 @@
-import Address from "@/helpers/firestore/model/order/address";
 import { Collections } from "@/helpers/firestore/collections";
+import Address from "@/helpers/firestore/model/order/address";
 import Item from "@/helpers/firestore/model/order/item";
 import Order from "@/helpers/firestore/model/order/order";
-import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/hooks/useFirebase";
+import { errorMessage } from "@/utils/texts";
 import { useState } from "react";
 
-export default function useInvoiced() {
+export default function useInvoices() {
   const { get, getBy } = useFirebase<Order>();
 
   const [error, setError] = useState<string | null>(null);

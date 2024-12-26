@@ -4,15 +4,15 @@ import "./style.css";
 
 import { useEffect, useRef } from "react";
 
-import Item from "@/helpers/firestore/model/order/item";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import RoundedButton from "@/components/basis/Button/RoundedButton";
-import useInvoiced from "../hooks/useInvoiced";
+import Item from "@/helpers/firestore/model/order/item";
 import { useParams } from "next/navigation";
+import useInvoices from "../hooks/useInvoices";
 
 export default function InvoicedDetails() {
-  const { getInvoice, error, loading, selectedOrder } = useInvoiced();
+  const { getInvoice, error, loading, selectedOrder } = useInvoices();
 
   const { id } = useParams<{ id: string }>();
 

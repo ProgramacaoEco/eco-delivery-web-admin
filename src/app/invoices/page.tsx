@@ -1,13 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import Order from "@/helpers/firestore/model/order/order";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
+import Order from "@/helpers/firestore/model/order/order";
+import Link from "next/link";
 import { useEffect } from "react";
-import useInvoiced from "./hooks/useInvoiced";
+import useInvoices from "./hooks/useInvoices";
 
 export default function Invoiced() {
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function Invoiced() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { getInvoices, error, loading, orders } = useInvoiced();
+  const { getInvoices, error, loading, orders } = useInvoices();
 
   return (
     <div>
