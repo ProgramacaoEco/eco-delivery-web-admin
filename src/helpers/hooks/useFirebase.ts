@@ -1,125 +1,157 @@
-import { errorMessage, successMessage } from "@/utils/texts";
-
 import { BaseModel } from "../firestore/model/baseModel";
 import { Collections } from "@/helpers/firestore/collections";
-import { FirebaseContext } from "../firestore/context";
 import { FirestoreHelper } from "@/helpers/firestore";
-import { useContext } from "react";
 
 interface SetProps<T extends BaseModel> {
-    data: T; 
-    collection: Collections; 
-    onSuccessMessage: string; 
-    onErrorMessage: string;
+  collection: Collections;
+  body: T;
+  data: T[];
+  onData: (data: any) => void;
+  transformer: (data: any) => T;
+  onSuccess: () => void;
+  onError: () => void;
+  onLoading: (loading: boolean) => void;
 }
 
 interface GetProps<T extends BaseModel> {
-    collection: Collections;
-    onData: (data: any) => T;
+  collection: Collections;
+  onData: (data: any) => void;
+  transformer: (data: any) => T;
+  onLoading: (loading: boolean) => void;
+  onError: () => void;
 }
 
-interface RemoveProps {
-    id: string;
-    collection: Collections;
-    onSuccessMessage: string;
-    onErrorMessage: string
+interface GetByProps<T extends BaseModel> {
+  id: string;
+  collection: Collections;
+  transformer: (data: any) => T;
+  onData: (data: T | null) => void;
+  onLoading: (loading: boolean) => void;
+  onError: () => void;
 }
 
-export default function useFirebase() {
-  const {
-    setLoading,
-    setError,
-    setErrorMessage,
-    setSuccessMessage,
-    setSuccess,
-    setData,
-    reset,
-    success,
-    data
-  } = useContext(FirebaseContext);
-  const set = async <T extends BaseModel>({collection, data, onErrorMessage, onSuccessMessage}: SetProps<T>) => {
-    reset();
+interface RemoveProps<T extends BaseModel> {
+  id: string;
+  collection: Collections;
+  data: T[];
+  onData: (data: any) => void;
+  onSuccess: () => void;
+  onLoading: (loading: boolean) => void;
+  onError: () => void;
+}
 
-    setLoading(true);
+export default function useFirebase<T extends BaseModel>() {
+  const set = async ({
+    collection,
+    onError,
+    onLoading,
+    onSuccess,
+    data,
+    body,
+    onData,
+    transformer,
+  }: SetProps<T>) => {
+    onLoading(true);
 
     try {
-      const success = await FirestoreHelper.set(collection, data);
+      const success = await FirestoreHelper.set(collection, body);
 
       if (success) {
-        setSuccess(true);
-        setData((prevState) => [...prevState, data]);
-        setSuccessMessage(successMessage(onSuccessMessage));
+        onSuccess();
+        onData([...data, body].map(transformer));
       } else {
-        setError((_) => true);
-        setErrorMessage(errorMessage(onErrorMessage));
+        onError();
       }
     } catch (error) {
-      setError(true);
-      setErrorMessage(errorMessage(onErrorMessage));
+      onError();
       console.error(error);
     } finally {
-      setLoading(false);
+      onLoading(false);
     }
   };
 
-  const get = async <T extends BaseModel>({collection, onData}: GetProps<T>) => {
-    reset()
+  const get = async ({
+    collection,
+    onData,
+    onError,
+    onLoading,
+    transformer,
+  }: GetProps<T>) => {
+    onLoading(true);
 
-    setError(false);
-      setLoading(true);
-  
-      if (success || typeof success === "undefined") {
-        await FirestoreHelper.get(collection)
-          .then((data) => {
-            if (!!data) {
-              setData(
-                data.map(
-                  onData
-                )
-              );
-            } else {
-              setData([]);
-              setError(true);
-            }
-          })
-          .catch((error) => {
-            setError(true);
-            setData([]);
-            console.error(error);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+    try {
+      const data = await FirestoreHelper.get(collection);
+
+      if (data !== null && data?.length > 0) {
+        onData(data.map(transformer));
+        console.log(data.map(transformer));
+      } else {
+        onData([]);
       }
+    } catch (error) {
+      onError();
+      console.error(error);
+      console.log(error);
+    } finally {
+      onLoading(false);
+    }
+  };
 
-  }
+  const getBy = async ({
+    id,
+    collection,
+    onData,
+    onError,
+    onLoading,
+    transformer,
+  }: GetByProps<T>) => {
+    onLoading(true);
 
-  const remove = async ({collection, id, onErrorMessage, onSuccessMessage}: RemoveProps) => {
-    reset();
+    try {
+      const data = await FirestoreHelper.getBy(id, collection);
 
-    setLoading(true);
+      if (!!data) {
+        onData(transformer(data));
+      } else {
+        onData(null);
+      }
+    } catch (error) {
+      onError();
+      onData(null);
+      console.error(error);
+    } finally {
+      onLoading(false);
+    }
+  };
+
+  const remove = async ({
+    collection,
+    id,
+    onError,
+    onLoading,
+    onSuccess,
+    data,
+    onData,
+  }: RemoveProps<T>) => {
+    onLoading(true);
 
     try {
       const success = await FirestoreHelper.remove(id, collection);
 
       if (success) {
-        setSuccess(true);
-        const newData = data.filter(({ _id }) => id !== _id);
-        setData([...newData]);
-        setSuccessMessage(successMessage(onSuccessMessage));
+        onSuccess();
+        const newData: T[] = data.filter(({ _id }: T) => id !== _id);
+        onData(newData);
       } else {
-        setError(true);
-        setErrorMessage(errorMessage(onErrorMessage));
+        onError();
       }
     } catch (error) {
-      setError(true);
+      onError();
       console.error(error);
     } finally {
-      setLoading(false);
+      onLoading(false);
     }
   };
 
-  return { set, get, remove };
+  return { set, get, getBy, remove };
 }
-
-

@@ -49,6 +49,7 @@ export default function Page() {
             shadow={themeVars.shadow.shadowBlue}
             Icon={Assignment}
             label="Pedidos"
+            href="/orders"
           />
           <Card
             shadow={themeVars.shadow.shadowBlue}

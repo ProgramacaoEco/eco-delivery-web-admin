@@ -71,9 +71,9 @@ export default function NewProduct() {
             gap: "30px",
           }}
         >
-          <InputText label="Código" />
-          <InputText label="Descrição" />
-          <InputText label="Valor" />
+          <InputText required label="Código" />
+          <InputText required label="Descrição" />
+          <InputText required label="Valor" />
 
           <FormControl>
             <DropdownLabel id="categoria">Categoria</DropdownLabel>

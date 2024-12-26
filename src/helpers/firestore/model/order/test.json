@@ -1,0 +1,30 @@
+{
+    "orders": {
+      "6c84fb90-12c4-11e1-840d-7b25c5ee775a": {
+        "id": "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
+        "orderIssuer": "John Doe",
+        "address": {
+          "address": "123 Main St",
+          "number": "456",
+          "apt": "Apt 789",
+          "neighborhood": "Downtown",
+          "reference": "Near Central Park",
+          "postalCode": "12345-678"
+        },
+        "items": [
+            {
+              "description": "Item 1",
+              "quantity": 2,
+              "value": 19.99
+            },
+            {
+              "description": "Item 2",
+              "quantity": 1,
+              "value": 9.99
+            }
+        ],
+        "phoneNumber": "+1234567890"
+      }
+    }
+  }
+  

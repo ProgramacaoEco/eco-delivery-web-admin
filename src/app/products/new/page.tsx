@@ -14,6 +14,9 @@ import RoundedButton from "@/components/basis/Button/RoundedButton";
 import { Typography } from "@/components/basis/Typography";
 
 export default function NewProduct() {
+  const [code, setCode] = useState("");
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState(0);
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
 
@@ -24,7 +27,7 @@ export default function NewProduct() {
   };
 
   return (
-    <>
+    <div style={{ paddingBottom: "40px" }}>
       <PageTitle
         color="orange"
         title="Cadastro de produtos"
@@ -71,13 +74,26 @@ export default function NewProduct() {
             gap: "30px",
           }}
         >
-          <InputText label="Código" />
-          <InputText label="Descrição" />
-          <InputText label="Valor" />
+          <InputText
+            onChange={(event) => setCode(event.target.value)}
+            required
+            label="Código"
+          />
+          <InputText
+            onChange={(event) => setDescription(event.target.value)}
+            required
+            label="Descrição"
+          />
+          <InputText
+            onChange={(event) => setValue(Number(event.target.value))}
+            required
+            label="Valor"
+          />
 
           <FormControl>
             <DropdownLabel id="categoria">Categoria</DropdownLabel>
             <Dropdown
+              required
               labelId="categoria"
               label="Categoria"
               value={category}
@@ -92,9 +108,11 @@ export default function NewProduct() {
               <DropdownItem value="1">1</DropdownItem>
             </Dropdown>
           </FormControl>
-          <RoundedButton buttonColor="orange">Salvar</RoundedButton>
+          <RoundedButton type="submit" buttonColor="orange">
+            Salvar
+          </RoundedButton>
         </div>
       </form>
-    </>
+    </div>
   );
 }

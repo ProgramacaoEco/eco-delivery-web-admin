@@ -6,7 +6,7 @@ globalStyle(".MuiSnackbarContent-root", {
   backgroundColor: "red",
 });
 
-export const users = style({
+const users = style({
   display: "flex",
   flexDirection: "column",
   width: "100%",
@@ -17,3 +17,5 @@ export const users = style({
     },
   },
 });
+
+export default users;

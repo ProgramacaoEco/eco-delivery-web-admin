@@ -1,3 +1,5 @@
+import { BaseModel } from "../baseModel";
+
 export class User implements BaseModel {
   constructor(id: string, email: string, userName: string, isAdmin?: boolean) {
     this._id = id;

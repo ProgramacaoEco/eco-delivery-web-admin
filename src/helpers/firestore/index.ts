@@ -8,6 +8,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 
+import { BaseModel } from "./model/baseModel";
 import { Collections } from "./collections";
 import { app } from "@/firebase-config";
 

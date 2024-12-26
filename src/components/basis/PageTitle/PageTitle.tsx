@@ -1,4 +1,5 @@
 import { AppBar, Box, IconButton } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 
 import { Close } from "@icons/index";
 import { Typography } from "@/components/basis/Typography";
@@ -39,24 +40,44 @@ export default function PageTitle({
     padding: "0",
   };
 
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (window.scrollY > 0) {
+        setShow(false);
+      } else {
+        setShow(true);
+      }
+    };
+
+    controlNavbar();
+
+    window.addEventListener("scroll", controlNavbar);
+
+    return () => window.removeEventListener("scroll", controlNavbar);
+  }, []);
+
   return (
     <Box sx={{ height: "5.5rem" }}>
-      <AppBar style={appbarStyle}>
-        <Typography.TitleRegular>
-          {title}
-          <IconButton
-            style={closeIconButton}
-            onClick={() => {
-              if (!!onClose) {
-                onClose();
-              }
-              return router.replace(route ?? "/");
-            }}
-          >
-            <Close />
-          </IconButton>
-        </Typography.TitleRegular>
-      </AppBar>
+      {show && (
+        <AppBar style={appbarStyle}>
+          <Typography.TitleRegular>
+            {title}
+            <IconButton
+              style={closeIconButton}
+              onClick={() => {
+                if (!!onClose) {
+                  onClose();
+                }
+                return router.back();
+              }}
+            >
+              <Close />
+            </IconButton>
+          </Typography.TitleRegular>
+        </AppBar>
+      )}
     </Box>
   );
 }

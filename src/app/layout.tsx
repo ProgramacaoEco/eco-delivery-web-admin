@@ -1,14 +1,14 @@
 "use client";
 
 import { layout, loginLayout } from "./layout.css";
-import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-import FirebaseProvider from "@/helpers/firestore/context/FirebaseProvider";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { cn } from "@/utils/classNames";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
@@ -22,6 +22,21 @@ export default function RootLayout({
   };
 }>) {
   const pathname = usePathname();
+  const noPrint = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    addEventListener("beforeprint", () => {
+      if (noPrint.current) {
+        noPrint.current.style.visibility = "hidden";
+      }
+    });
+
+    addEventListener("afterprint", () => {
+      if (noPrint.current) {
+        noPrint.current.style.visibility = "visible";
+      }
+    });
+  }, []);
 
   return (
     <html lang="pt">
@@ -39,6 +54,7 @@ export default function RootLayout({
           width={512}
           height={512}
           draggable={false}
+          ref={noPrint}
           style={{
             zIndex: "-1",
             position: "fixed",
@@ -46,9 +62,7 @@ export default function RootLayout({
             right: -120,
           }}
         />
-        <FirebaseProvider>
-          <SessionProvider session={params.session}>{children}</SessionProvider>
-        </FirebaseProvider>
+        <SessionProvider session={params.session}>{children}</SessionProvider>
       </body>
     </html>
   );
