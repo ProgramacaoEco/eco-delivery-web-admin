@@ -8,9 +8,9 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-import { BaseModel } from "./model/baseModel";
-import { Collections } from "./collections";
 import { app } from "@/firebase-config";
+import { Collections } from "./collections";
+import { BaseModel } from "./model/baseModel";
 
 const db = getFirestore(app);
 
@@ -52,7 +52,11 @@ async function set<T extends BaseModel>(
   data: T
 ) {
   try {
-    await setDoc(doc(db, currentCollection, data._id), data.toJson());
+    const set = await setDoc(
+      doc(db, currentCollection, data._id),
+      data.toJson()
+    );
+    console.log(data.toJson());
     return true;
   } catch (error) {
     console.error(error);

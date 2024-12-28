@@ -1,0 +1,67 @@
+import { BaseModel } from "../baseModel";
+import { Category } from "../../enum/category";
+
+export class Product implements BaseModel {
+  constructor(
+    _id: string,
+    description: string,
+    value: number,
+    category: Category,
+    inventory: number,
+    image?: string
+  ) {
+    this._id = _id;
+    this._image = image;
+    this._description = description;
+    this._value = value;
+    this._category = category;
+    this._inventory = inventory;
+  }
+
+  readonly _id: string;
+
+  private readonly _image?: string;
+  public get image(): string | undefined {
+    return this._image;
+  }
+
+  private readonly _description: string;
+  public get description(): string {
+    return this._description;
+  }
+
+  private readonly _value: number;
+  public get value(): number {
+    return this._value;
+  }
+
+  private readonly _category: Category;
+  public get category(): Category {
+    return this._category;
+  }
+
+  private readonly _inventory: number;
+  public get inventory(): number {
+    return this._inventory;
+  }
+
+  toJson() {
+    if (this._image !== undefined) {
+      return {
+        id: this._id,
+        category: this._category,
+        description: this._description,
+        image: this._image,
+        value: this._value,
+        inventory: this._inventory,
+      };
+    }
+    return {
+      id: this._id,
+      category: this._category,
+      description: this._description,
+      value: this._value,
+      inventory: this._inventory,
+    };
+  }
+}

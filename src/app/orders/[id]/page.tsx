@@ -2,14 +2,12 @@
 
 import "./style.css";
 
-import { useEffect, useState } from "react";
-
-import Item from "@/helpers/firestore/model/order/item";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import Order from "@/helpers/firestore/model/order/order";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import useOrders from "../hooks/useOrders";
+import Item from "@/helpers/realtime/model/order/item";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import useOrders from "../hooks/useOrders";
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
@@ -17,8 +15,7 @@ export default function OrderDetails() {
 
   useEffect(() => {
     getSingleOrder(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getSingleOrder, id]);
 
   return (
     <LoadingContainer

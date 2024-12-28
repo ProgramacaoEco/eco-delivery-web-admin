@@ -1,5 +1,4 @@
 import { IconType } from "@/utils/IconType";
-import Image from "next/image";
 import Link from "next/link";
 import { Typography } from "../Typography";
 import { card } from "./style.css";

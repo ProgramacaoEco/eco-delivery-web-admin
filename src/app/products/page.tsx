@@ -2,8 +2,8 @@
 
 import { Add, Grocery } from "@icons/index";
 
-import Link from "next/link";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
+import Link from "next/link";
 
 export default function Products() {
   return (

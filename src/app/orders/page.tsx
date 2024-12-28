@@ -1,13 +1,11 @@
 "use client";
+import { useEffect } from "react";
 
-import { useEffect, useState } from "react";
-
-import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import Order from "@/helpers/firestore/model/order/order";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
+import Link from "next/link";
 import useOrders from "./hooks/useOrders";
 
 export default function Orders() {
@@ -15,8 +13,7 @@ export default function Orders() {
 
   useEffect(() => {
     listenToOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [listenToOrders]);
 
   return (
     <div>

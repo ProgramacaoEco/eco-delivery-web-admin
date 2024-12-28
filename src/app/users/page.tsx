@@ -3,14 +3,14 @@
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import NewUserForm from "./NewUserForm";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import { User } from "@/helpers/firestore/model/admin/user";
-import style from "./style.css";
 import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 import useUser from "./hooks/useUser";
+import NewUserForm from "./NewUserForm";
+import style from "./style.css";
 
 export default function Users() {
   const { removeUser, setUser, error, loading, success, users, currentUser } =
@@ -42,17 +42,20 @@ export default function Users() {
         <ListTile>
           {users.length > 0 &&
             currentUser !== null &&
-            users.map(({ userName, isAdmin, _id }: User) => (
-              <Tile
-                key={_id}
-                isDeletable={
-                  !isAdmin && currentUser.isAdmin && _id !== currentUser._id
-                }
-                onDelete={() => removeUser(_id)}
-              >
-                {userName}
-              </Tile>
-            ))}
+            users.map(
+              ({ userName, isAdmin, _id }: User) =>
+                _id && (
+                  <Tile
+                    key={_id}
+                    isDeletable={
+                      !isAdmin && currentUser.isAdmin && _id !== currentUser._id
+                    }
+                    onDelete={() => removeUser(_id)}
+                  >
+                    {userName}
+                  </Tile>
+                )
+            )}
         </ListTile>
       </div>
       {error && (

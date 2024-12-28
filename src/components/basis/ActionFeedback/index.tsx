@@ -1,11 +1,6 @@
-import {
-  IconButton,
-  Snackbar,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
-
-import Close from "@icons/Close";
+import Snackbar from "@mui/material/Snackbar";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
+import createTheme from "@mui/material/styles/createTheme";
 import { useState } from "react";
 
 interface ActionFeedbackProps {

@@ -1,7 +1,9 @@
-import { AppBar, Box, IconButton } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 import { Close } from "@icons/index";
+import IconButton from "@mui/material/IconButton";
 import { Typography } from "@/components/basis/Typography";
 import { themeVars } from "@/theme/theme.css";
 import { useRouter } from "next/navigation";

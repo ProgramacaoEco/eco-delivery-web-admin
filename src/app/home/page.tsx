@@ -10,7 +10,6 @@ import {
   Person,
   Report,
   Settings,
-  Warehouse,
 } from "@icons/index";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
 import { signOut, useSession } from "next-auth/react";
@@ -54,7 +53,7 @@ export default function Page() {
           <Card
             shadow={themeVars.shadow.shadowBlue}
             Icon={AssignmentCheck}
-            href="/invoiced"
+            href="/invoices"
             label="Pedidos faturados"
           />
           <Card
@@ -63,11 +62,11 @@ export default function Page() {
             Icon={Liquor}
             label="Produtos"
           />
-          <Card
+          {/* <Card
             shadow={themeVars.shadow.shadowOrange}
             Icon={Warehouse}
             label="Estoque"
-          />
+          /> */}
           <Card
             shadow={themeVars.shadow.shadowLightBlue}
             Icon={LocalShipping}

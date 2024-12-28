@@ -1,6 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react";
 import {
-  drawerCloseButtonMobile,
   drawerContentContainer,
   drawerFooter,
   drawerSettingsContent,
@@ -8,8 +7,6 @@ import {
 
 import Drawer from "@mui/material/Drawer/Drawer";
 import DrawerHeader from "./drawerHeader";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
 import { Typography } from "../../Typography";
 import { themeVars } from "@/theme/theme.css";
 

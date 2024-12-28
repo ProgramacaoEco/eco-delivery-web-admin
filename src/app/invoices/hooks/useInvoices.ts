@@ -1,10 +1,11 @@
+import { useCallback, useState } from "react";
+
 import { Collections } from "@/helpers/firestore/collections";
-import Address from "@/helpers/firestore/model/order/address";
-import Item from "@/helpers/firestore/model/order/item";
-import Order from "@/helpers/firestore/model/order/order";
-import useFirebase from "@/helpers/hooks/useFirebase";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import Address from "@/helpers/realtime/model/order/address";
+import Item from "@/helpers/realtime/model/order/item";
+import Order from "@/helpers/realtime/model/order/order";
 import { errorMessage } from "@/utils/texts";
-import { useState } from "react";
 
 export default function useInvoices() {
   const { get, getBy } = useFirebase<Order>();
@@ -41,25 +42,31 @@ export default function useInvoices() {
       new Date(data?.createdOn)
     );
 
-  const getInvoices = () =>
-    get({
-      collection,
-      onData: setOrders,
-      onError: () => setError(errorMessage("ao obter os pedidos faturados.")),
-      onLoading: setLoading,
-      transformer,
-    });
+  const getInvoices = useCallback(
+    () =>
+      get({
+        collection,
+        onData: setOrders,
+        onError: () => setError(errorMessage("ao obter os pedidos faturados.")),
+        onLoading: setLoading,
+        transformer,
+      }),
+    [collection, get]
+  );
 
-  const getInvoice = (id: string) =>
-    getBy({
-      collection,
-      id,
-      onData: setSelectedOrder,
-      onError: () =>
-        setError(errorMessage("ao obter o pedido faturado selecionado.")),
-      onLoading: setLoading,
-      transformer,
-    });
+  const getInvoice = useCallback(
+    (id: string) =>
+      getBy({
+        collection,
+        id,
+        onData: setSelectedOrder,
+        onError: () =>
+          setError(errorMessage("ao obter o pedido faturado selecionado.")),
+        onLoading: setLoading,
+        transformer,
+      }),
+    [collection, getBy]
+  );
 
   return { getInvoice, getInvoices, orders, error, loading, selectedOrder };
 }

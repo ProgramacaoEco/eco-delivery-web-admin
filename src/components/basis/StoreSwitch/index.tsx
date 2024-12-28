@@ -1,6 +1,6 @@
 import { storeClosed, storeOpenColor } from "./style.css";
 
-import { Switch } from "@mui/material";
+import Switch from "@mui/material/Switch";
 import { useState } from "react";
 
 interface StoreSwitchProps {

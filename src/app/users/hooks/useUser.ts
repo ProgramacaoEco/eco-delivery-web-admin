@@ -2,8 +2,8 @@ import { errorMessage, successMessage } from "@/utils/texts";
 import { useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { User } from "@/helpers/firestore/model/admin/user";
-import useFirebase from "@/helpers/hooks/useFirebase";
 import { useSession } from "next-auth/react";
 
 export default function useUser() {
@@ -34,7 +34,7 @@ export default function useUser() {
       onSuccess: () => setSuccess(successMessage("Usuário adicionado")),
       transformer: (data) =>
         new User(data.id, data.email, data.userName, data.isAdmin),
-      onData: setUsers,
+      onData: (data) => setUsers((u) => [...u, data]),
       onLoading: setLoading,
       body: user,
     });

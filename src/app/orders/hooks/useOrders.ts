@@ -1,10 +1,11 @@
-import Address from "@/helpers/firestore/model/order/address";
-import Item from "@/helpers/firestore/model/order/item";
-import Order from "@/helpers/firestore/model/order/order";
+import { useCallback, useState } from "react";
+
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import Address from "@/helpers/realtime/model/order/address";
+import Item from "@/helpers/realtime/model/order/item";
+import Order from "@/helpers/realtime/model/order/order";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import useRealtime from "@/helpers/hooks/useRealtime";
-import { useState } from "react";
 
 export default function useOrders() {
   const { getSingle, listenToValue } = useRealtime();
@@ -39,22 +40,28 @@ export default function useOrders() {
       new Date(data?.createdOn)
     );
 
-  const getSingleOrder = (id: string) =>
-    getSingle({
-      id: id,
-      onData: (data) => setSelectedOrder(createOrder(data)),
-      onError: () => setError(errorMessage("ao obter o pedido selecionado")),
-      onLoading: setLoading,
-      reference: References.orders,
-    });
+  const getSingleOrder = useCallback(
+    (id: string) =>
+      getSingle({
+        id: id,
+        onData: (data) => setSelectedOrder(createOrder(data)),
+        onError: () => setError(errorMessage("ao obter o pedido selecionado")),
+        onLoading: setLoading,
+        reference: References.orders,
+      }),
+    [getSingle]
+  );
 
-  const listenToOrders = () =>
-    listenToValue({
-      onData: (data) => setOrders(data.map(createOrder)),
-      onLoading: setLoading,
-      onError: () => setError(errorMessage("ao obter os pedidos")),
-      reference: References.orders,
-    });
+  const listenToOrders = useCallback(
+    () =>
+      listenToValue({
+        onData: (data) => setOrders(data.map(createOrder)),
+        onLoading: setLoading,
+        onError: () => setError(errorMessage("ao obter os pedidos")),
+        reference: References.orders,
+      }),
+    [listenToValue]
+  );
 
   return {
     getSingleOrder,

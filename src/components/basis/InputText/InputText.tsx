@@ -1,54 +1,51 @@
-import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { TextField, outlinedInputClasses, styled } from "@mui/material";
+import { ComponentProps, forwardRef } from "react";
 
-import { ChangeEventHandler } from "react";
-import { themeVars } from "@/theme/theme.css";
+import { cn } from "@/utils/classNames";
+import { outlineBorder } from "./style.css";
 
-const inputTextColor = themeVars.color.common.white;
-
-type InputFieldProps<T extends FieldValues> = ControllerRenderProps<T, any>;
-
-const StyledTextField = styled(TextField)(() => ({
-  "& label.Mui-focused": {
-    color: inputTextColor,
-  },
-  "& label": {
-    color: inputTextColor,
-  },
-  fieldset: {
-    borderColor: `${inputTextColor} !important`,
-    color: inputTextColor,
-  },
-  input: {
-    color: inputTextColor,
-  },
-}));
-interface InputTextProps<T extends FieldValues> {
-  field?: InputFieldProps<T>;
+interface InputTextProps {
   label: string;
   error?: boolean;
-  required: boolean;
-  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  id?: string;
+  mask?: string;
 }
 
-export default function InputText<T extends FieldValues>({
-  label,
-  error = false,
-  field,
-  required = false,
-  onChange,
-}: InputTextProps<T>) {
+const InputText = forwardRef<
+  HTMLInputElement,
+  InputTextProps & ComponentProps<"input">
+>(function InputText(
+  {
+    label,
+    error = false,
+    id,
+    mask,
+    ...props
+  }: InputTextProps & ComponentProps<"input">,
+  ref
+) {
   return (
-    <StyledTextField
-      style={{ width: "100%" }}
-      autoComplete="off"
-      variant="outlined"
-      label={label}
-      error={error}
-      onChange={onChange}
-      required={required}
-      {...field}
-      ref={field?.ref}
-    />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+        width: "100%",
+      }}
+    >
+      <label htmlFor={id}>{label}</label>
+      <input
+        style={{ border: error ? "1px solid red" : undefined }}
+        {...props}
+        ref={ref}
+        autoComplete="new-password"
+        autoCorrect="false"
+        id={id}
+        type="text"
+        placeholder={label}
+        className={cn(outlineBorder)}
+      />
+    </div>
   );
-}
+});
+
+export default InputText;

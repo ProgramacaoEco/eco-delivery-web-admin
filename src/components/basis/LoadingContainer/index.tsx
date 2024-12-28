@@ -1,7 +1,5 @@
-import { PropsWithChildren, useContext } from "react";
-
-import { FirebaseContext } from "@/helpers/firestore/context";
 import Loading from "../Loading";
+import { PropsWithChildren } from "react";
 import { Typography } from "../Typography";
 import { loadingContainer } from "./style.css";
 

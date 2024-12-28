@@ -1,5 +1,5 @@
-import { viewPort } from "@/theme/constants";
 import { style } from "@vanilla-extract/css";
+import { viewPort } from "@/theme/constants";
 
 export const homeGrid = style({
   display: "grid",
@@ -7,6 +7,7 @@ export const homeGrid = style({
   gridTemplateRows: "none",
   gap: "10px",
   justifyContent: "center",
+  alignContent: "center",
   "@media": {
     [viewPort.small]: {
       gridTemplateColumns: "1fr",

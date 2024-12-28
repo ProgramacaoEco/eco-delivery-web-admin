@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import RoundedButton from "@/components/basis/Button/RoundedButton";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import Item from "@/helpers/firestore/model/order/item";
+import Item from "@/helpers/realtime/model/order/item";
 import { useParams } from "next/navigation";
 import useInvoices from "../hooks/useInvoices";
 
@@ -18,8 +18,7 @@ export default function InvoicedDetails() {
 
   useEffect(() => {
     getInvoice(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, getInvoice]);
 
   const printButtonRef = useRef<HTMLButtonElement>(null);
 

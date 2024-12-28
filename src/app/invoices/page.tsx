@@ -4,19 +4,17 @@ import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
-import Order from "@/helpers/firestore/model/order/order";
+import Order from "@/helpers/realtime/model/order/order";
 import Link from "next/link";
 import { useEffect } from "react";
 import useInvoices from "./hooks/useInvoices";
 
 export default function Invoiced() {
+  const { getInvoices, error, loading, orders } = useInvoices();
+
   useEffect(() => {
     getInvoices();
-    console.log(error !== null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const { getInvoices, error, loading, orders } = useInvoices();
+  }, [getInvoices]);
 
   return (
     <div>
@@ -24,7 +22,7 @@ export default function Invoiced() {
       <LoadingContainer loading={loading} error={error !== null}>
         <ListTile>
           {orders.map(({ orderIssuer, _id, createdOn }: Order) => (
-            <Link key={_id} href={`/invoiced/${_id}`}>
+            <Link key={_id} href={`/invoices/${_id}`}>
               <Tile isDeletable={false}>
                 {createdOn?.toLocaleDateString("pt-BR")}{" "}
                 {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}

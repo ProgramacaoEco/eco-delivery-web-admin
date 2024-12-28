@@ -1,4 +1,5 @@
 import Delete from "@icons/Delete";
+import { Edit } from "@icons/index";
 import { IconButton } from "@mui/material";
 import { PropsWithChildren } from "react";
 import { tile } from "./style.css";
@@ -20,16 +21,22 @@ export default function Tile({
   return (
     <div>
       <div className={tile}>
-        {children}
-        {isEditable && <IconButton onClick={onEdit}></IconButton>}
-        {
-          <IconButton
-            style={{ visibility: isDeletable ? "visible" : "hidden" }}
-            onClick={onDelete}
-          >
-            <Delete />
-          </IconButton>
-        }
+        <div>{children}</div>
+        <div>
+          {isEditable && (
+            <IconButton onClick={onEdit}>
+              <Edit />
+            </IconButton>
+          )}
+          {
+            <IconButton
+              style={{ visibility: isDeletable ? "visible" : "hidden" }}
+              onClick={onDelete}
+            >
+              <Delete />
+            </IconButton>
+          }
+        </div>
       </div>
     </div>
   );
