@@ -8,10 +8,10 @@ import Order from "@/helpers/realtime/model/order/order";
 import { errorMessage } from "@/utils/texts";
 
 export default function useInvoices() {
-  const { get, getBy, set } = useFirebase<Order>();
+  const { get, getBy } = useFirebase<Order>();
 
-  const [error, setError] = useState<string | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [orders, setOrders] = useState<Order[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
@@ -44,7 +44,7 @@ export default function useInvoices() {
     );
 
   const getInvoices = useCallback(() => {
-    setError(null);
+    setError(undefined);
     setLoading(true);
     get({
       collection,
@@ -62,7 +62,7 @@ export default function useInvoices() {
 
   const getInvoice = useCallback(
     (id: string) => {
-      setError(null);
+      setError(undefined);
       setLoading(true);
       getBy({
         collection,

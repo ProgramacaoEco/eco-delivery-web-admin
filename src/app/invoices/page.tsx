@@ -17,20 +17,22 @@ export default function Invoiced() {
   }, [getInvoices]);
 
   return (
-    <div>
-      <PageTitle color="blue" title="Pedidos faturados" />
-      <LoadingContainer loading={loading} error={error !== null}>
-        <ListTile>
-          {orders.map(({ orderIssuer, id, createdOn }: Order) => (
-            <Link key={id} href={`/invoices/${id}`}>
-              <Tile isDeletable={false}>
-                {createdOn?.toLocaleDateString("pt-BR")}{" "}
-                {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
-              </Tile>
-            </Link>
-          ))}
-        </ListTile>
-      </LoadingContainer>
-    </div>
+    <LoadingContainer loading={loading} error={error !== undefined}>
+      {orders && (
+        <>
+          <PageTitle color="blue" title="Pedidos faturados" />
+          <ListTile>
+            {orders.map(({ orderIssuer, id, createdOn }: Order) => (
+              <Link key={id} href={`/invoices/${id}`}>
+                <Tile isDeletable={false}>
+                  {createdOn?.toLocaleDateString("pt-BR")}{" "}
+                  {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
+                </Tile>
+              </Link>
+            ))}
+          </ListTile>
+        </>
+      )}
+    </LoadingContainer>
   );
 }

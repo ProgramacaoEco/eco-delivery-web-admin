@@ -20,20 +20,22 @@ export default function Orders() {
   }, [listenToOrders]);
 
   return (
-    <div>
-      <PageTitle color="blue" title="Pedidos" />
-      <LoadingContainer loading={loading} error={error !== undefined}>
-        <ListTile>
-          {orders.map(({ orderIssuer, id, createdOn }) => (
-            <Link key={id} href={`/orders/${id}`}>
-              <Tile isDeletable={false}>
-                {createdOn?.toLocaleDateString("pt-BR")}{" "}
-                {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
-              </Tile>
-            </Link>
-          ))}
-        </ListTile>
-      </LoadingContainer>
-    </div>
+    <LoadingContainer loading={loading} error={error !== undefined}>
+      {orders && (
+        <>
+          <PageTitle color="blue" title="Pedidos" />
+          <ListTile>
+            {orders.map(({ orderIssuer, id, createdOn }) => (
+              <Link key={id} href={`/orders/${id}`}>
+                <Tile isDeletable={false}>
+                  {createdOn?.toLocaleDateString("pt-BR")}{" "}
+                  {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
+                </Tile>
+              </Link>
+            ))}
+          </ListTile>
+        </>
+      )}
+    </LoadingContainer>
   );
 }

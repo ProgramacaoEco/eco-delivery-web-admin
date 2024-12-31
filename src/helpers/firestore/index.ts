@@ -21,7 +21,7 @@ async function get(currentCollection: Collections) {
     return data;
   } catch (error) {
     console.error(error);
-    return null;
+    throw error;
   }
 }
 
@@ -32,7 +32,7 @@ async function getBy(id: string, currentCollection: Collections) {
     return snapshot.data();
   } catch (error) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -44,6 +44,7 @@ async function remove(id: string, currentCollection: Collections) {
   } catch (error) {
     console.error(error);
     return false;
+    throw error;
   }
 }
 
@@ -52,14 +53,12 @@ async function set<T extends BaseModel>(
   data: T
 ) {
   try {
-    const set = await setDoc(
-      doc(db, currentCollection, data.id),
-      data.toJson()
-    );
+    await setDoc(doc(db, currentCollection, data.id), data.toJson());
     return true;
   } catch (error) {
     console.error(error);
     return false;
+    throw error;
   }
 }
 

@@ -22,21 +22,37 @@ export default function useRealtime<T extends BaseModel>() {
       const db = getDatabase(app);
       const query = ref(db, reference);
 
-      onValue(
-        query,
-        (snapshot) => {
-          if (!snapshot.exists()) {
-            onData([]);
-            return;
-          }
+      try {
+        const unsubscribe = onValue(
+          query,
+          (snapshot) => {
+            try {
+              if (!snapshot.exists()) {
+                onData([]);
+                return;
+              }
 
-          onData(Object.values(snapshot.val()));
-        },
-        (error) => {
-          console.log(error);
-          onError();
-        }
-      );
+              const data = Object.values(snapshot.val());
+              onData(data);
+            } catch (processError) {
+              console.error("Error processing snapshot:", processError);
+              onError();
+            }
+          },
+          (error) => {
+            console.error("Error with onValue listener:", error);
+            onError();
+          }
+        );
+
+        return () => {
+          unsubscribe();
+          console.log("Listener unsubscribed successfully.");
+        };
+      } catch (error) {
+        console.error("Error initializing listener:", error);
+        onError();
+      }
     },
     []
   );

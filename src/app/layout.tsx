@@ -1,15 +1,18 @@
 "use client";
-
-import { layout, loginLayout } from "./layout.css";
 import { useEffect, useRef } from "react";
+import { layout, loginLayout } from "./layout.css";
 
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import OrderProvider from "./orders/context/OrderProvider";
+import ActionFeedback from "@/components/basis/ActionFeedback";
+import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import { Typography } from "@/components/basis/Typography";
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+import { cn } from "@/utils/classNames";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { cn } from "@/utils/classNames";
+import { Inter } from "next/font/google";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import OrderProvider from "./orders/context/OrderProvider";
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
@@ -24,6 +27,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const noPrint = useRef<HTMLImageElement>(null);
+
+  const { isOnline } = useNetworkStatus();
 
   useEffect(() => {
     addEventListener("beforeprint", () => {
@@ -63,9 +68,27 @@ export default function RootLayout({
             right: -120,
           }}
         />
-        <OrderProvider>
-          <SessionProvider session={params.session}>{children}</SessionProvider>
-        </OrderProvider>
+        {isOnline ? (
+          <OrderProvider>
+            <SessionProvider session={params.session}>
+              {children}
+              <ActionFeedback
+                message="Sem conexão"
+                state="error"
+                autoHideDuration={3000}
+                open={!window.navigator.onLine}
+              />
+            </SessionProvider>
+          </OrderProvider>
+        ) : (
+          <div className={loadingContainer}>
+            <Typography.TitleBold>
+              Desculpe-nos, parece que algo de errado aconteceu. Por favor,
+              recarregue a página e tente novamente. Se o erro persistir,
+              contate o suporte.
+            </Typography.TitleBold>
+          </div>
+        )}
       </body>
     </html>
   );

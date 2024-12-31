@@ -4,7 +4,7 @@ import Order from "@/helpers/realtime/model/order/order";
 import { OrderContext } from "./OrderContext";
 
 export default function OrderProvider({ children }: PropsWithChildren) {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[] | undefined>(undefined);
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(
     undefined
   );

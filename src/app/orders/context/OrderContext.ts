@@ -1,9 +1,8 @@
-import { OrderContextType } from "./OrderContextType";
 import { createContext } from "react";
+import { OrderContextType } from "./OrderContextType";
 
 export const OrderContext = createContext<OrderContextType>({
   loading: false,
-  orders: [],
   setError: () => {},
   setLoading: () => {},
   setOrders: () => {},
