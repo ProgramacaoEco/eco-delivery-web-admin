@@ -1,48 +1,61 @@
-import { get, getDatabase, onValue, ref } from "firebase/database";
+import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
 
 import { app } from "@/firebase-config";
+import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { useCallback } from "react";
 
-interface UseRealtimeParams {
+interface UseRealtimeParams<T extends BaseModel> {
   reference: string;
   id: string;
-  onData: (data: any) => void;
-  onLoading: (loading: boolean) => void;
+  onData: (data: any) => any;
   onError: () => void;
+  value?: T;
 }
 
-export default function useRealtime() {
+export default function useRealtime<T extends BaseModel>() {
   const listenToValue = useCallback(
     async ({
       onError,
-      onLoading,
       onData,
       reference,
-    }: Omit<UseRealtimeParams, "id">) => {
+    }: Omit<UseRealtimeParams<T>, "id">) => {
       const db = getDatabase(app);
       const query = ref(db, reference);
 
       onValue(
         query,
         (snapshot) => {
-          onLoading(true);
-
           if (!snapshot.exists()) {
             onData([]);
-            onLoading(false);
             return;
           }
 
           onData(Object.values(snapshot.val()));
-
-          onLoading(false);
         },
         (error) => {
           console.log(error);
           onError();
-          onLoading(false);
         }
       );
+    },
+    []
+  );
+
+  const setValue = useCallback(
+    async ({ id, onData, onError, reference, value }: UseRealtimeParams<T>) => {
+      if (value === undefined) throw Error("An value must be provided");
+
+      const db = getDatabase(app);
+      const query = ref(db, `${reference}/${id}`);
+
+      try {
+        await set(query, value.toJson());
+
+        await onData(value);
+      } catch (error) {
+        console.log(error);
+        onError();
+      }
     },
     []
   );
@@ -50,20 +63,19 @@ export default function useRealtime() {
   const getSingle = useCallback(
     async ({
       onError,
-      onLoading,
+
       onData,
       reference,
       id,
-    }: UseRealtimeParams) => {
+    }: UseRealtimeParams<T>) => {
       const db = getDatabase(app);
       const query = ref(db, `${reference}/${id}`);
 
       try {
-        onLoading(true);
         const snapshot = await get(query);
 
         if (!snapshot.exists()) {
-          onData(null);
+          onData(undefined);
           return;
         }
 
@@ -71,12 +83,29 @@ export default function useRealtime() {
       } catch (error) {
         console.log(error);
         onError();
-      } finally {
-        onLoading(false);
       }
     },
     []
   );
 
-  return { listenToValue, getSingle };
+  const deleteSingle = useCallback(
+    async ({
+      id,
+      onError,
+      reference,
+    }: Omit<UseRealtimeParams<T>, "onData">) => {
+      const db = getDatabase(app);
+      const query = ref(db, `${reference}/${id}`);
+
+      try {
+        await remove(query);
+      } catch (error) {
+        console.log(error);
+        onError();
+      }
+    },
+    []
+  );
+
+  return { listenToValue, getSingle, setValue, deleteSingle };
 }

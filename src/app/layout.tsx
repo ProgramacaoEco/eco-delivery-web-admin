@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import OrderProvider from "./orders/context/OrderProvider";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { cn } from "@/utils/classNames";
@@ -62,7 +63,9 @@ export default function RootLayout({
             right: -120,
           }}
         />
-        <SessionProvider session={params.session}>{children}</SessionProvider>
+        <OrderProvider>
+          <SessionProvider session={params.session}>{children}</SessionProvider>
+        </OrderProvider>
       </body>
     </html>
   );

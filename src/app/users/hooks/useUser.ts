@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from "@/utils/texts";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
@@ -7,6 +7,8 @@ import { User } from "@/helpers/firestore/model/admin/user";
 import { useSession } from "next-auth/react";
 
 export default function useUser() {
+  const { data: sessionData } = useSession();
+
   const { set, get, remove } = useFirebase();
 
   const [error, setError] = useState<string | null>(null);
@@ -17,35 +19,17 @@ export default function useUser() {
 
   const collection = Collections.Usuarios;
 
-  const { data: sessionData } = useSession();
-
-  useEffect(() => {
-    if (sessionData) {
-      getUser();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionData]);
-
-  const setUser = async (user: User) => {
-    await set({
-      collection: collection,
-      data: users,
-      onError: () => setError(errorMessage("ao adicionar o usuário")),
-      onSuccess: () => setSuccess(successMessage("Usuário adicionado")),
-      transformer: (data) =>
-        new User(data.id, data.email, data.userName, data.isAdmin),
-      onData: (data) => setUsers((u) => [...u, data]),
-      onLoading: setLoading,
-      body: user,
-    });
-  };
-
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
+    setError(null);
+    setLoading(true);
     await get({
       collection: collection,
       transformer: (data) =>
         new User(data.id, data.email, data.name, data.isAdmin),
       onData: (users) => {
+        if (sessionData && loading) {
+          setLoading(false);
+        }
         setUsers(users);
         setCurrentUser(
           users.filter(
@@ -53,24 +37,58 @@ export default function useUser() {
           )[0]
         );
       },
-      onError: () => setError(errorMessage("ao obter os usuários")),
-      onLoading: (loading) => {
+      onError: () => {
+        setError(errorMessage("ao obter os usuários"));
         if (sessionData && loading) {
           setLoading(false);
         }
       },
     });
+  }, [collection, get, loading, sessionData]);
+
+  useEffect(() => {
+    if (sessionData) {
+      getUser();
+    }
+  }, [getUser, sessionData]);
+
+  const setUser = async (user: User) => {
+    setError(null);
+    setLoading(true);
+    await set({
+      collection: collection,
+      data: users,
+      onError: () => {
+        setError(errorMessage("ao adicionar o usuário"));
+        setLoading(false);
+      },
+      onSuccess: () => setSuccess(successMessage("Usuário adicionado")),
+      transformer: (data) =>
+        new User(data.id, data.email, data.userName, data.isAdmin),
+      onData: (data) => {
+        setUsers((u) => [...u, data]);
+        setLoading(false);
+      },
+      body: user,
+    });
   };
 
   const removeUser = async (id: string) => {
+    setError(null);
+    setLoading(true);
     await remove({
       collection: collection,
       id,
       data: users,
       onData: setUsers,
-      onError: () => setError(errorMessage("ao remover o usuário")),
-      onSuccess: () => setSuccess(successMessage("Usuário removido")),
-      onLoading: setLoading,
+      onError: () => {
+        setError(errorMessage("ao remover o usuário"));
+        setLoading(false);
+      },
+      onSuccess: () => {
+        setSuccess(successMessage("Usuário removido"));
+        setLoading(false);
+      },
     });
   };
 

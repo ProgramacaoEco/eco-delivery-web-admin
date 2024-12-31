@@ -1,11 +1,11 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 
-import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { Collections } from "@/helpers/firestore/collections";
-import { Product } from "@/helpers/firestore/model/product/product";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import { useState } from "react";
+import { BaseModel } from "@/helpers/firestore/model/baseModel";
+import { Product } from "@/helpers/firestore/model/product/product";
 import useStorage from "@/helpers/storage/hooks/useStorage";
+import { useState } from "react";
 
 export default function useSetProducts<T extends BaseModel>(
   isEditing: boolean = false
@@ -20,24 +20,27 @@ export default function useSetProducts<T extends BaseModel>(
 
   const save = async (product: Product, file?: File) => {
     setLoading(true);
+    setError(null);
 
     if (file !== undefined) {
       return await upload({
-        id: product._id,
+        id: product.id,
         file: file,
-        onError: () =>
-          setError(errorMessage("ao cadastrar imagem do produto.")),
-        onLoading: setLoading,
+        onError: () => {
+          setError(errorMessage("ao cadastrar imagem do produto."));
+          setLoading(false);
+        },
         onSuccess: async (imagePath) =>
           await set({
             collection: Collections.Produtos,
-            onError: () =>
+            onError: () => {
               setError(
                 errorMessage(
                   isEditing ? "ao atualizar cadastro." : "ao cadastrar produto."
                 )
-              ),
-            onLoading: () => setLoading(false),
+              );
+              setLoading(false);
+            },
             transformer: (data) =>
               new Product(
                 data.id,
@@ -48,14 +51,16 @@ export default function useSetProducts<T extends BaseModel>(
                 imagePath
               ),
             onData: setUpdated,
-            onSuccess: () =>
+            onSuccess: () => {
               setSuccess(
                 successMessage(
                   isEditing ? "Produto atualizado" : "Produto cadastrado"
                 )
-              ),
+              );
+              setLoading(false);
+            },
             body: new Product(
-              product._id,
+              product.id,
               product.description,
               product.value,
               product.category,
@@ -68,29 +73,35 @@ export default function useSetProducts<T extends BaseModel>(
 
     await set({
       collection: Collections.Produtos,
-      onError: () =>
+      onError: () => {
         setError(
           errorMessage(
             isEditing ? "ao atualizar cadastro." : "ao cadastrar produto."
           )
-        ),
-      onLoading: setLoading,
-      onSuccess: () =>
+        );
+        setLoading(false);
+      },
+      onSuccess: () => {
         setSuccess(
           successMessage(
             isEditing ? "Produto atualizado" : "Produto cadastrado"
           )
-        ),
+        );
+        setLoading(false);
+      },
       transformer: () => {
         return new Product(
-          product._id,
+          product.id,
           product.description,
           product.value,
           product.category,
           product.inventory
         );
       },
-      onData: setUpdated,
+      onData: (upload) => {
+        setUpdated(upload);
+        setLoading(false);
+      },
       body: product,
     });
   };

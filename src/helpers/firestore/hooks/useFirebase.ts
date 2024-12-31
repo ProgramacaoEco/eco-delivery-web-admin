@@ -1,7 +1,7 @@
-import { BaseModel } from "../model/baseModel";
-import { Collections } from "@/helpers/firestore/collections";
 import { FirestoreHelper } from "@/helpers/firestore";
+import { Collections } from "@/helpers/firestore/collections";
 import { useCallback } from "react";
+import { BaseModel } from "../model/baseModel";
 
 interface SetProps<T extends BaseModel> {
   collection: Collections;
@@ -11,14 +11,12 @@ interface SetProps<T extends BaseModel> {
   transformer?: (data: any) => T;
   onSuccess?: () => void;
   onError: () => void;
-  onLoading?: (loading: boolean) => void;
 }
 
 interface GetProps<T extends BaseModel> {
   collection: Collections;
   onData: (data: any) => void;
   transformer: (data: any) => T;
-  onLoading: (loading: boolean) => void;
   onError: () => void;
 }
 
@@ -27,7 +25,6 @@ interface GetByProps<T extends BaseModel> {
   collection: Collections;
   transformer: (data: any) => T;
   onData: (data: any) => void;
-  onLoading: (loading: boolean) => void;
   onError: () => void;
 }
 
@@ -37,7 +34,6 @@ interface RemoveProps<T extends BaseModel> {
   data: T[];
   onData: (data: any) => void;
   onSuccess: () => void;
-  onLoading: (loading: boolean) => void;
   onError: () => void;
 }
 
@@ -46,15 +42,12 @@ export default function useFirebase<T extends BaseModel>() {
     async ({
       collection,
       onError,
-      onLoading,
       onSuccess,
       data,
       body,
       onData,
       transformer,
     }: SetProps<T>) => {
-      if (onLoading !== undefined) onLoading(true);
-
       try {
         const success = await FirestoreHelper.set(collection, body);
 
@@ -69,54 +62,31 @@ export default function useFirebase<T extends BaseModel>() {
       } catch (error) {
         onError();
         console.error(error);
-      } finally {
-        if (onLoading !== undefined) onLoading(false);
       }
     },
     []
   );
 
   const get = useCallback(
-    async ({
-      collection,
-      onData,
-      onError,
-      onLoading,
-      transformer,
-    }: GetProps<T>) => {
-      onLoading(true);
-
+    async ({ collection, onData, onError, transformer }: GetProps<T>) => {
       try {
         const data = await FirestoreHelper.get(collection);
 
         if (data !== null && data?.length > 0) {
           onData(data.map(transformer));
-          console.log(data.map(transformer));
         } else {
           onData([]);
         }
       } catch (error) {
         onError();
         console.error(error);
-        console.log(error);
-      } finally {
-        onLoading(false);
       }
     },
     []
   );
 
   const getBy = useCallback(
-    async ({
-      id,
-      collection,
-      onData,
-      onError,
-      onLoading,
-      transformer,
-    }: GetByProps<T>) => {
-      onLoading(true);
-
+    async ({ id, collection, onData, onError, transformer }: GetByProps<T>) => {
       try {
         const data = await FirestoreHelper.getBy(id, collection);
 
@@ -129,8 +99,6 @@ export default function useFirebase<T extends BaseModel>() {
         onError();
         onData(null);
         console.error(error);
-      } finally {
-        onLoading(false);
       }
     },
     []
@@ -141,19 +109,18 @@ export default function useFirebase<T extends BaseModel>() {
       collection,
       id,
       onError,
-      onLoading,
       onSuccess,
       data,
       onData,
     }: RemoveProps<T>) => {
-      onLoading(true);
-
       try {
         const success = await FirestoreHelper.remove(id, collection);
 
         if (success) {
           onSuccess();
-          const newData: T[] = data.filter(({ _id }: T) => id !== _id);
+          const newData: T[] = data.filter(
+            ({ id: currentIdIterated }: T) => currentIdIterated !== id
+          );
           onData(newData);
         } else {
           onError();
@@ -161,8 +128,6 @@ export default function useFirebase<T extends BaseModel>() {
       } catch (error) {
         onError();
         console.error(error);
-      } finally {
-        onLoading(false);
       }
     },
     []

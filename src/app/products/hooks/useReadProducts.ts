@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Product } from "@/helpers/firestore/model/product/product";
 import { errorMessage } from "@/utils/texts";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useReadProducts() {
   const { get } = useFirebase();
@@ -13,11 +13,18 @@ export default function useReadProducts() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setError(null);
+    setLoading(true);
     get({
       collection: Collections.Produtos,
-      onData: setProducts,
-      onError: () => setError(errorMessage("ao obter os produtos.")),
-      onLoading: setLoading,
+      onData: (products) => {
+        setProducts(products);
+        setLoading(false);
+      },
+      onError: () => {
+        setError(errorMessage("ao obter os produtos."));
+        setLoading(false);
+      },
       transformer: (data) =>
         new Product(
           data.id,

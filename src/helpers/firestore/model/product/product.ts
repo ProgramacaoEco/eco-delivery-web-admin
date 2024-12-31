@@ -1,16 +1,16 @@
-import { BaseModel } from "../baseModel";
 import { Category } from "../../enum/category";
+import { BaseModel } from "../baseModel";
 
 export class Product implements BaseModel {
   constructor(
-    _id: string,
+    id: string,
     description: string,
     value: number,
     category: Category,
     inventory: number,
     image?: string
   ) {
-    this._id = _id;
+    this.id = id;
     this._image = image;
     this._description = description;
     this._value = value;
@@ -18,7 +18,7 @@ export class Product implements BaseModel {
     this._inventory = inventory;
   }
 
-  readonly _id: string;
+  readonly id: string;
 
   private readonly _image?: string;
   public get image(): string | undefined {
@@ -48,7 +48,7 @@ export class Product implements BaseModel {
   toJson() {
     if (this._image !== undefined) {
       return {
-        id: this._id,
+        id: this.id,
         category: this._category,
         description: this._description,
         image: this._image,
@@ -57,7 +57,7 @@ export class Product implements BaseModel {
       };
     }
     return {
-      id: this._id,
+      id: this.id,
       category: this._category,
       description: this._description,
       value: this._value,

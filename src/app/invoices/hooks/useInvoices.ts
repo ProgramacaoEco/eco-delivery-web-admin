@@ -8,7 +8,7 @@ import Order from "@/helpers/realtime/model/order/order";
 import { errorMessage } from "@/utils/texts";
 
 export default function useInvoices() {
-  const { get, getBy } = useFirebase<Order>();
+  const { get, getBy, set } = useFirebase<Order>();
 
   const [error, setError] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -39,32 +39,45 @@ export default function useInvoices() {
           )
       ),
       data?.phoneNumber,
-      new Date(data?.createdOn)
+      new Date(data?.createdOn),
+      data.status
     );
 
-  const getInvoices = useCallback(
-    () =>
-      get({
-        collection,
-        onData: setOrders,
-        onError: () => setError(errorMessage("ao obter os pedidos faturados.")),
-        onLoading: setLoading,
-        transformer,
-      }),
-    [collection, get]
-  );
+  const getInvoices = useCallback(() => {
+    setError(null);
+    setLoading(true);
+    get({
+      collection,
+      onData: (orders) => {
+        setOrders(orders);
+        setLoading(false);
+      },
+      onError: () => {
+        setError(errorMessage("ao obter os pedidos faturados."));
+        setLoading(false);
+      },
+      transformer,
+    });
+  }, [collection, get]);
 
   const getInvoice = useCallback(
-    (id: string) =>
+    (id: string) => {
+      setError(null);
+      setLoading(true);
       getBy({
         collection,
         id,
-        onData: setSelectedOrder,
-        onError: () =>
-          setError(errorMessage("ao obter o pedido faturado selecionado.")),
-        onLoading: setLoading,
+        onData: (order) => {
+          setSelectedOrder(order);
+          setLoading(false);
+        },
+        onError: () => {
+          setError(errorMessage("ao obter o pedido faturado selecionado."));
+          setLoading(false);
+        },
         transformer,
-      }),
+      });
+    },
     [collection, getBy]
   );
 

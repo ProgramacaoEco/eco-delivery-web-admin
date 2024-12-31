@@ -7,7 +7,6 @@ interface UploadParams {
   file: File;
   onSuccess?: (fullPath: string) => void;
   onError: () => void;
-  onLoading: (loading: boolean) => void;
 }
 
 export default function useStorage() {
@@ -15,14 +14,7 @@ export default function useStorage() {
 
   const folder = "Produtos/";
 
-  const upload = async ({
-    file,
-    id,
-    onError,
-    onLoading,
-    onSuccess,
-  }: UploadParams) => {
-    onLoading(true);
+  const upload = async ({ file, id, onError, onSuccess }: UploadParams) => {
     try {
       const fileType = file.name.split(".").pop();
       const storageRef = ref(storage, `${folder}${id}.${fileType}`);
@@ -38,8 +30,6 @@ export default function useStorage() {
     } catch (error) {
       console.error(error);
       onError();
-    } finally {
-      onLoading(false);
     }
   };
 

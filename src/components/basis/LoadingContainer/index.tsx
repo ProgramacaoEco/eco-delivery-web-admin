@@ -12,6 +12,14 @@ export default function LoadingContainer({
   loading,
   children,
 }: PropsWithChildren<LoadingContainerProps>) {
+  if (loading && !error) {
+    return (
+      <div className={loadingContainer}>
+        <Loading />
+      </div>
+    );
+  }
+
   if (!loading && error) {
     return (
       <div className={loadingContainer}>
@@ -24,12 +32,5 @@ export default function LoadingContainer({
     );
   }
 
-  if (loading && !error) {
-    return (
-      <div className={loadingContainer}>
-        <Loading />
-      </div>
-    );
-  }
   return children;
 }

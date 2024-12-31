@@ -53,10 +53,9 @@ async function set<T extends BaseModel>(
 ) {
   try {
     const set = await setDoc(
-      doc(db, currentCollection, data._id),
+      doc(db, currentCollection, data.id),
       data.toJson()
     );
-    console.log(data.toJson());
     return true;
   } catch (error) {
     console.error(error);

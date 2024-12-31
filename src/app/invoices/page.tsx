@@ -21,8 +21,8 @@ export default function Invoiced() {
       <PageTitle color="blue" title="Pedidos faturados" />
       <LoadingContainer loading={loading} error={error !== null}>
         <ListTile>
-          {orders.map(({ orderIssuer, _id, createdOn }: Order) => (
-            <Link key={_id} href={`/invoices/${_id}`}>
+          {orders.map(({ orderIssuer, id, createdOn }: Order) => (
+            <Link key={id} href={`/invoices/${id}`}>
               <Tile isDeletable={false}>
                 {createdOn?.toLocaleDateString("pt-BR")}{" "}
                 {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}

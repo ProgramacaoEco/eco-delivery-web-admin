@@ -1,21 +1,24 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext } from "react";
 
+import { Collections } from "@/helpers/firestore/collections";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import Address from "@/helpers/realtime/model/order/address";
 import Item from "@/helpers/realtime/model/order/item";
 import Order from "@/helpers/realtime/model/order/order";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
+import { OrderContext } from "../context/OrderContext";
 
 export default function useOrders() {
-  const { getSingle, listenToValue } = useRealtime();
+  const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
+  const { set } = useFirebase();
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { setError, setLoading, setOrders, setSelectedOrder } =
+    useContext(OrderContext);
 
-  const createOrder = (data: any) =>
+  const createOrder = (data: any, status?: OrderStatus) =>
     new Order(
       data?.id,
       data?.orderIssuer,
@@ -37,38 +40,108 @@ export default function useOrders() {
           )
       ),
       data?.phoneNumber,
-      new Date(data?.createdOn)
+      new Date(data?.createdOn),
+      status === undefined ? data.status : status
     );
 
   const getSingleOrder = useCallback(
-    (id: string) =>
+    (id: string) => {
+      setError(undefined);
+      setLoading(true);
       getSingle({
         id: id,
-        onData: (data) => setSelectedOrder(createOrder(data)),
-        onError: () => setError(errorMessage("ao obter o pedido selecionado")),
-        onLoading: setLoading,
+        onData: (data) => {
+          setSelectedOrder(createOrder(data));
+          setLoading(false);
+        },
+        onError: () => {
+          setError(errorMessage("ao obter o pedido selecionado"));
+          setLoading(false);
+        },
         reference: References.orders,
-      }),
-    [getSingle]
+      });
+    },
+    [getSingle, setError, setLoading, setSelectedOrder]
   );
 
-  const listenToOrders = useCallback(
-    () =>
-      listenToValue({
-        onData: (data) => setOrders(data.map(createOrder)),
-        onLoading: setLoading,
-        onError: () => setError(errorMessage("ao obter os pedidos")),
+  const listenToOrders = useCallback(() => {
+    setError(undefined);
+    setLoading(true);
+    listenToValue({
+      onData: (data) => {
+        setOrders(data.map(createOrder));
+        setLoading(false);
+      },
+      onError: () => {
+        setError(errorMessage("ao obter os pedidos"));
+        setLoading(false);
+      },
+      reference: References.orders,
+    });
+  }, [listenToValue, setError, setLoading, setOrders]);
+
+  const updateOrderStatus = useCallback(
+    async (
+      status: OrderStatus,
+      order?: Order,
+      onUpdate?: (data: any) => any
+    ) => {
+      setError(undefined);
+      setLoading(true);
+      if (order !== undefined) {
+        await setValue({
+          id: order.id,
+          onData: async (data) => {
+            const updatedOrder = createOrder(data);
+            console.log(updatedOrder);
+            setSelectedOrder(updatedOrder);
+            if (onUpdate) await onUpdate(updatedOrder);
+            setLoading(false);
+          },
+          onError: () => {
+            setError(errorMessage("ao atualizar o estado do pedido"));
+            setLoading(false);
+          },
+          reference: References.orders,
+          value: createOrder(order.toJson(), status),
+        });
+      } else {
+        throw Error("Order cannot be null.");
+      }
+    },
+    [setError, setLoading, setSelectedOrder, setValue]
+  );
+
+  const deleteOrder = useCallback(
+    (id: string) => {
+      deleteSingle({
+        id,
+        onError: () => setError(errorMessage("ao remover o pedido finalizado")),
         reference: References.orders,
-      }),
-    [listenToValue]
+      });
+    },
+    [deleteSingle, setError]
+  );
+
+  const setInvoice = useCallback(
+    async (order: Order) => {
+      setLoading(true);
+      await set({
+        collection: Collections.Pedidos_Faturados,
+        body: order,
+        onError: () => setError(errorMessage("ao faturar o pedido finalizado")),
+        onSuccess: () => deleteOrder(order.id),
+      });
+      setLoading(false);
+    },
+    [deleteOrder, set, setError, setLoading]
   );
 
   return {
+    updateOrderStatus,
     getSingleOrder,
     listenToOrders,
-    orders,
-    selectedOrder,
-    error,
-    loading,
+    deleteOrder,
+    setInvoice,
   };
 }
