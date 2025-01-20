@@ -43,14 +43,14 @@ export default function Users() {
           {users.length > 0 &&
             currentUser !== null &&
             users.map(
-              ({ userName, isAdmin, _id }: User) =>
-                _id && (
+              ({ userName, isAdmin, id }: User) =>
+                id && (
                   <Tile
-                    key={_id}
+                    key={id}
                     isDeletable={
-                      !isAdmin && currentUser.isAdmin && _id !== currentUser._id
+                      !isAdmin && currentUser.isAdmin && id !== currentUser.id
                     }
-                    onDelete={() => removeUser(_id)}
+                    onDelete={() => removeUser(id)}
                   >
                     {userName}
                   </Tile>

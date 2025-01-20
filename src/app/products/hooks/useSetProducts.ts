@@ -2,21 +2,18 @@ import { errorMessage, successMessage } from "@/utils/texts";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { Product } from "@/helpers/firestore/model/product/product";
 import useStorage from "@/helpers/storage/hooks/useStorage";
 import { useState } from "react";
 
-export default function useSetProducts<T extends BaseModel>(
-  isEditing: boolean = false
-) {
+export default function useSetProducts(isEditing: boolean = false) {
   const { set } = useFirebase();
   const { upload } = useStorage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [updated, setUpdated] = useState<T>();
+  const [updated, setUpdated] = useState<Product>();
 
   const save = async (product: Product, file?: File) => {
     setLoading(true);
@@ -41,22 +38,13 @@ export default function useSetProducts<T extends BaseModel>(
               );
               setLoading(false);
             },
-            transformer: (data) =>
-              new Product(
-                data.id,
-                data.description,
-                data.value,
-                data.category,
-                data.inventory,
-                imagePath
-              ),
-            onData: setUpdated,
             onSuccess: () => {
               setSuccess(
                 successMessage(
                   isEditing ? "Produto atualizado" : "Produto cadastrado"
                 )
               );
+              setUpdated(product);
               setLoading(false);
             },
             body: new Product(
@@ -87,19 +75,7 @@ export default function useSetProducts<T extends BaseModel>(
             isEditing ? "Produto atualizado" : "Produto cadastrado"
           )
         );
-        setLoading(false);
-      },
-      transformer: () => {
-        return new Product(
-          product.id,
-          product.description,
-          product.value,
-          product.category,
-          product.inventory
-        );
-      },
-      onData: (upload) => {
-        setUpdated(upload);
+        setUpdated(product);
         setLoading(false);
       },
       body: product,

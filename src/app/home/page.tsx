@@ -11,16 +11,16 @@ import {
   Report,
   Settings,
 } from "@icons/index";
-import { homeContainer, homeGrid, homeHeader } from "./style.css";
 import { signOut, useSession } from "next-auth/react";
+import { homeContainer, homeGrid, homeHeader } from "./style.css";
 
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { themeVars } from "@/theme/theme.css";
+import { IconButton } from "@mui/material";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Page() {
@@ -71,11 +71,13 @@ export default function Page() {
             shadow={themeVars.shadow.shadowLightBlue}
             Icon={LocalShipping}
             label="Bairros"
+            href="/neighborhood"
           />
           <Card
             shadow={themeVars.shadow.shadowWhite}
             Icon={Campaign}
             label="Campanhas"
+            href="/campaigns"
           />
         </div>
       </div>

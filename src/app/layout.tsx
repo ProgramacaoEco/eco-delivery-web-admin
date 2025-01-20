@@ -2,7 +2,6 @@
 import { useEffect, useRef } from "react";
 import { layout, loginLayout } from "./layout.css";
 
-import ActionFeedback from "@/components/basis/ActionFeedback";
 import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { Typography } from "@/components/basis/Typography";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
@@ -27,6 +26,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const noPrint = useRef<HTMLImageElement>(null);
+  const mounted = useRef<boolean>(false);
 
   const { isOnline } = useNetworkStatus();
 
@@ -42,6 +42,8 @@ export default function RootLayout({
         noPrint.current.style.visibility = "visible";
       }
     });
+
+    mounted.current = true;
   }, []);
 
   return (
@@ -68,24 +70,18 @@ export default function RootLayout({
             right: -120,
           }}
         />
+
         {isOnline ? (
           <OrderProvider>
             <SessionProvider session={params.session}>
               {children}
-              <ActionFeedback
-                message="Sem conexão"
-                state="error"
-                autoHideDuration={3000}
-                open={!window.navigator.onLine}
-              />
             </SessionProvider>
           </OrderProvider>
         ) : (
           <div className={loadingContainer}>
             <Typography.TitleBold>
-              Desculpe-nos, parece que algo de errado aconteceu. Por favor,
-              recarregue a página e tente novamente. Se o erro persistir,
-              contate o suporte.
+              Você está sem internet. Por favor, verifique sua conexão e tente
+              novamente.
             </Typography.TitleBold>
           </div>
         )}

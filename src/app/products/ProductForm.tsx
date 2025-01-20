@@ -1,16 +1,14 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { fileInput, picker } from "./style.css";
 
-import { Category } from "@/helpers/firestore/enum/category";
-import { CurrencyInput } from "react-currency-mask";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import Dropdown from "@/components/basis/Dropdown";
 import DropdownItem from "@/components/basis/Dropdown/DropdownItem";
-import Image from "next/image";
+import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
+import { Category } from "@/helpers/firestore/enum/category";
 import { Product } from "@/helpers/firestore/model/product/product";
-import RoundedButton from "@/components/basis/Button/RoundedButton";
-import { Typography } from "@components/basis/Typography";
+import { CurrencyInput } from "react-currency-mask";
 
 interface ProductFormProps {
   defaultValue?: Product | null;
@@ -21,7 +19,7 @@ export default function ProductForm({
   onSubmit,
   defaultValue,
 }: ProductFormProps) {
-  const [image, setImage] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string | undefined>(defaultValue?.image);
   const [binaryImage, setBinaryImage] = useState<File | undefined>(undefined);
 
   const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +37,7 @@ export default function ProductForm({
     formState: { errors },
   } = useForm<Product>({
     defaultValues: {
-      _id: "",
+      id: "",
       category: Category.Cervejas,
       value: 0,
       inventory: 0,
@@ -49,17 +47,17 @@ export default function ProductForm({
 
   useEffect(() => {
     if (defaultValue !== null && defaultValue !== undefined) {
-      const { _id, category, description, image, value, inventory } =
+      const { id, category, description, image, value, inventory } =
         defaultValue;
 
-      reset({ _id, category, description, image, value, inventory });
+      reset({ id, category, description, image, value, inventory });
 
       setImage(image);
     }
   }, [defaultValue, reset]);
 
   const submit = () =>
-    handleSubmit(({ _id, category, description, value, inventory }, event) => {
+    handleSubmit(({ id, category, description, value, inventory }, event) => {
       event?.preventDefault();
       if (
         Object.entries(errors).find(([_, value]) => value.message !== undefined)
@@ -67,7 +65,7 @@ export default function ProductForm({
         return;
 
       onSubmit(
-        new Product(_id, description, value, category, inventory, image),
+        new Product(id, description, value, category, inventory, image),
         binaryImage
       );
       reset();
@@ -82,32 +80,11 @@ export default function ProductForm({
         alignItems: "center",
       }}
     >
-      <label className={picker}>
-        {image && image !== null && image.length > 0 ? (
-          <Image
-            priority
-            src={image}
-            alt="Imagem do produto"
-            height={400}
-            width={400}
-            style={{
-              height: "25.9rem",
-              width: "100%",
-              objectFit: "contain",
-            }}
-          />
-        ) : (
-          <Typography.DisplayMediumBold>
-            Selecione a imagem do produto
-          </Typography.DisplayMediumBold>
-        )}
-        <input
-          className={fileInput}
-          type="file"
-          accept=".jpeg,.jpg,.png"
-          onChange={handleImage}
-        />
-      </label>
+      <ImagePicker
+        defaultImage={defaultValue?.image}
+        placeholder="Selecione a imagem do produto"
+        onChange={handleImage}
+      />
 
       <div
         style={{
@@ -119,7 +96,7 @@ export default function ProductForm({
       >
         <Controller
           control={control}
-          name="_id"
+          name="id"
           render={({ field }) => (
             <InputText
               {...field}
@@ -127,8 +104,8 @@ export default function ProductForm({
               onChange={(e) =>
                 field.onChange(e.target.value.replace(/\s/g, ""))
               }
-              id="_id"
-              error={errors._id?.message !== undefined}
+              id="id"
+              error={errors.id?.message !== undefined}
               label="Código"
             />
           )}

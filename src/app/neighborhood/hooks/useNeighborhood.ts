@@ -3,56 +3,41 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import { User } from "@/helpers/firestore/model/admin/user";
-import { useSession } from "next-auth/react";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 
-export default function useUser() {
-  const { data: sessionData } = useSession();
-
+export default function useNeighborhood() {
   const { set, get, remove } = useFirebase();
 
   const [error, setError] = useState<string | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [neighborhoods, setNeighborhoods] = useState<Neighborhood[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const collection = Collections.Usuarios;
+  const collection = Collections.Bairros;
 
-  const getUser = useCallback(async () => {
+  const getNeighborhoods = useCallback(async () => {
     setError(null);
     setLoading(true);
     await get({
       collection: collection,
       transformer: (data) =>
-        new User(data.id, data.email, data.name, data.isAdmin),
-      onData: (users) => {
-        if (sessionData && loading) {
-          setLoading(false);
-        }
-        setUsers(users);
-        setCurrentUser(
-          users.filter(
-            ({ email }: User) => email === sessionData?.user?.email
-          )[0]
-        );
+        new Neighborhood(data.id, data.neighborhoodName, data.freightCost),
+      onData: (neighborhoods) => {
+        setNeighborhoods(neighborhoods);
+        setLoading(false);
       },
       onError: () => {
         setError(errorMessage("ao obter os usuários"));
-        if (sessionData && loading) {
-          setLoading(false);
-        }
+        setLoading(false);
       },
     });
-  }, [collection, get, sessionData]);
+  }, [collection, get]);
 
   useEffect(() => {
-    if (sessionData) {
-      getUser();
-    }
-  }, [getUser, sessionData]);
+    getNeighborhoods();
+  }, [getNeighborhoods]);
 
-  const setUser = async (user: User) => {
+  const setNeighborhood = async (neighborhood: Neighborhood) => {
     setError(null);
     setLoading(true);
     await set({
@@ -63,21 +48,21 @@ export default function useUser() {
       },
       onSuccess: () => {
         setSuccess(successMessage("Usuário adicionado"));
-        setUsers((u) => [...u, user]);
+        setNeighborhoods((n) => [...n, neighborhood]);
         setLoading(false);
       },
-      body: user,
+      body: neighborhood,
     });
   };
 
-  const removeUser = async (id: string) => {
+  const removeNeighborhood = async (id: string) => {
     setError(null);
     setLoading(true);
     await remove({
       collection: collection,
       id,
-      data: users,
-      onData: setUsers,
+      data: neighborhoods,
+      onData: setNeighborhoods,
       onError: () => {
         setError(errorMessage("ao remover o usuário"));
         setLoading(false);
@@ -90,12 +75,11 @@ export default function useUser() {
   };
 
   return {
-    setUser,
-    removeUser,
+    setNeighborhood,
+    removeNeighborhood,
     loading,
     error,
     success,
-    users,
-    currentUser,
+    neighborhoods,
   };
 }

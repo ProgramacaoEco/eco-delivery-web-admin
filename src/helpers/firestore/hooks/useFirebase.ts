@@ -6,9 +6,6 @@ import { BaseModel } from "../model/baseModel";
 interface SetProps<T extends BaseModel> {
   collection: Collections;
   body: T;
-  data?: T[];
-  onData?: (data: any) => void;
-  transformer?: (data: any) => T;
   onSuccess?: () => void;
   onError: () => void;
 }
@@ -39,23 +36,12 @@ interface RemoveProps<T extends BaseModel> {
 
 export default function useFirebase<T extends BaseModel>() {
   const set = useCallback(
-    async ({
-      collection,
-      onError,
-      onSuccess,
-      data,
-      body,
-      onData,
-      transformer,
-    }: SetProps<T>) => {
+    async ({ collection, onError, onSuccess, body }: SetProps<T>) => {
       try {
         const success = await FirestoreHelper.set(collection, body);
 
         if (success) {
           if (onSuccess !== undefined) onSuccess();
-          if (onData !== undefined && transformer != undefined) {
-            onData(transformer(data));
-          }
         } else {
           onError();
         }

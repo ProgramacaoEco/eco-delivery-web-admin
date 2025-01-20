@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import { Close } from "@icons/index";
-import IconButton from "@mui/material/IconButton";
 import { Typography } from "@/components/basis/Typography";
 import { themeVars } from "@/theme/theme.css";
+import { Close, CloseDark } from "@icons/index";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/navigation";
 
 interface PageTitleProps {
@@ -13,6 +13,7 @@ interface PageTitleProps {
   onClose?: () => void;
   route?: string;
   title: string;
+  dark?: boolean;
 }
 
 export default function PageTitle({
@@ -20,6 +21,7 @@ export default function PageTitle({
   onClose,
   title,
   route,
+  dark = false,
 }: PageTitleProps) {
   const router = useRouter();
 
@@ -60,11 +62,15 @@ export default function PageTitle({
     return () => window.removeEventListener("scroll", controlNavbar);
   }, []);
 
+  const CloseIcon = dark ? CloseDark : Close;
+
   return (
     <Box sx={{ height: "5.5rem" }}>
       {show && (
         <AppBar style={appbarStyle}>
-          <Typography.TitleRegular>
+          <Typography.TitleRegular
+            color={dark ? themeVars.color.background : "white"}
+          >
             {title}
             <IconButton
               style={closeIconButton}
@@ -75,7 +81,7 @@ export default function PageTitle({
                 return router.back();
               }}
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </Typography.TitleRegular>
         </AppBar>

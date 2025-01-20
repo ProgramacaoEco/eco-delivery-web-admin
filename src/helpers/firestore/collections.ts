@@ -3,4 +3,6 @@ export enum Collections {
   Usuarios = "Usuarios",
   Pedidos_Faturados = "Pedidos_Faturados",
   Produtos = "Produtos",
+  Bairros = "Bairros",
+  Campanhas = "Campanhas",
 }

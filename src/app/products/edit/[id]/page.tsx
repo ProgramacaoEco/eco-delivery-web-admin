@@ -1,13 +1,11 @@
 "use client";
-
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import { Product } from "@/helpers/firestore/model/product/product";
-import ProductForm from "../../ProductForm";
 import { useParams } from "next/navigation";
 import useReadSingleProduct from "../../hooks/useReadSingleProduct";
 import useSetProducts from "../../hooks/useSetProducts";
+import ProductForm from "../../ProductForm";
 
 export default function EditProduct() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +18,7 @@ export default function EditProduct() {
     error: errorSave,
     success: successSave,
     updated,
-  } = useSetProducts<Product>(true);
+  } = useSetProducts(true);
 
   return (
     <LoadingContainer
