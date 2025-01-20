@@ -11,16 +11,16 @@ import {
   Report,
   Settings,
 } from "@icons/index";
-import { signOut, useSession } from "next-auth/react";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { signOut, useSession } from "next-auth/react";
 
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
-import StoreSwitch from "@/components/basis/StoreSwitch";
-import { themeVars } from "@/theme/theme.css";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
+import StoreSwitch from "@/components/basis/StoreSwitch";
+import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 
 export default function Page() {
@@ -30,6 +30,19 @@ export default function Page() {
 
   return (
     <>
+      <div
+        style={{
+          textAlign: "center",
+          backgroundColor: "lightblue",
+          color: themeVars.color.background,
+          fontWeight: "bold",
+        }}
+      >
+        Olá! Obrigado por utilizar nossos sistemas! No momento, este sistema
+        encontra-se em fase de desenvolvimento. Se houverem quaisquer erros, por
+        favor, contate nosso suporte.
+      </div>
+
       <div className={homeContainer}>
         <div className={homeGrid}>
           <div className={homeHeader}>

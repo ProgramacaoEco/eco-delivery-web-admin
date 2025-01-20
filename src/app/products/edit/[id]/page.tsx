@@ -1,24 +1,25 @@
 "use client";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import { useParams } from "next/navigation";
-import useReadSingleProduct from "../../hooks/useReadSingleProduct";
-import useSetProducts from "../../hooks/useSetProducts";
 import ProductForm from "../../ProductForm";
+import { useParams } from "next/navigation";
+import useProduct from "../../hooks/useProduct";
+import useSetProduct from "../../hooks/useSetProduct";
 
 export default function EditProduct() {
   const { id } = useParams<{ id: string }>();
 
-  const { error, loading, product } = useReadSingleProduct(id);
+  const { error, loading, product } = useProduct(id);
 
   const {
     save,
     loading: loadingSave,
     error: errorSave,
     success: successSave,
-    updated,
-  } = useSetProducts(true);
+    product: updated,
+  } = useSetProduct(true);
 
   return (
     <LoadingContainer
@@ -34,6 +35,8 @@ export default function EditProduct() {
         <ProductForm
           onSubmit={save}
           defaultValue={updated === undefined ? product : updated}
+          loading={loading}
+          error={error}
         />
       </div>
       {successSave && (

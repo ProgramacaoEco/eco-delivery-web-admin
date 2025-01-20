@@ -2,11 +2,10 @@
 
 import "./style.css";
 
-import { useEffect, useRef } from "react";
-
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import SelectedOrderDetails from "@/components/shared/SelectedOrderDetails";
+import { useEffect } from "react";
 import useInvoices from "../hooks/useInvoices";
 import { useParams } from "next/navigation";
 
@@ -19,13 +18,13 @@ export default function InvoicedDetails() {
     getInvoice(id);
   }, [id, getInvoice]);
 
-  const printButtonRef = useRef<HTMLButtonElement>(null);
+  console.log(selectedOrder);
 
   return (
     <LoadingContainer
       loading={loading}
       error={
-        error !== null && selectedOrder !== null && selectedOrder !== undefined
+        error === null && selectedOrder === null && selectedOrder === undefined
       }
     >
       <PageTitle
@@ -42,7 +41,7 @@ export default function InvoicedDetails() {
 
       <SelectedOrderDetails
         onUpdateStatus={() => {}}
-        selectedOrder={selectedOrder!}
+        selectedOrder={selectedOrder}
       />
     </LoadingContainer>
   );

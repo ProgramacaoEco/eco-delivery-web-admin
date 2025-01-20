@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Product } from "@/helpers/firestore/model/product/product";
 import { errorMessage } from "@/utils/texts";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
-export default function useReadProducts() {
-  const { get } = useFirebase();
+export default function useProduct(id: string) {
+  const { getBy } = useFirebase();
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setError(null);
-    setLoading(true);
-    get({
+    getBy({
+      id,
       collection: Collections.Produtos,
-      onData: (products) => {
-        setProducts(products);
+      onData: (product) => {
+        setProduct(product);
         setLoading(false);
       },
       onError: () => {
@@ -35,7 +35,7 @@ export default function useReadProducts() {
           data.image
         ),
     });
-  }, [get]);
+  }, [getBy, id]);
 
-  return { products, loading, error };
+  return { product, loading, error };
 }

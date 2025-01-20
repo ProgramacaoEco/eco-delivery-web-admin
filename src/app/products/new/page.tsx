@@ -4,10 +4,10 @@ import ActionFeedback from "@/components/basis/ActionFeedback";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import ProductForm from "../ProductForm";
-import useSetProducts from "../hooks/useSetProducts";
+import useSetProduct from "../hooks/useSetProduct";
 
 export default function EditProduct() {
-  const { save, loading, error, success } = useSetProducts();
+  const { save, loading, error, success } = useSetProduct();
 
   return (
     <LoadingContainer loading={loading} error={error !== null}>
@@ -17,7 +17,7 @@ export default function EditProduct() {
           title="Cadastro de produtos"
           route="/products"
         />
-        <ProductForm onSubmit={save} />
+        <ProductForm onSubmit={save} loading={loading} error={error} />
       </div>
       {success && (
         <ActionFeedback

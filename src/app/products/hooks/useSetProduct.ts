@@ -1,19 +1,19 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 
 import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Product } from "@/helpers/firestore/model/product/product";
-import useStorage from "@/helpers/storage/hooks/useStorage";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { useState } from "react";
+import useStorage from "@/helpers/storage/hooks/useStorage";
 
-export default function useSetProducts(isEditing: boolean = false) {
+export default function useSetProduct(isEditing: boolean = false) {
+  const [product, setProduct] = useState<Product>();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const { set } = useFirebase();
   const { upload } = useStorage();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [updated, setUpdated] = useState<Product>();
 
   const save = async (product: Product, file?: File) => {
     setLoading(true);
@@ -27,7 +27,16 @@ export default function useSetProducts(isEditing: boolean = false) {
           setError(errorMessage("ao cadastrar imagem do produto."));
           setLoading(false);
         },
-        onSuccess: async (imagePath) =>
+        onSuccess: async (imagePath) => {
+          const newProduct = new Product(
+            product.id,
+            product.description,
+            product.value,
+            product.category,
+            product.inventory,
+            imagePath
+          );
+
           await set({
             collection: Collections.Produtos,
             onError: () => {
@@ -44,20 +53,23 @@ export default function useSetProducts(isEditing: boolean = false) {
                   isEditing ? "Produto atualizado" : "Produto cadastrado"
                 )
               );
-              setUpdated(product);
+              setProduct(newProduct);
               setLoading(false);
             },
-            body: new Product(
-              product.id,
-              product.description,
-              product.value,
-              product.category,
-              product.inventory,
-              imagePath
-            ),
-          }),
+            body: newProduct,
+          });
+        },
       });
     }
+
+    const newProduct = new Product(
+      product.id,
+      product.description,
+      product.value,
+      product.category,
+      product.inventory,
+      product.image
+    );
 
     await set({
       collection: Collections.Produtos,
@@ -75,12 +87,12 @@ export default function useSetProducts(isEditing: boolean = false) {
             isEditing ? "Produto atualizado" : "Produto cadastrado"
           )
         );
-        setUpdated(product);
+        setProduct(newProduct);
         setLoading(false);
       },
-      body: product,
+      body: newProduct,
     });
   };
 
-  return { save, success, loading, error, updated };
+  return { product, loading, success, error, save };
 }
