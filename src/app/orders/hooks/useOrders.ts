@@ -2,6 +2,7 @@ import { useCallback, useContext } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import Address from "@/helpers/realtime/model/order/address";
@@ -15,18 +16,23 @@ export default function useOrders() {
   const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
   const { set } = useFirebase();
 
-  const { setError, setLoading, setOrders, setSelectedOrder } =
+  const { setError, setLoading, setOrders, setSelectedOrder, orders } =
     useContext(OrderContext);
 
   const createOrder = (data: any, status?: OrderStatus) =>
     new Order(
       data?.id,
+      data?.isViewed,
       data?.orderIssuer,
       new Address(
         data?.address?.address,
         data?.address?.number,
         data?.address?.apt,
-        data?.address?.neighborhood,
+        new Neighborhood(
+          data?.address?.neighborhood.id,
+          data?.address?.neighborhood.neighborhoodName,
+          data?.address?.neighborhood.freightCost
+        ),
         data?.address?.reference,
         data?.address?.postalCode
       ),
@@ -64,10 +70,10 @@ export default function useOrders() {
     [getSingle, setError, setLoading, setSelectedOrder]
   );
 
-  const listenToOrders = useCallback(() => {
+  const listenToOrders = useCallback(async () => {
     setError(undefined);
     setLoading(true);
-    listenToValue({
+    return await listenToValue({
       onData: (data) => {
         setOrders(data.map(createOrder));
         setLoading(false);
@@ -93,7 +99,6 @@ export default function useOrders() {
           id: order.id,
           onData: async (data) => {
             const updatedOrder = createOrder(data);
-            console.log(updatedOrder);
             setSelectedOrder(updatedOrder);
             if (onUpdate) await onUpdate(updatedOrder);
             setLoading(false);

@@ -1,7 +1,7 @@
 import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
 
-import { app } from "@/firebase-config";
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
+import { app } from "@/firebase-config";
 import { useCallback } from "react";
 
 interface UseRealtimeParams<T extends BaseModel> {
@@ -45,10 +45,7 @@ export default function useRealtime<T extends BaseModel>() {
           }
         );
 
-        return () => {
-          unsubscribe();
-          console.log("Listener unsubscribed successfully.");
-        };
+        return unsubscribe;
       } catch (error) {
         console.error("Error initializing listener:", error);
         onError();

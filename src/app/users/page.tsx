@@ -3,14 +3,14 @@
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
+import NewUserForm from "./NewUserForm";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import { User } from "@/helpers/firestore/model/admin/user";
+import style from "./style.css";
 import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 import useUser from "./hooks/useUser";
-import NewUserForm from "./NewUserForm";
-import style from "./style.css";
 
 export default function Users() {
   const { removeUser, setUser, error, loading, success, users, currentUser } =
@@ -19,67 +19,73 @@ export default function Users() {
   const [existingUser, setExistingUser] = useState(false);
 
   return (
-    <LoadingContainer loading={loading} error={error !== null}>
-      <div className={style}>
-        <PageTitle color={themeVars.color.users.appbarColor} title="Usuários" />
-        <div style={{ marginTop: "20px", width: "inherit" }}>
-          <NewUserForm
-            onSubmit={async (usr) => {
-              const user = users.find(
-                (element: User) => element.email === usr.email.trim()
-              );
+    <>
+      <PageTitle
+        isLoading={loading}
+        color={themeVars.color.users.appbarColor}
+        title="Usuários"
+      />
+      <LoadingContainer loading={loading} error={error !== null}>
+        <div className={style}>
+          <div style={{ marginTop: "20px", width: "inherit" }}>
+            <NewUserForm
+              onSubmit={async (usr) => {
+                const user = users.find(
+                  (element: User) => element.email === usr.email.trim()
+                );
 
-              if (user) {
-                setExistingUser(true);
-                return;
-              }
+                if (user) {
+                  setExistingUser(true);
+                  return;
+                }
 
-              await setUser(usr);
-            }}
-          />
+                await setUser(usr);
+              }}
+            />
+          </div>
+
+          <ListTile>
+            {users.length > 0 &&
+              currentUser !== null &&
+              users.map(
+                ({ userName, isAdmin, id }: User) =>
+                  id && (
+                    <Tile
+                      key={id}
+                      isDeletable={
+                        !isAdmin && currentUser.isAdmin && id !== currentUser.id
+                      }
+                      onDelete={() => removeUser(id)}
+                    >
+                      {userName}
+                    </Tile>
+                  )
+              )}
+          </ListTile>
         </div>
-
-        <ListTile>
-          {users.length > 0 &&
-            currentUser !== null &&
-            users.map(
-              ({ userName, isAdmin, id }: User) =>
-                id && (
-                  <Tile
-                    key={id}
-                    isDeletable={
-                      !isAdmin && currentUser.isAdmin && id !== currentUser.id
-                    }
-                    onDelete={() => removeUser(id)}
-                  >
-                    {userName}
-                  </Tile>
-                )
-            )}
-        </ListTile>
-      </div>
-      {error && (
+        {error && (
+          <ActionFeedback
+            message={error}
+            autoHideDuration={3000}
+            open={error.length > 0}
+            state="error"
+          />
+        )}
         <ActionFeedback
-          message={error}
+          message="Usuário já existente"
           autoHideDuration={3000}
-          open={error.length > 0}
+          open={existingUser}
           state="error"
         />
-      )}
-      <ActionFeedback
-        message="Usuário já existente"
-        autoHideDuration={3000}
-        open={existingUser}
-        state="error"
-      />
-      {success && (
-        <ActionFeedback
-          message={success}
-          open={success.length > 0}
-          state="success"
-          autoHideDuration={3000}
-        />
-      )}
-    </LoadingContainer>
+        {success && (
+          <ActionFeedback
+            message={success}
+            open={success.length > 0}
+            state="success"
+            autoHideDuration={3000}
+          />
+        )}
+      </LoadingContainer>
+    </>
   );
 }

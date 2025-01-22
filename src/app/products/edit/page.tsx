@@ -24,28 +24,34 @@ export default function ListProducts() {
   const router = useRouter();
 
   return (
-    <LoadingContainer loading={loading} error={error !== null}>
-      <PageTitle title="Atualizar Cadastro" color="orange" />
-      <ListTile>
-        {products.map(({ description, id }) => (
-          <Tile
-            onEdit={() => router.push(`/products/edit/${id}`)}
-            isEditable={true}
-            onDelete={() => removeProduct(id)}
-            key={id}
-          >
-            {description}
-          </Tile>
-        ))}
-      </ListTile>
-      {success && (
-        <ActionFeedback
-          message={success}
-          open={success.length > 0}
-          state="success"
-          autoHideDuration={3000}
-        />
-      )}
-    </LoadingContainer>
+    <>
+      <PageTitle
+        isLoading={loading}
+        title="Atualizar Cadastro"
+        color="orange"
+      />
+      <LoadingContainer loading={loading} error={error !== null}>
+        <ListTile>
+          {products.map(({ description, id }) => (
+            <Tile
+              onEdit={() => router.push(`/products/edit/${id}`)}
+              isEditable={true}
+              onDelete={() => removeProduct(id)}
+              key={id}
+            >
+              {description}
+            </Tile>
+          ))}
+        </ListTile>
+        {success && (
+          <ActionFeedback
+            message={success}
+            open={success.length > 0}
+            state="success"
+            autoHideDuration={3000}
+          />
+        )}
+      </LoadingContainer>
+    </>
   );
 }

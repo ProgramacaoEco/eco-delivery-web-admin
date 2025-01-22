@@ -18,31 +18,33 @@ export default function InvoicedDetails() {
     getInvoice(id);
   }, [id, getInvoice]);
 
-  console.log(selectedOrder);
-
   return (
-    <LoadingContainer
-      loading={loading}
-      error={
-        error === null && selectedOrder === null && selectedOrder === undefined
-      }
-    >
+    <>
       <PageTitle
+        isLoading={loading}
         color="blue"
         title={
           selectedOrder
             ? `${selectedOrder.createdOn?.toLocaleDateString("pt-BR")}
-              ${selectedOrder.createdOn?.toLocaleTimeString("pt-BR")} - ${
+            ${selectedOrder.createdOn?.toLocaleTimeString("pt-BR")} - ${
                 selectedOrder?.orderIssuer
               }`
             : ""
         }
       />
-
-      <SelectedOrderDetails
-        onUpdateStatus={() => {}}
-        selectedOrder={selectedOrder}
-      />
-    </LoadingContainer>
+      <LoadingContainer
+        loading={loading}
+        error={
+          error === null &&
+          selectedOrder === null &&
+          selectedOrder === undefined
+        }
+      >
+        <SelectedOrderDetails
+          onUpdateStatus={() => {}}
+          selectedOrder={selectedOrder}
+        />
+      </LoadingContainer>
+    </>
   );
 }

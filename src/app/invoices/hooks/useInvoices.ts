@@ -1,11 +1,12 @@
 import { useCallback, useState } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import Address from "@/helpers/realtime/model/order/address";
+import { Collections } from "@/helpers/firestore/collections";
 import Item from "@/helpers/realtime/model/order/item";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import Order from "@/helpers/realtime/model/order/order";
 import { errorMessage } from "@/utils/texts";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useInvoices() {
   const { get, getBy } = useFirebase<Order>();
@@ -20,12 +21,17 @@ export default function useInvoices() {
   const transformer = (data: any) =>
     new Order(
       data?.id,
+      data?.isViewed,
       data?.orderIssuer,
       new Address(
         data?.address.address,
         data?.address.number,
         data?.address.apt,
-        data?.address.neighborhood,
+        new Neighborhood(
+          data?.address?.neighborhood.id,
+          data?.address?.neighborhood.neighborhoodName,
+          data?.address?.neighborhood.freightCost
+        ),
         data?.address.reference,
         data?.address.postalCode
       ),

@@ -1,9 +1,11 @@
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
+
 export default class Address {
   constructor(
     address: string,
     number: string,
     apt: string,
-    neighborhood: string,
+    neighborhood: Neighborhood,
     reference: string,
     postalCode: string
   ) {
@@ -25,8 +27,8 @@ export default class Address {
     return this._number;
   }
 
-  private readonly _neighborhood: string;
-  public get neighborhood(): string {
+  private readonly _neighborhood: Neighborhood;
+  public get neighborhood(): Neighborhood {
     return this._neighborhood;
   }
 
@@ -49,7 +51,7 @@ export default class Address {
     return {
       address: this._address,
       number: this._number,
-      neighborhood: this._neighborhood,
+      neighborhood: this._neighborhood.toJson(),
       reference: this._reference,
       apt: this._apt,
       postalCode: this._postalCode,

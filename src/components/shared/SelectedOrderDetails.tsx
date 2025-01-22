@@ -1,8 +1,9 @@
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import Item from "@/helpers/realtime/model/order/item";
 import Order from "@/helpers/realtime/model/order/order";
-import { useEffect } from "react";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import RoundedButton from "../basis/Button/RoundedButton";
+import { themeVars } from "@/theme/theme.css";
+import { useEffect } from "react";
 
 interface OrderDetailsProps {
   selectedOrder?: Order | null;
@@ -64,19 +65,36 @@ export default function SelectedOrderDetails({
           {selectedOrder?.address.apt}
         </h3>
         <h3>
-          {selectedOrder?.address.neighborhood},{" "}
+          {selectedOrder?.address.neighborhood.neighborhoodName},{" "}
           {selectedOrder?.address.postalCode}
         </h3>
         <h3>{selectedOrder?.address.reference}</h3>
       </div>
 
-      <table style={{ width: "100%", marginTop: "2rem" }}>
+      <table
+        style={{
+          width: "100%",
+          marginTop: "2rem",
+        }}
+      >
         <thead>
-          <tr>
-            <td colSpan={1}>Cód.</td>
-            <td colSpan={2}>Descrição</td>
-            <td colSpan={2}>Qtd.</td>
-            <td colSpan={2}>Valor</td>
+          <tr
+            style={{
+              backgroundColor: "lightblue",
+            }}
+          >
+            <td style={{ color: themeVars.color.background }} colSpan={1}>
+              Cód.
+            </td>
+            <td style={{ color: themeVars.color.background }} colSpan={2}>
+              Descrição
+            </td>
+            <td style={{ color: themeVars.color.background }} colSpan={2}>
+              Qtd.
+            </td>
+            <td style={{ color: themeVars.color.background }} colSpan={2}>
+              Valor
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -96,6 +114,32 @@ export default function SelectedOrderDetails({
               </tr>
             )
           )}
+          <tr key="freight-cost">
+            <td
+              colSpan={5}
+              style={{
+                backgroundColor: "lightblue",
+                color: themeVars.color.background,
+              }}
+            >
+              Entrega
+            </td>
+            <td
+              colSpan={2}
+              style={{
+                backgroundColor: "lightblue",
+                color: themeVars.color.background,
+              }}
+            >
+              R$
+              {(
+                selectedOrder?.address.neighborhood.freightCost ?? 0
+              ).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </td>
+          </tr>
         </tbody>
         <tfoot>
           <tr>
@@ -113,7 +157,7 @@ export default function SelectedOrderDetails({
                 ?.reduce(
                   (accumulator: number, currentValue: Item) =>
                     accumulator + currentValue.value * currentValue.quantity,
-                  0
+                  selectedOrder?.address.neighborhood.freightCost ?? 0
                 )
                 .toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,

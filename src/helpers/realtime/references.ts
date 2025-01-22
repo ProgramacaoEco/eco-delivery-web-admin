@@ -1,3 +1,4 @@
 export enum References {
-    orders = "orders"
+  orders = "orders",
+  storeStatus = "storeStatus",
 }

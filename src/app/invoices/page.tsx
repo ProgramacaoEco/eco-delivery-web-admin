@@ -17,10 +17,10 @@ export default function Invoiced() {
   }, [getInvoices]);
 
   return (
-    <LoadingContainer loading={loading} error={error !== undefined}>
-      {orders && (
-        <>
-          <PageTitle color="blue" title="Pedidos faturados" />
+    <>
+      <PageTitle isLoading={loading} color="blue" title="Pedidos faturados" />
+      <LoadingContainer loading={loading} error={error !== undefined}>
+        {orders && (
           <ListTile>
             {orders.map(({ orderIssuer, id, createdOn }: Order) => (
               <Link key={id} href={`/invoices/${id}`}>
@@ -31,8 +31,8 @@ export default function Invoiced() {
               </Link>
             ))}
           </ListTile>
-        </>
-      )}
-    </LoadingContainer>
+        )}
+      </LoadingContainer>
+    </>
   );
 }

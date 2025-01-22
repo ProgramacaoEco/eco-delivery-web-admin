@@ -1,17 +1,17 @@
+import { Close, CloseDark } from "@icons/index";
 import { useEffect, useState } from "react";
 
-import { Typography } from "@/components/basis/Typography";
-import { themeVars } from "@/theme/theme.css";
-import { Close, CloseDark } from "@icons/index";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import { Typography } from "@/components/basis/Typography";
+import { themeVars } from "@/theme/theme.css";
 import { useRouter } from "next/navigation";
 
 interface PageTitleProps {
   color: string;
   onClose?: () => void;
-  route?: string;
+  isLoading: boolean;
   title: string;
   dark?: boolean;
 }
@@ -20,7 +20,7 @@ export default function PageTitle({
   color,
   onClose,
   title,
-  route,
+  isLoading = false,
   dark = false,
 }: PageTitleProps) {
   const router = useRouter();
@@ -74,12 +74,16 @@ export default function PageTitle({
             {title}
             <IconButton
               style={closeIconButton}
-              onClick={() => {
-                if (!!onClose) {
-                  onClose();
-                }
-                return router.back();
-              }}
+              onClick={
+                isLoading
+                  ? undefined
+                  : () => {
+                      if (!!onClose) {
+                        onClose();
+                      }
+                      return router.back();
+                    }
+              }
             >
               <CloseIcon />
             </IconButton>

@@ -105,6 +105,7 @@ export default function ProductForm({
             name="id"
             render={({ field }) => (
               <InputText
+                readOnly={defaultValue !== null && defaultValue !== undefined}
                 {...field}
                 value={field.value}
                 onChange={(e) =>
@@ -130,7 +131,7 @@ export default function ProductForm({
             render={({ field }) => (
               <InputText
                 {...field}
-                value={field.value} // Ensure there's always a value (default to 0 if undefined)
+                value={field.value}
                 onChange={(e) =>
                   field.onChange(e.target.value.replace(/\D/g, ""))
                 }

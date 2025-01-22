@@ -1,5 +1,6 @@
 "use client";
 
+import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 import {
   Assignment,
   AssignmentCheck,
@@ -11,105 +12,185 @@ import {
   Report,
   Settings,
 } from "@icons/index";
-import { homeContainer, homeGrid, homeHeader } from "./style.css";
 import { signOut, useSession } from "next-auth/react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { homeContainer, homeGrid, homeHeader } from "./style.css";
 
+import ActionFeedback from "@/components/basis/ActionFeedback";
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
+import LoadingContainer from "@/components/basis/LoadingContainer";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { themeVars } from "@/theme/theme.css";
-import { useState } from "react";
+import { IconButton } from "@mui/material";
+import { Howl } from "howler";
+import Image from "next/image";
+import { OrderContext } from "../orders/context/OrderContext";
+import useOrders from "../orders/hooks/useOrders";
 
 export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const session = useSession();
 
+  const { listenToOrders } = useOrders();
+  const {
+    changeStoreStatus,
+    error: errorStoreStatus,
+    getStoreStatus,
+    loading: loadingStoreStatus,
+    storeStatus,
+  } = useStoreStatus();
+  const { loading, error, orders } = useContext(OrderContext);
+
+  useEffect(() => {
+    listenToOrders();
+  }, [listenToOrders]);
+
+  useEffect(() => {
+    getStoreStatus();
+  }, [getStoreStatus]);
+
+  useEffect(() => {
+    if (
+      storeStatus &&
+      storeStatus.storeStatus &&
+      orders &&
+      orders?.filter((o) => !o.isViewed).length > 0
+    ) {
+      new Howl({
+        src: ["/sound/notification.wav"],
+        html5: true,
+        autoplay: true,
+      }).play();
+    }
+  }, [orders, storeStatus]);
+
+  const newOrders = useCallback(() => {
+    const orderQuantity = orders?.filter((o) => !o.isViewed).length ?? 0;
+
+    if (orderQuantity > 0) {
+      return orderQuantity;
+    }
+
+    return 0;
+  }, [orders]);
+
   return (
     <>
-      <div
-        style={{
-          textAlign: "center",
-          backgroundColor: "lightblue",
-          color: themeVars.color.background,
-          fontWeight: "bold",
-        }}
+      <LoadingContainer
+        loading={loading || loadingStoreStatus}
+        error={error !== undefined || errorStoreStatus !== undefined}
       >
-        Olá! Obrigado por utilizar nossos sistemas! No momento, este sistema
-        encontra-se em fase de desenvolvimento. Se houverem quaisquer erros, por
-        favor, contate nosso suporte.
-      </div>
+        <div
+          style={{
+            textAlign: "center",
+            backgroundColor: "lightblue",
+            color: themeVars.color.background,
+            fontWeight: "bold",
+          }}
+        >
+          Olá! Obrigado por utilizar nossos sistemas! No momento, este sistema
+          encontra-se em fase de desenvolvimento. Se houverem quaisquer erros,
+          por favor, contate nosso suporte.
+        </div>
 
-      <div className={homeContainer}>
-        <div className={homeGrid}>
-          <div className={homeHeader}>
-            <IconButton onClick={() => setOpenDrawer(true)}>
-              <Settings />
-            </IconButton>
-            <StoreSwitch />
-            <Image
-              src="/test_logo.png"
-              width={75}
-              height={75}
-              alt="Test LOGO"
+        <div className={homeContainer}>
+          <div className={homeGrid}>
+            <div className={homeHeader}>
+              <IconButton onClick={() => setOpenDrawer(true)}>
+                <Settings />
+              </IconButton>
+              <StoreSwitch
+                isOpen={storeStatus?.storeStatus ?? false}
+                onStoreOpen={(isOpen) =>
+                  changeStoreStatus(new StoreStatus("store-status", isOpen))
+                }
+              />
+              <Image
+                src="/test_logo.png"
+                width={75}
+                height={75}
+                alt="Test LOGO"
+              />
+            </div>
+            <Card
+              shadow={themeVars.shadow.shadowBlue}
+              Icon={Assignment}
+              label="Pedidos"
+              href="/orders"
+            />
+            <Card
+              shadow={themeVars.shadow.shadowBlue}
+              Icon={AssignmentCheck}
+              href="/invoices"
+              label="Pedidos faturados"
+            />
+            <Card
+              href="/products"
+              shadow={themeVars.shadow.shadowOrange}
+              Icon={Liquor}
+              label="Produtos"
+            />
+            <Card
+              shadow={themeVars.shadow.shadowLightBlue}
+              Icon={LocalShipping}
+              label="Bairros"
+              href="/neighborhood"
+            />
+            <Card
+              shadow={themeVars.shadow.shadowWhite}
+              Icon={Campaign}
+              label="Campanhas"
+              href="/campaigns"
             />
           </div>
-          <Card
-            shadow={themeVars.shadow.shadowBlue}
-            Icon={Assignment}
-            label="Pedidos"
-            href="/orders"
-          />
-          <Card
-            shadow={themeVars.shadow.shadowBlue}
-            Icon={AssignmentCheck}
-            href="/invoices"
-            label="Pedidos faturados"
-          />
-          <Card
-            href="/products"
-            shadow={themeVars.shadow.shadowOrange}
-            Icon={Liquor}
-            label="Produtos"
-          />
-          {/* <Card
-            shadow={themeVars.shadow.shadowOrange}
-            Icon={Warehouse}
-            label="Estoque"
-          /> */}
-          <Card
-            shadow={themeVars.shadow.shadowLightBlue}
-            Icon={LocalShipping}
-            label="Bairros"
-            href="/neighborhood"
-          />
-          <Card
-            shadow={themeVars.shadow.shadowWhite}
-            Icon={Campaign}
-            label="Campanhas"
-            href="/campaigns"
-          />
         </div>
-      </div>
-      <DrawerSettings
-        userLogged={session.data?.user?.name?.split(" ")[0] ?? ""}
-        open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
-        footerTile={
+        <DrawerSettings
+          userLogged={session.data?.user?.name?.split(" ")[0] ?? ""}
+          open={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          footerTile={
+            <DrawerTile
+              type="button"
+              onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+              Icon={Logout}
+              label="Sair do sistema"
+            />
+          }
+        >
           <DrawerTile
-            type="button"
-            onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
-            Icon={Logout}
-            label="Sair do sistema"
+            type="link"
+            href="/users"
+            Icon={Person}
+            label="Usuários"
           />
-        }
-      >
-        <DrawerTile type="link" href="/users" Icon={Person} label="Usuários" />
-        <DrawerTile type="link" href="#" Icon={Report} label="Relatórios" />
-      </DrawerSettings>
+          <DrawerTile
+            type="link"
+            href="#"
+            Icon={Report}
+            label="Relatórios (em breve!)"
+          />
+        </DrawerSettings>
+        <ActionFeedback
+          message={`Você tem ${
+            newOrders() === 1
+              ? `${newOrders()} novo pedido`
+              : `${newOrders()} novos pedidos`
+          } `}
+          autoHideDuration={null}
+          fullWidth
+          isClosable={false}
+          open={
+            !!storeStatus &&
+            storeStatus?.storeStatus &&
+            orders !== undefined &&
+            orders?.filter((o) => !o.isViewed).length > 0
+          }
+          state="success"
+        />
+      </LoadingContainer>
     </>
   );
 }

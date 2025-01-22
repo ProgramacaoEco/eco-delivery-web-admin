@@ -17,37 +17,39 @@ export default function Campaigns() {
   const { campaigns, error, loading, save, success } = useCampaigns();
 
   return (
-    <LoadingContainer loading={loading} error={error !== null}>
-      <PageTitle dark color="white" title="Campanhas" />
-      <Swiper
-        resizeObserver
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          minHeight: "60vh",
-        }}
-        navigation
-        modules={[Navigation, Pagination, Scrollbar, A11y]}
-        centeredSlides
-        spaceBetween={10}
-        slidesPerView={3}
-      >
-        {Array.from(Array(3).keys()).map((n, index) => {
-          return (
-            <SwiperSlide id={`campanha-${n}`} key={`campanha-${n}`}>
-              <ImagePicker
-                defaultImage={campaigns[index]?.campaignDownloadUrl}
-                placeholder="Selecione a imagem da campanha"
-                onChange={(event) => {
-                  if (event.target.files)
-                    save(`campanha-${n}`, event.target.files[0]);
-                }}
-              />
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
-    </LoadingContainer>
+    <>
+      <PageTitle isLoading={loading} dark color="white" title="Campanhas" />
+      <LoadingContainer loading={loading} error={error !== null}>
+        <Swiper
+          resizeObserver
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            minHeight: "60vh",
+          }}
+          navigation
+          modules={[Navigation, Pagination, Scrollbar, A11y]}
+          centeredSlides
+          spaceBetween={10}
+          slidesPerView={3}
+        >
+          {Array.from(Array(3).keys()).map((n, index) => {
+            return (
+              <SwiperSlide id={`campanha-${n}`} key={`campanha-${n}`}>
+                <ImagePicker
+                  defaultImage={campaigns[index]?.campaignDownloadUrl}
+                  placeholder="Selecione a imagem da campanha"
+                  onChange={(event) => {
+                    if (event.target.files)
+                      save(`campanha-${n}`, event.target.files[0]);
+                  }}
+                />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </LoadingContainer>
+    </>
   );
 }

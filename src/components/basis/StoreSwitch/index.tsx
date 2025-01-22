@@ -1,29 +1,27 @@
 import { storeClosed, storeOpenColor } from "./style.css";
 
 import Switch from "@mui/material/Switch";
-import { useState } from "react";
 
 interface StoreSwitchProps {
+  isOpen: boolean;
   onStoreOpen?: (open: boolean) => void;
 }
 
-export default function StoreSwitch({ onStoreOpen }: StoreSwitchProps) {
-  const [storeOpen, setStoreOpen] = useState(false);
-
+export default function StoreSwitch({ onStoreOpen, isOpen }: StoreSwitchProps) {
   return (
     <div style={{ color: "white" }}>
       A loja está{" "}
-      {storeOpen ? (
+      {isOpen ? (
         <span className={storeOpenColor}>aberta</span>
       ) : (
         <span className={storeClosed}>fechada</span>
       )}
       .
       <Switch
+        checked={isOpen}
         onClick={() => {
-          setStoreOpen((prev) => !prev);
           if (typeof onStoreOpen !== "undefined") {
-            onStoreOpen!(storeOpen);
+            onStoreOpen!(!isOpen);
           }
         }}
         size="medium"

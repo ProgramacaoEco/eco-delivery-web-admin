@@ -22,31 +22,33 @@ export default function EditProduct() {
   } = useSetProduct(true);
 
   return (
-    <LoadingContainer
-      loading={loading || loadingSave}
-      error={error !== null || product === null || errorSave !== null}
-    >
-      <div style={{ paddingBottom: "40px" }}>
-        <PageTitle
-          color="orange"
-          title="Cadastro de produtos"
-          route="/products"
-        />
-        <ProductForm
-          onSubmit={save}
-          defaultValue={updated === undefined ? product : updated}
-          loading={loading}
-          error={error}
-        />
-      </div>
-      {successSave && (
-        <ActionFeedback
-          message={successSave}
-          open={successSave.length > 0}
-          state="success"
-          autoHideDuration={3000}
-        />
-      )}
-    </LoadingContainer>
+    <>
+      <PageTitle
+        color="orange"
+        title="Cadastro de produtos"
+        isLoading={loadingSave || loading}
+      />
+      <LoadingContainer
+        loading={loading || loadingSave}
+        error={error !== null || product === null || errorSave !== null}
+      >
+        <div style={{ paddingBottom: "40px" }}>
+          <ProductForm
+            onSubmit={save}
+            defaultValue={updated === undefined ? product : updated}
+            loading={loading}
+            error={error}
+          />
+        </div>
+        {successSave && (
+          <ActionFeedback
+            message={successSave}
+            open={successSave.length > 0}
+            state="success"
+            autoHideDuration={3000}
+          />
+        )}
+      </LoadingContainer>
+    </>
   );
 }

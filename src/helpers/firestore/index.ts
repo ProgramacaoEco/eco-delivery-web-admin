@@ -8,9 +8,9 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-import { app } from "@/firebase-config";
-import { Collections } from "./collections";
 import { BaseModel } from "./model/baseModel";
+import { Collections } from "./collections";
+import { app } from "@/firebase-config";
 
 const db = getFirestore(app);
 

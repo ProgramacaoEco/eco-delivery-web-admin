@@ -2,8 +2,8 @@
 
 import { Add, Grocery } from "@icons/index";
 
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Link from "next/link";
+import PageTitle from "@/components/basis/PageTitle/PageTitle";
 
 export default function Products() {
   return (
@@ -15,7 +15,11 @@ export default function Products() {
         justifyContent: "center",
       }}
     >
-      <PageTitle color="orange" title="Cadastro de produtos" />
+      <PageTitle
+        isLoading={false}
+        color="orange"
+        title="Cadastro de produtos"
+      />
       <div style={{ display: "flex", gap: "100px" }}>
         <Link href="/products/new" style={{ all: "unset" }}>
           <div

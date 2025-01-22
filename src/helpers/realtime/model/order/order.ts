@@ -1,11 +1,12 @@
-import { BaseModel } from "@/helpers/firestore/model/baseModel";
-import { OrderStatus } from "../../enum/order-status";
 import Address from "./address";
+import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import Item from "./item";
+import { OrderStatus } from "../../enum/order-status";
 
 export default class Order implements BaseModel {
   constructor(
     id: string,
+    isViewed: boolean,
     orderIssuer: string,
     address: Address,
     items: Item[],
@@ -14,6 +15,7 @@ export default class Order implements BaseModel {
     status: OrderStatus
   ) {
     this.id = id;
+    this._isViewed = isViewed;
     this._address = address;
     this._orderIssuer = orderIssuer;
     this._items = items;
@@ -27,6 +29,16 @@ export default class Order implements BaseModel {
   private readonly _orderIssuer: string;
   public get orderIssuer(): string {
     return this._orderIssuer;
+  }
+
+  private _isViewed: boolean;
+
+  public get isViewed(): boolean {
+    return this._isViewed;
+  }
+
+  public set isViewed(isViewed: boolean) {
+    this._isViewed = isViewed;
   }
 
   private readonly _address: Address;
@@ -57,6 +69,7 @@ export default class Order implements BaseModel {
   toJson() {
     return {
       id: this.id,
+      isViewed: this._isViewed,
       orderIssuer: this._orderIssuer,
       address: this._address.toJson(),
       items: this._items.map((item) => item.toJson()),
