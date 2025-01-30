@@ -5,6 +5,7 @@ import { Collections } from "@/helpers/firestore/collections";
 import Item from "@/helpers/realtime/model/order/item";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import Order from "@/helpers/realtime/model/order/order";
+import { Product } from "@/helpers/firestore/model/product/product";
 import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
@@ -39,14 +40,23 @@ export default function useInvoices() {
         (content: any) =>
           new Item(
             content.id,
-            content.description,
+            new Product(
+              content.product.id,
+              content.product.description,
+              content.product.value,
+              content.product.category,
+              content.product.inventory,
+              content.product.image
+            ),
             content.quantity,
-            content.value
+            content.value,
+            content?.notes ?? ""
           )
       ),
       data?.phoneNumber,
       new Date(data?.createdOn),
-      data.status
+      data.status,
+      data?.paymentMethod
     );
 
   const getInvoices = useCallback(() => {

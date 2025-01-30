@@ -1,25 +1,30 @@
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
+import { Product } from "@/helpers/firestore/model/product/product";
 
 export default class Item implements BaseModel {
   constructor(
     id: string,
-    description: string,
+    product: Product,
     quantity: number,
-    value: number
+    value: number,
+    notes: string
   ) {
     this.id = id;
-    this._description = description;
+    this._product = product;
     this._quantity = quantity;
     this._value = value;
+    this._notes = notes;
   }
 
   readonly id: string;
-  private readonly _description: string;
+  private readonly _product: Product;
   private readonly _quantity: number;
   private readonly _value: number;
+  private readonly _notes: string;
 
-  get description() {
-    return this._description;
+  get product() {
+    console.log(this._product);
+    return this._product;
   }
 
   get quantity() {
@@ -30,12 +35,17 @@ export default class Item implements BaseModel {
     return this._value;
   }
 
+  get notes() {
+    return this._notes;
+  }
+
   toJson() {
     return {
       id: this.id,
-      description: this._description,
+      product: this._product.toJson(),
       quantity: this._quantity,
       value: this._value,
+      notes: this._notes,
     };
   }
 }

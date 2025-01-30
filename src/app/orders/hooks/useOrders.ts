@@ -1,16 +1,17 @@
 import { useCallback, useContext } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import Address from "@/helpers/realtime/model/order/address";
+import { Collections } from "@/helpers/firestore/collections";
 import Item from "@/helpers/realtime/model/order/item";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import Order from "@/helpers/realtime/model/order/order";
+import { OrderContext } from "../context/OrderContext";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import { Product } from "@/helpers/firestore/model/product/product";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import { OrderContext } from "../context/OrderContext";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export default function useOrders() {
   const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
@@ -19,10 +20,14 @@ export default function useOrders() {
   const { setError, setLoading, setOrders, setSelectedOrder, orders } =
     useContext(OrderContext);
 
-  const createOrder = (data: any, status?: OrderStatus) =>
+  const createOrder = (
+    data: any,
+    isViewed: boolean = false,
+    status?: OrderStatus
+  ) =>
     new Order(
       data?.id,
-      data?.isViewed,
+      !isViewed ? data?.isViewed : isViewed,
       data?.orderIssuer,
       new Address(
         data?.address?.address,
@@ -40,14 +45,23 @@ export default function useOrders() {
         (content: any) =>
           new Item(
             content.id,
-            content.description,
+            new Product(
+              content.product.id,
+              content.product.description,
+              content.product.value,
+              content.product.category,
+              content.product.inventory,
+              content.product.image
+            ),
             content.quantity,
-            content.value
+            content.value,
+            content?.notes ?? ""
           )
       ),
       data?.phoneNumber,
       new Date(data?.createdOn),
-      status === undefined ? data.status : status
+      status === undefined ? data.status : status,
+      data?.paymentMethod
     );
 
   const getSingleOrder = useCallback(
@@ -75,7 +89,7 @@ export default function useOrders() {
     setLoading(true);
     return await listenToValue({
       onData: (data) => {
-        setOrders(data.map(createOrder));
+        setOrders(data.map((o: Order) => createOrder(o, o.isViewed, o.status)));
         setLoading(false);
       },
       onError: () => {
@@ -108,7 +122,7 @@ export default function useOrders() {
             setLoading(false);
           },
           reference: References.orders,
-          value: createOrder(order.toJson(), status),
+          value: createOrder(order.toJson(), true, status),
         });
       } else {
         throw Error("Order cannot be null.");

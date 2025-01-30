@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export class StoreStatus implements BaseModel {
   constructor(id: string, storeStatus: boolean) {
@@ -20,7 +20,8 @@ export class StoreStatus implements BaseModel {
 
   toJson() {
     return {
-      storeStatus: this._storeStatus,
+      id: this.id,
+      storeStatus: this.storeStatus,
     };
   }
 }
@@ -36,8 +37,8 @@ export default function useStoreStatus() {
       setLoading(true);
       await setValue({
         id: "storeStatus",
-        onData: () => {
-          setStoreStatus(value);
+        onData: (data) => {
+          setStoreStatus(data);
           setLoading(false);
         },
         onError: () => {

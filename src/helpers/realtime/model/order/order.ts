@@ -2,6 +2,7 @@ import Address from "./address";
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import Item from "./item";
 import { OrderStatus } from "../../enum/order-status";
+import { PaymentMethod } from "../../enum/payment-method";
 
 export default class Order implements BaseModel {
   constructor(
@@ -12,7 +13,8 @@ export default class Order implements BaseModel {
     items: Item[],
     phoneNumber: string,
     createdOn: Date,
-    status: OrderStatus
+    status: OrderStatus,
+    paymentMethod: PaymentMethod
   ) {
     this.id = id;
     this._isViewed = isViewed;
@@ -22,6 +24,7 @@ export default class Order implements BaseModel {
     this._phoneNumber = phoneNumber;
     this._createdOn = createdOn;
     this._status = status;
+    this._paymentMethod = paymentMethod;
   }
 
   readonly id: string;
@@ -66,6 +69,11 @@ export default class Order implements BaseModel {
     return this._status;
   }
 
+  private readonly _paymentMethod: PaymentMethod;
+  public get paymentMethod(): PaymentMethod {
+    return this._paymentMethod;
+  }
+
   toJson() {
     return {
       id: this.id,
@@ -76,6 +84,7 @@ export default class Order implements BaseModel {
       phoneNumber: this._phoneNumber,
       createdOn: this._createdOn.toISOString(),
       status: this._status,
+      paymentMethod: this._paymentMethod,
     };
   }
 }

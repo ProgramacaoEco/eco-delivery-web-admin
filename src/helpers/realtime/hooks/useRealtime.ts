@@ -58,6 +58,8 @@ export default function useRealtime<T extends BaseModel>() {
     async ({ id, onData, onError, reference, value }: UseRealtimeParams<T>) => {
       if (value === undefined) throw Error("An value must be provided");
 
+      console.log(value);
+
       const db = getDatabase(app);
       const query = ref(db, `${reference}/${id}`);
 

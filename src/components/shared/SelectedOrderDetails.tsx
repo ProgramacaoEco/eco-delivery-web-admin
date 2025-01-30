@@ -95,14 +95,17 @@ export default function SelectedOrderDetails({
             <td style={{ color: themeVars.color.background }} colSpan={2}>
               Valor
             </td>
+            <td style={{ color: themeVars.color.background }} colSpan={2}>
+              Obs.
+            </td>
           </tr>
         </thead>
         <tbody>
           {selectedOrder?.items?.map(
-            ({ id, description, quantity, value }: Item) => (
-              <tr key={description}>
+            ({ id, product, quantity, value, notes }: Item) => (
+              <tr key={product.id}>
                 <td colSpan={1}>{id}</td>
-                <td colSpan={2}>{description}</td>
+                <td colSpan={2}>{product.description}</td>
                 <td colSpan={2}>{quantity}</td>
                 <td colSpan={2}>
                   R$
@@ -111,6 +114,7 @@ export default function SelectedOrderDetails({
                     maximumFractionDigits: 2,
                   })}
                 </td>
+                <td colSpan={2}>{notes}</td>
               </tr>
             )
           )}
@@ -125,7 +129,7 @@ export default function SelectedOrderDetails({
               Entrega
             </td>
             <td
-              colSpan={2}
+              colSpan={4}
               style={{
                 backgroundColor: "lightblue",
                 color: themeVars.color.background,
@@ -151,7 +155,7 @@ export default function SelectedOrderDetails({
                 0
               )}
             </td>
-            <td colSpan={3}>
+            <td colSpan={5}>
               R$
               {selectedOrder?.items
                 ?.reduce(
@@ -164,6 +168,10 @@ export default function SelectedOrderDetails({
                   maximumFractionDigits: 2,
                 })}
             </td>
+          </tr>
+          <tr>
+            <td colSpan={5}>Forma de pagamento</td>
+            <td colSpan={4}>{selectedOrder?.paymentMethod}</td>
           </tr>
         </tfoot>
       </table>

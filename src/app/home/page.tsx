@@ -1,6 +1,5 @@
 "use client";
 
-import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 import {
   Assignment,
   AssignmentCheck,
@@ -12,21 +11,22 @@ import {
   Report,
   Settings,
 } from "@icons/index";
-import { signOut, useSession } from "next-auth/react";
-import { useCallback, useContext, useEffect, useState } from "react";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { signOut, useSession } from "next-auth/react";
+import { useContext, useEffect, useState } from "react";
+import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
+import { Howl } from "howler";
+import { IconButton } from "@mui/material";
+import Image from "next/image";
 import LoadingContainer from "@/components/basis/LoadingContainer";
+import { OrderContext } from "../orders/context/OrderContext";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { themeVars } from "@/theme/theme.css";
-import { IconButton } from "@mui/material";
-import { Howl } from "howler";
-import Image from "next/image";
-import { OrderContext } from "../orders/context/OrderContext";
 import useOrders from "../orders/hooks/useOrders";
 
 export default function Page() {
@@ -43,6 +43,7 @@ export default function Page() {
     storeStatus,
   } = useStoreStatus();
   const { loading, error, orders } = useContext(OrderContext);
+  const [orderQuantity, setOrderQuantity] = useState(0);
 
   useEffect(() => {
     listenToOrders();
@@ -53,12 +54,12 @@ export default function Page() {
   }, [getStoreStatus]);
 
   useEffect(() => {
-    if (
-      storeStatus &&
-      storeStatus.storeStatus &&
-      orders &&
-      orders?.filter((o) => !o.isViewed).length > 0
-    ) {
+    if (orders === undefined) return;
+
+    const orderQuantity = orders.filter((o) => !o.isViewed).length;
+
+    if (storeStatus && storeStatus.storeStatus && orders && orderQuantity) {
+      setOrderQuantity(orderQuantity);
       new Howl({
         src: ["/sound/notification.wav"],
         html5: true,
@@ -67,20 +68,10 @@ export default function Page() {
     }
   }, [orders, storeStatus]);
 
-  const newOrders = useCallback(() => {
-    const orderQuantity = orders?.filter((o) => !o.isViewed).length ?? 0;
-
-    if (orderQuantity > 0) {
-      return orderQuantity;
-    }
-
-    return 0;
-  }, [orders]);
-
   return (
     <>
       <LoadingContainer
-        loading={loading || loadingStoreStatus}
+        loading={loading || loadingStoreStatus || storeStatus === undefined}
         error={error !== undefined || errorStoreStatus !== undefined}
       >
         <div
@@ -175,19 +166,14 @@ export default function Page() {
         </DrawerSettings>
         <ActionFeedback
           message={`Você tem ${
-            newOrders() === 1
-              ? `${newOrders()} novo pedido`
-              : `${newOrders()} novos pedidos`
+            orderQuantity === 1
+              ? `${orderQuantity} novo pedido`
+              : `${orderQuantity} novos pedidos`
           } `}
           autoHideDuration={null}
           fullWidth
           isClosable={false}
-          open={
-            !!storeStatus &&
-            storeStatus?.storeStatus &&
-            orders !== undefined &&
-            orders?.filter((o) => !o.isViewed).length > 0
-          }
+          open={(storeStatus?.storeStatus ?? false) && orderQuantity > 0}
           state="success"
         />
       </LoadingContainer>
