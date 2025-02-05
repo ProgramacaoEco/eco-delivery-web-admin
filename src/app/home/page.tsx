@@ -13,10 +13,10 @@ import {
 } from "@icons/index";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
 import { signOut, useSession } from "next-auth/react";
+import toast, { Toaster } from "react-hot-toast";
 import { useContext, useEffect, useState } from "react";
 import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 
-import ActionFeedback from "@/components/basis/ActionFeedback";
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
@@ -43,7 +43,6 @@ export default function Page() {
     storeStatus,
   } = useStoreStatus();
   const { loading, error, orders } = useContext(OrderContext);
-  const [orderQuantity, setOrderQuantity] = useState(0);
 
   useEffect(() => {
     listenToOrders();
@@ -54,12 +53,25 @@ export default function Page() {
   }, [getStoreStatus]);
 
   useEffect(() => {
+    toast.dismiss();
+
     if (orders === undefined) return;
 
     const orderQuantity = orders.filter((o) => !o.isViewed).length;
 
-    if (storeStatus && storeStatus.storeStatus && orders && orderQuantity) {
-      setOrderQuantity(orderQuantity);
+    if (
+      storeStatus &&
+      storeStatus.storeStatus &&
+      orders &&
+      orderQuantity &&
+      orderQuantity > 0
+    ) {
+      toast.success(
+        `Você tem ${orderQuantity} ${
+          orderQuantity > 1 ? "novos pedidos" : "novo pedido"
+        }`
+      );
+
       new Howl({
         src: ["/sound/notification.wav"],
         html5: true,
@@ -164,17 +176,14 @@ export default function Page() {
             label="Relatórios (em breve!)"
           />
         </DrawerSettings>
-        <ActionFeedback
-          message={`Você tem ${
-            orderQuantity === 1
-              ? `${orderQuantity} novo pedido`
-              : `${orderQuantity} novos pedidos`
-          } `}
-          autoHideDuration={null}
-          fullWidth
-          isClosable={false}
-          open={(storeStatus?.storeStatus ?? false) && orderQuantity > 0}
-          state="success"
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            duration: 10000000,
+            style: {
+              width: "100%",
+            },
+          }}
         />
       </LoadingContainer>
     </>

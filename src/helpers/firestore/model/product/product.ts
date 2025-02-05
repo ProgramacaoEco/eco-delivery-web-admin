@@ -1,5 +1,5 @@
-import { Category } from "../../enum/category";
 import { BaseModel } from "../baseModel";
+import { Category } from "../../enum/category";
 
 export class Product implements BaseModel {
   constructor(
@@ -53,7 +53,7 @@ export class Product implements BaseModel {
         description: this._description,
         image: this._image,
         value: this._value,
-        inventory: this._inventory,
+        inventory: +this._inventory,
       };
     }
     return {
@@ -61,7 +61,7 @@ export class Product implements BaseModel {
       category: this._category,
       description: this._description,
       value: this._value,
-      inventory: this._inventory,
+      inventory: +this._inventory,
     };
   }
 }
