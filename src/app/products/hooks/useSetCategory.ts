@@ -3,48 +3,46 @@ import { errorMessage, successMessage } from "@/utils/texts";
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Category } from "@/helpers/firestore/model/product/category";
-import { Product } from "@/helpers/firestore/model/product/product";
 import { Folders } from "@/helpers/storage/folders";
 import useStorage from "@/helpers/storage/hooks/useStorage";
 import { useState } from "react";
 
-export default function useSetProduct(isEditing: boolean = false) {
-  const [product, setProduct] = useState<Product>();
+export default function useSetCategory(isEditing: boolean = false) {
+  const [category, setCategory] = useState<Category>();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const { set } = useFirebase();
-  const { upload } = useStorage(Folders.Produtos);
+  const { upload } = useStorage(Folders.Categorias);
 
-  const save = async (product: Product, category: Category, file?: File) => {
+  const save = async (category: Category, file?: File) => {
     setLoading(true);
     setError(null);
 
     if (file !== undefined) {
       return await upload({
-        id: product.id,
+        id: category.name,
         file: file,
         onError: () => {
-          setError(errorMessage("ao cadastrar imagem do produto."));
+          setError(errorMessage("ao cadastrar imagem da categoria."));
           setLoading(false);
         },
         onSuccess: async (imagePath) => {
-          const newProduct = new Product(
-            product.id,
-            product.description,
-            product.value,
-            category,
-            product.inventory,
-            imagePath
+          const newCategory = new Category(
+            category.name,
+            category.name,
+            imagePath!
           );
 
           await set({
-            collection: Collections.Produtos,
+            collection: Collections.Categorias,
             onError: () => {
               setError(
                 errorMessage(
-                  isEditing ? "ao atualizar cadastro." : "ao cadastrar produto."
+                  isEditing
+                    ? "ao atualizar cadastro."
+                    : "ao cadastrar categoria."
                 )
               );
               setLoading(false);
@@ -52,33 +50,30 @@ export default function useSetProduct(isEditing: boolean = false) {
             onSuccess: () => {
               setSuccess(
                 successMessage(
-                  isEditing ? "Produto atualizado" : "Produto cadastrado"
+                  isEditing ? "Categoria atualizada" : "Categoria cadastrada"
                 )
               );
-              setProduct(newProduct);
+              setCategory(newCategory);
               setLoading(false);
             },
-            body: newProduct,
+            body: newCategory,
           });
         },
       });
     }
 
-    const newProduct = new Product(
-      product.id,
-      product.description,
-      product.value,
-      category,
-      product.inventory,
-      product.image
+    const newCategory = new Category(
+      category.name,
+      category.name,
+      category.pictureUrl
     );
 
     await set({
-      collection: Collections.Produtos,
+      collection: Collections.Categorias,
       onError: () => {
         setError(
           errorMessage(
-            isEditing ? "ao atualizar cadastro." : "ao cadastrar produto."
+            isEditing ? "ao atualizar cadastro." : "ao cadastrar categoria."
           )
         );
         setLoading(false);
@@ -86,15 +81,15 @@ export default function useSetProduct(isEditing: boolean = false) {
       onSuccess: () => {
         setSuccess(
           successMessage(
-            isEditing ? "Produto atualizado" : "Produto cadastrado"
+            isEditing ? "Categoria atualizada" : "Categoria cadastrada"
           )
         );
-        setProduct(newProduct);
+        setCategory(newCategory);
         setLoading(false);
       },
-      body: newProduct,
+      body: newCategory,
     });
   };
 
-  return { product, loading, success, error, save };
+  return { category, loading, success, error, save };
 }

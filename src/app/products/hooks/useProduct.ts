@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { Category } from "@/helpers/firestore/model/product/category";
 import { Collections } from "@/helpers/firestore/collections";
 import { Product } from "@/helpers/firestore/model/product/product";
 import { errorMessage } from "@/utils/texts";
@@ -30,7 +31,11 @@ export default function useProduct(id: string) {
           data.id,
           data.description,
           data.value,
-          data.category,
+          new Category(
+            data.category.id,
+            data.category.name,
+            data.category.pictureUrl
+          ),
           data.inventory,
           data.image
         ),

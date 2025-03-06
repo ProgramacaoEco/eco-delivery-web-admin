@@ -28,14 +28,14 @@ export default function Tile({
               <Edit />
             </IconButton>
           )}
-          {
+          {isDeletable && (
             <IconButton
               style={{ visibility: isDeletable ? "visible" : "hidden" }}
               onClick={onDelete}
             >
               <Delete />
             </IconButton>
-          }
+          )}
         </div>
       </div>
     </div>

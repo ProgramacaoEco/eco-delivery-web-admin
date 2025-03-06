@@ -1,19 +1,20 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { Category } from "@/helpers/firestore/enum/category";
-import { CurrencyInput } from "react-currency-mask";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import Dropdown from "@/components/basis/Dropdown";
 import DropdownItem from "@/components/basis/Dropdown/DropdownItem";
 import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
+import { Category } from "@/helpers/firestore/model/product/category";
 import { Product } from "@/helpers/firestore/model/product/product";
-import RoundedButton from "@/components/basis/Button/RoundedButton";
+import { CurrencyInput } from "react-currency-mask";
+import useCategories from "./hooks/useCategories";
 
 interface ProductFormProps {
   defaultValue?: Product | null;
-  onSubmit: (product: Product, file?: File) => void;
+  onSubmit: (product: Product, category: Category, file?: File) => void;
   loading: boolean;
   error: string | null;
 }
@@ -35,6 +36,12 @@ export default function ProductForm({
   };
 
   const {
+    categories,
+    error: categoriesError,
+    loading: categoriesLoading,
+  } = useCategories();
+
+  const {
     handleSubmit,
     register,
     reset,
@@ -43,7 +50,7 @@ export default function ProductForm({
   } = useForm<Product>({
     defaultValues: {
       id: "",
-      category: Category.Cervejas,
+      category: categories[0],
       value: 0,
       inventory: 0,
     },
@@ -62,22 +69,38 @@ export default function ProductForm({
   }, [defaultValue, reset]);
 
   const submit = () =>
-    handleSubmit(({ id, category, description, value, inventory }, event) => {
-      event?.preventDefault();
-      if (
-        Object.entries(errors).find(([_, value]) => value.message !== undefined)
-      )
-        return;
+    handleSubmit(
+      ({ id, category: { name }, description, value, inventory }, event) => {
+        event?.preventDefault();
+        if (
+          Object.entries(errors).find(
+            ([_, value]) => value.message !== undefined
+          )
+        )
+          return;
 
-      onSubmit(
-        new Product(id, description, value, category, inventory, image),
-        binaryImage
-      );
-      reset();
-    });
+        console.log(name);
+
+        const c = categories.find((c) => c.name === name);
+
+        console.log(c);
+
+        if (!c) return;
+
+        onSubmit(
+          new Product(id, description, value, c, inventory, image),
+          c,
+          binaryImage
+        );
+        reset();
+      }
+    );
 
   return (
-    <LoadingContainer loading={loading} error={error !== null}>
+    <LoadingContainer
+      loading={loading || categoriesLoading}
+      error={error !== null || categoriesError !== null}
+    >
       <form
         onSubmit={submit()}
         style={{
@@ -174,10 +197,19 @@ export default function ProductForm({
                 id="categoria"
                 label="Categoria"
                 name="Categoria"
+                value={field.value?.id}
+                onChange={(selectedValue) => {
+                  const selectedCategory = categories.find(
+                    (c) => c.name === selectedValue.target.value
+                  );
+                  if (selectedCategory) {
+                    field.onChange(selectedCategory); // Update form value with Category object
+                  }
+                }}
               >
-                {Object.entries(Category).map(([key, value]) => (
-                  <DropdownItem key={key} value={value}>
-                    {value.toString()}
+                {categories.map(({ id, name }) => (
+                  <DropdownItem key={id} value={name}>
+                    {name}
                   </DropdownItem>
                 ))}
               </Dropdown>

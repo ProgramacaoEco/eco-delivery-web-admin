@@ -14,8 +14,9 @@ export default function ImagePicker({
   defaultImage,
   placeholder,
   onChange,
+  onRemove,
   ...props
-}: ComponentProps<"input"> & { defaultImage?: string }) {
+}: ComponentProps<"input"> & { defaultImage?: string; onRemove?: () => void }) {
   const [image, setImage] = useState<string | undefined>(defaultImage);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -32,6 +33,30 @@ export default function ImagePicker({
 
   return (
     <label className={picker}>
+      {onRemove && image && image.length > 0 && (
+        <a
+          href=""
+          onClick={(e) => {
+            e.preventDefault();
+            if (onRemove) onRemove();
+          }}
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#FFFFFF"
+          >
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+          </svg>
+        </a>
+      )}
       {image && image !== null && image.length > 0 ? (
         <Image
           ref={imageRef}

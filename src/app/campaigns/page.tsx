@@ -8,13 +8,15 @@ import "swiper/css/scrollbar";
 import { A11y, Navigation, Pagination, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import ActionFeedback from "@/components/basis/ActionFeedback";
 import ImagePicker from "@/components/basis/ImagePicker";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import useCampaigns from "./hooks/useCampaigns";
 
 export default function Campaigns() {
-  const { campaigns, error, loading, save, success } = useCampaigns();
+  const { campaigns, error, loading, save, success, deleteCampaign } =
+    useCampaigns();
 
   return (
     <>
@@ -38,9 +40,13 @@ export default function Campaigns() {
             return (
               <SwiperSlide id={`campanha-${n}`} key={`campanha-${n}`}>
                 <ImagePicker
+                  onRemove={() => deleteCampaign(campaigns[index].id)}
                   defaultImage={campaigns[index]?.campaignDownloadUrl}
                   placeholder="Selecione a imagem da campanha"
-                  onChange={(event) => {
+                  onChange={async (event) => {
+                    if (campaigns[index]) {
+                      await deleteCampaign(`campanha-${n}`);
+                    }
                     if (event.target.files)
                       save(`campanha-${n}`, event.target.files[0]);
                   }}
@@ -50,6 +56,15 @@ export default function Campaigns() {
           })}
         </Swiper>
       </LoadingContainer>
+      {success && (
+        <ActionFeedback
+          open={!!success}
+          message={success}
+          state="success"
+          autoHideDuration={3000}
+        />
+      )}
+      {error && <ActionFeedback open={!!error} message={error} state="error" />}
     </>
   );
 }

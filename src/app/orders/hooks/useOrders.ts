@@ -1,17 +1,17 @@
 import { useCallback, useContext } from "react";
 
-import Address from "@/helpers/realtime/model/order/address";
 import { Collections } from "@/helpers/firestore/collections";
-import Item from "@/helpers/realtime/model/order/item";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import Order from "@/helpers/realtime/model/order/order";
-import { OrderContext } from "../context/OrderContext";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import { Product } from "@/helpers/firestore/model/product/product";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import Address from "@/helpers/realtime/model/order/address";
+import Item from "@/helpers/realtime/model/order/item";
+import Order from "@/helpers/realtime/model/order/order";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import { OrderContext } from "../context/OrderContext";
 
 export default function useOrders() {
   const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
@@ -61,7 +61,8 @@ export default function useOrders() {
       data?.phoneNumber,
       new Date(data?.createdOn),
       status === undefined ? data.status : status,
-      data?.paymentMethod
+      data?.paymentMethod,
+      data?.uidOrderIssuer
     );
 
   const getSingleOrder = useCallback(

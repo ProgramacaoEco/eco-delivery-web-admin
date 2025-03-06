@@ -5,8 +5,8 @@ import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
-import useProducts from "../hooks/useProducts";
 import { useRouter } from "next/navigation";
+import useProducts from "../hooks/useProducts";
 
 export default function ListProducts() {
   const {

@@ -1,5 +1,5 @@
+import { Category } from "../../model/product/category";
 import { BaseModel } from "../baseModel";
-import { Category } from "../../enum/category";
 
 export class Product implements BaseModel {
   constructor(
@@ -58,7 +58,7 @@ export class Product implements BaseModel {
     }
     return {
       id: this.id,
-      category: this._category,
+      category: this._category.toJson(),
       description: this._description,
       value: this._value,
       inventory: +this._inventory,

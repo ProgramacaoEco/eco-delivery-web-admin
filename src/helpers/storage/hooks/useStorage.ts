@@ -1,21 +1,28 @@
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  list,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 import { app } from "@/firebase-config";
 
 interface UploadParams {
   id: string;
-  file: File;
-  onSuccess?: (fullPath: string) => void;
+  file?: File;
+  onSuccess?: (fullPath?: string) => void;
   onError: () => void;
 }
 
-export default function useStorage() {
+export default function useStorage(folder: Folders) {
   const storage = getStorage(app);
-
-  const folder = "Produtos/";
 
   const upload = async ({ file, id, onError, onSuccess }: UploadParams) => {
     try {
+      if (!file) return;
+
       const fileType = file.name.split(".").pop();
       const storageRef = ref(storage, `${folder}${id}.${fileType}`);
 
@@ -33,5 +40,23 @@ export default function useStorage() {
     }
   };
 
-  return { upload };
+  const remove = async ({ id, onError, onSuccess }: UploadParams) => {
+    try {
+      const objects = await list(ref(storage, `${folder}`));
+
+      objects.items.forEach(async (i) => {
+        console.log(id, i.name, i.name.startsWith(id));
+        if (i.name.startsWith(id)) {
+          await deleteObject(ref(storage, i.fullPath));
+        }
+      });
+
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error(error);
+      onError();
+    }
+  };
+
+  return { upload, remove };
 }

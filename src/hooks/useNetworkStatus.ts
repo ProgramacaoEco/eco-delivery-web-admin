@@ -1,29 +1,38 @@
 import { useEffect, useState } from "react";
 
-const useNetworkStatus = () => {
-  const [isOnline, setOnline] = useState<boolean>(true);
-
-  const updateNetworkStatus = () => {
-    setOnline(navigator.onLine);
-  };
+export const useOnlineStatus = () => {
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
-    updateNetworkStatus();
-  }, []);
+    // Handler functions for online/offline events
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-  useEffect(() => {
-    window.addEventListener("load", updateNetworkStatus);
-    window.addEventListener("online", updateNetworkStatus);
-    window.addEventListener("offline", updateNetworkStatus);
+    // Set up event listeners
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-    return () => {
-      window.removeEventListener("load", updateNetworkStatus);
-      window.removeEventListener("online", updateNetworkStatus);
-      window.removeEventListener("offline", updateNetworkStatus);
+    // Optional: Verify connection with a fetch request if needed
+    const checkNetworkStatus = async () => {
+      try {
+        await fetch("https://httpbin.org/get", { cache: "no-cache" });
+        if (!isOnline) setIsOnline(true);
+      } catch {
+        if (isOnline) setIsOnline(false);
+      }
     };
-  }, [navigator.onLine]);
 
-  return { isOnline };
+    // Initial check in case browser's native detection is unreliable
+    checkNetworkStatus();
+    const interval = setInterval(checkNetworkStatus, 5000);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+      clearInterval(interval);
+    };
+  }, [isOnline]);
+
+  return isOnline;
 };
-
-export default useNetworkStatus;

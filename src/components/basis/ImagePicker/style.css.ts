@@ -11,6 +11,7 @@ export const fileInputImage = style({
 });
 
 export const picker = style({
+  position: "relative",
   width: "100%",
   marginTop: "2rem",
   marginBottom: "40px",

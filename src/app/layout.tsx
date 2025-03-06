@@ -1,17 +1,18 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { layout, loginLayout } from "./layout.css";
 
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
-import { Typography } from "@/components/basis/Typography";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
-import { cn } from "@/utils/classNames";
+import { layout, loginLayout } from "./layout.css";
+import { useEffect, useRef, useState } from "react";
+
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import OrderProvider from "./orders/context/OrderProvider";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { Inter } from "next/font/google";
-import Image from "next/image";
+import { Typography } from "@/components/basis/Typography";
+import { cn } from "@/utils/classNames";
+import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { usePathname } from "next/navigation";
-import OrderProvider from "./orders/context/OrderProvider";
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
@@ -28,7 +29,7 @@ export default function RootLayout({
   const noPrint = useRef<HTMLImageElement>(null);
   const mounted = useRef<boolean>(false);
 
-  const { isOnline } = useNetworkStatus();
+  const isOnline = useOnlineStatus();
 
   useEffect(() => {
     addEventListener("beforeprint", () => {
@@ -45,6 +46,13 @@ export default function RootLayout({
 
     mounted.current = true;
   }, []);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Add this state
+  const [hasMounted, setHasMounted] = useState(false);
 
   return (
     <html lang="pt">
@@ -71,7 +79,10 @@ export default function RootLayout({
           }}
         />
 
-        {isOnline ? (
+        {!hasMounted ? (
+          // Show empty state during hydration
+          <div className={loadingContainer}></div>
+        ) : isOnline ? (
           <OrderProvider>
             <SessionProvider session={params.session}>
               {children}
