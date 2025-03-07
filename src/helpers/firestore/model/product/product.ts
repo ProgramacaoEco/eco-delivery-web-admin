@@ -1,5 +1,5 @@
-import { Category } from "../../model/product/category";
 import { BaseModel } from "../baseModel";
+import { Category } from "../../model/product/category";
 
 export class Product implements BaseModel {
   constructor(
@@ -49,7 +49,7 @@ export class Product implements BaseModel {
     if (this._image !== undefined) {
       return {
         id: this.id,
-        category: this._category,
+        category: this._category.toJson(),
         description: this._description,
         image: this._image,
         value: this._value,

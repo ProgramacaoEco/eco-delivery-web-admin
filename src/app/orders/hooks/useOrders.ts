@@ -1,17 +1,18 @@
 import { useCallback, useContext } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import { Product } from "@/helpers/firestore/model/product/product";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import Address from "@/helpers/realtime/model/order/address";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { Collections } from "@/helpers/firestore/collections";
 import Item from "@/helpers/realtime/model/order/item";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import Order from "@/helpers/realtime/model/order/order";
+import { OrderContext } from "../context/OrderContext";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import { Product } from "@/helpers/firestore/model/product/product";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import { OrderContext } from "../context/OrderContext";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export default function useOrders() {
   const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
@@ -49,7 +50,11 @@ export default function useOrders() {
               content.product.id,
               content.product.description,
               content.product.value,
-              content.product.category,
+              new Category(
+                content.product.category.id,
+                content.product.category.name,
+                content.product.category.pictureUrl
+              ),
               content.product.inventory,
               content.product.image
             ),

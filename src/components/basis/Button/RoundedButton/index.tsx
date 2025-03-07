@@ -1,6 +1,7 @@
 import { ComponentProps, PropsWithChildren, forwardRef } from "react";
 
 import { Typography } from "../../Typography";
+import { cn } from "@/utils/classNames";
 import { roundedButton } from "./style.css";
 
 interface RoundedButtonProps {
@@ -14,17 +15,13 @@ const RoundedButton = forwardRef<
   {
     buttonColor = "transparent",
     children,
+    className,
     ...props
   }: PropsWithChildren<ComponentProps<"button">> & RoundedButtonProps,
   ref
 ) {
   return (
-    <button
-      ref={ref}
-      style={{ backgroundColor: buttonColor }}
-      className={roundedButton}
-      {...props}
-    >
+    <button ref={ref} className={cn(roundedButton, className)} {...props}>
       <Typography.DisplayMediumBold>{children}</Typography.DisplayMediumBold>
     </button>
   );
