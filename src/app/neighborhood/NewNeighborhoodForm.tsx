@@ -1,10 +1,11 @@
 import { Controller, useForm } from "react-hook-form";
 
+import Check from "@icons/Check";
+import { CurrencyInput } from "react-currency-mask";
+import { IconButton } from "@mui/material";
 import InputText from "@/components/basis/InputText/InputText";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import Check from "@icons/Check";
-import { IconButton } from "@mui/material";
-import { CurrencyInput } from "react-currency-mask";
+import { form } from "./style.css";
 
 type NewNeighborhoodType = {
   id: string;
@@ -38,11 +39,7 @@ export default function NewNeighborhoodForm({
           reset();
         }
       })}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "1.25rem",
-      }}
+      className={form}
     >
       <InputText
         label="Nome do bairro"

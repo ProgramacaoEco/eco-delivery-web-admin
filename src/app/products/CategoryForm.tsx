@@ -1,10 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { form, formFields } from "./style.css";
 
-import RoundedButton from "@/components/basis/Button/RoundedButton";
+import { Category } from "@/helpers/firestore/model/product/category";
 import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { Category } from "@/helpers/firestore/model/product/category";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import { useForm } from "react-hook-form";
 
 interface CategoryFormProps {
@@ -70,28 +71,14 @@ export default function CategoryForm({
 
   return (
     <LoadingContainer loading={loading} error={error !== null}>
-      <form
-        onSubmit={submit()}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <form onSubmit={submit()} className={form}>
         <ImagePicker
           defaultImage={defaultValue?.pictureUrl}
           placeholder="Selecione a imagem da categoria"
           onChange={handleImage}
         />
 
-        <div
-          style={{
-            width: "40%",
-            display: "flex",
-            flexDirection: "column",
-            gap: "30px",
-          }}
-        >
+        <div className={formFields}>
           <InputText
             {...register("name", {
               required: "The category must have a valid description",

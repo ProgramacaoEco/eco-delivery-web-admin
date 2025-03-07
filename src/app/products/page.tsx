@@ -1,6 +1,7 @@
 "use client";
 
 import { Add, Category, Grocery } from "@icons/index";
+import { menu, menuButton } from "./style.css";
 
 import Link from "next/link";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
@@ -22,55 +23,21 @@ export default function Products() {
           color="orange"
           title="Cadastro de produtos"
         />
-        <div style={{ display: "flex", gap: "100px" }}>
+        <div className={menu}>
           <Link href="/products/new" style={{ all: "unset" }}>
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                border: "1px solid white",
-                borderRadius: "50%",
-                padding: "5rem",
-              }}
-            >
+            <div className={menuButton}>
               <Add fontSize={150} />
               <div>Cadastrar novo produto</div>
             </div>
           </Link>
           <Link href="/products/edit" style={{ all: "unset" }}>
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                border: "1px solid white",
-                borderRadius: "50%",
-                padding: "5rem",
-              }}
-            >
+            <div className={menuButton}>
               <Grocery fontSize={150} />
               <div>Ver ou editar produtos</div>
             </div>
           </Link>
           <Link href="/products/categories" style={{ all: "unset" }}>
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                border: "1px solid white",
-                borderRadius: "50%",
-                padding: "5rem",
-                textAlign: "center",
-              }}
-            >
+            <div className={menuButton}>
               <Category fontSize={155} />
               <div>Categorias</div>
             </div>

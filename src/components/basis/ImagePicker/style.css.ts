@@ -10,6 +10,16 @@ export const fileInputImage = style({
   objectFit: "cover",
 });
 
+export const crossRemove = style({
+  position: "absolute",
+  top: 0,
+  right: 0,
+});
+
+export const placeholderStyle = style({
+  textAlign: "center",
+});
+
 export const picker = style({
   position: "relative",
   width: "100%",

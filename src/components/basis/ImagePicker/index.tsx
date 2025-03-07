@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { fileInput, picker } from "./style.css";
+import { crossRemove, fileInput, picker, placeholderStyle } from "./style.css";
 
 import { default as Image } from "next/image";
 import { Typography } from "../Typography";
@@ -26,7 +26,6 @@ export default function ImagePicker({
     }
   };
 
-  // Update image state when defaultImage changes
   useEffect(() => {
     setImage(defaultImage);
   }, [defaultImage]);
@@ -40,11 +39,7 @@ export default function ImagePicker({
             e.preventDefault();
             if (onRemove) onRemove();
           }}
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-          }}
+          className={crossRemove}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +57,7 @@ export default function ImagePicker({
           ref={imageRef}
           priority
           src={image!}
-          alt="Imagem do produto"
+          alt="Imagem"
           height={400}
           width={400}
           style={{
@@ -72,7 +67,7 @@ export default function ImagePicker({
           }}
         />
       ) : (
-        <Typography.DisplayMediumBold>
+        <Typography.DisplayMediumBold className={placeholderStyle}>
           {placeholder}
         </Typography.DisplayMediumBold>
       )}

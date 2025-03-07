@@ -7,6 +7,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 
+import { Folders } from "../folders";
 import { app } from "@/firebase-config";
 
 interface UploadParams {
@@ -45,7 +46,6 @@ export default function useStorage(folder: Folders) {
       const objects = await list(ref(storage, `${folder}`));
 
       objects.items.forEach(async (i) => {
-        console.log(id, i.name, i.name.startsWith(id));
         if (i.name.startsWith(id)) {
           await deleteObject(ref(storage, i.fullPath));
         }

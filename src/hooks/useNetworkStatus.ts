@@ -15,7 +15,10 @@ export const useOnlineStatus = () => {
     // Optional: Verify connection with a fetch request if needed
     const checkNetworkStatus = async () => {
       try {
-        await fetch("https://httpbin.org/get", { cache: "no-cache" });
+        await fetch("https://httpbin.org/get", {
+          cache: "no-cache",
+          mode: "no-cors",
+        });
         if (!isOnline) setIsOnline(true);
       } catch {
         if (isOnline) setIsOnline(false);

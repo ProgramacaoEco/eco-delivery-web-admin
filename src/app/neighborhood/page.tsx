@@ -70,12 +70,6 @@ export default function NeighborhoodPage() {
             state="error"
           />
         )}
-        {/* <ActionFeedback
-        message="Usuário já existente"
-        autoHideDuration={3000}
-        open={existingUser}
-        state="error"
-      /> */}
         {success && (
           <ActionFeedback
             message={success}

@@ -1,15 +1,16 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { form, formFields } from "./style.css";
 
-import RoundedButton from "@/components/basis/Button/RoundedButton";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { CurrencyInput } from "react-currency-mask";
 import Dropdown from "@/components/basis/Dropdown";
 import DropdownItem from "@/components/basis/Dropdown/DropdownItem";
 import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { Category } from "@/helpers/firestore/model/product/category";
 import { Product } from "@/helpers/firestore/model/product/product";
-import { CurrencyInput } from "react-currency-mask";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import useCategories from "./hooks/useCategories";
 
 interface ProductFormProps {
@@ -79,11 +80,7 @@ export default function ProductForm({
         )
           return;
 
-        console.log(name);
-
         const c = categories.find((c) => c.name === name);
-
-        console.log(c);
 
         if (!c) return;
 
@@ -101,28 +98,14 @@ export default function ProductForm({
       loading={loading || categoriesLoading}
       error={error !== null || categoriesError !== null}
     >
-      <form
-        onSubmit={submit()}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <form onSubmit={submit()} className={form}>
         <ImagePicker
           defaultImage={defaultValue?.image}
           placeholder="Selecione a imagem do produto"
           onChange={handleImage}
         />
 
-        <div
-          style={{
-            width: "40%",
-            display: "flex",
-            flexDirection: "column",
-            gap: "30px",
-          }}
-        >
+        <div className={formFields}>
           <Controller
             control={control}
             name="id"

@@ -12,11 +12,16 @@ import ActionFeedback from "@/components/basis/ActionFeedback";
 import ImagePicker from "@/components/basis/ImagePicker";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
+import { swiperContainer } from "./style.css";
 import useCampaigns from "./hooks/useCampaigns";
+import useMediaQuery from "@/hooks/useMediaQuery";
+import { viewPort } from "@/theme/constants";
 
 export default function Campaigns() {
   const { campaigns, error, loading, save, success, deleteCampaign } =
     useCampaigns();
+
+  const matchQuerySmall = useMediaQuery(viewPort.small);
 
   return (
     <>
@@ -24,17 +29,13 @@ export default function Campaigns() {
       <LoadingContainer loading={loading} error={error !== null}>
         <Swiper
           resizeObserver
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            minHeight: "60vh",
-          }}
-          navigation
+          className={swiperContainer}
+          navigation={matchQuerySmall}
+          centeredSlidesBounds
           modules={[Navigation, Pagination, Scrollbar, A11y]}
           centeredSlides
           spaceBetween={10}
-          slidesPerView={3}
+          slidesPerView={matchQuerySmall ? 1 : 3}
         >
           {Array.from(Array(3).keys()).map((n, index) => {
             return (

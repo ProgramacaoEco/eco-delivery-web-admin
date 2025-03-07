@@ -23,7 +23,6 @@ export default class Item implements BaseModel {
   private readonly _notes: string;
 
   get product() {
-    console.log(this._product);
     return this._product;
   }
 

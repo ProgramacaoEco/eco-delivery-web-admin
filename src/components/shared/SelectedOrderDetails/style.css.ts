@@ -25,17 +25,12 @@ export const orderHeader = style({
   textAlign: "center",
 });
 
-export const orderTableBodyFreightCost = style({
-  backgroundColor: "lightblue",
-  color: themeVars.color.background,
-  width: "100%",
-});
-
 globalStyle("table", {
   border: "1px solid #ccc",
   borderCollapse: "collapse",
   margin: 0,
   padding: 0,
+  color: "white",
   width: "100%",
   tableLayout: "fixed",
 });
@@ -46,17 +41,19 @@ globalStyle("table caption", {
 });
 
 globalStyle("table tr", {
-  backgroundColor: "#f8f8f8",
   border: "1px solid #ddd",
   padding: ".35em",
+  backgroundColor: themeVars.color.tileOdd,
 });
 
 globalStyle("table th, table td", {
   padding: "1em",
+
   textAlign: "center",
 });
 
 globalStyle("table th", {
+  color: "white",
   fontSize: ".85em",
   letterSpacing: ".1em",
   textTransform: "uppercase",
@@ -96,7 +93,6 @@ globalStyle("table thead", {
 globalStyle("table tr", {
   "@media": {
     "screen and (max-width: 768px)": {
-      // borderBottom: "3px solid #ddd",
       display: "block",
       marginBottom: ".625em",
     },
