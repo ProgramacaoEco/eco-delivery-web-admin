@@ -30,10 +30,8 @@ export const layout = style({
   marginLeft: "auto",
   backgroundColor: themeVars.color.background,
   "@media": {
-    [viewPort.xs]: { paddingLeft: "2rem", paddingRight: "2rem" },
-    [viewPort.sm]: {
-      paddingLeft: "2rem",
-      paddingRight: "2rem",
+    [viewPort.small]: {
+      padding: "2rem",
       maxWidth: "640px",
     },
     [viewPort.md]: {

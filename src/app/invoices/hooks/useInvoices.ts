@@ -56,7 +56,8 @@ export default function useInvoices() {
       data?.phoneNumber,
       new Date(data?.createdOn),
       data.status,
-      data?.paymentMethod
+      data?.paymentMethod,
+      data?.uidOrderIssuer
     );
 
   const getInvoices = useCallback(() => {
