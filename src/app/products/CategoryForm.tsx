@@ -97,6 +97,7 @@ export default function CategoryForm({
               required: "The category must have a valid description",
             })}
             id="nome"
+            maxLength={24}
             error={errors.name?.message !== undefined}
             label="Nome da categoria"
           />
