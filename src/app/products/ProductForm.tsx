@@ -174,6 +174,7 @@ export default function ProductForm({
           <Controller
             control={control}
             name="category"
+            defaultValue={categories[0]}
             render={({ field }) => (
               <Dropdown
                 {...field}
