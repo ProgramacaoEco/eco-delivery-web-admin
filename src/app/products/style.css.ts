@@ -1,5 +1,5 @@
-import { style } from "@vanilla-extract/css";
 import { viewPort } from "@/theme/constants";
+import { style } from "@vanilla-extract/css";
 
 export const fileInput = style({
   display: "none",
@@ -28,6 +28,10 @@ export const formFields = style({
       width: "100%",
     },
   },
+});
+
+export const saveButton = style({
+  backgroundColor: "orange",
 });
 
 export const menuButton = style({

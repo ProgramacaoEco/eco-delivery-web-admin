@@ -1,11 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { form, formFields } from "./style.css";
+import { form, formFields, saveButton } from "./style.css";
 
-import { Category } from "@/helpers/firestore/model/product/category";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import RoundedButton from "@/components/basis/Button/RoundedButton";
+import { Category } from "@/helpers/firestore/model/product/category";
 import { useForm } from "react-hook-form";
 
 interface CategoryFormProps {
@@ -88,7 +88,7 @@ export default function CategoryForm({
             error={errors.name?.message !== undefined}
             label="Nome da categoria"
           />
-          <RoundedButton type="submit" buttonColor="orange">
+          <RoundedButton className={saveButton} type="submit">
             Salvar
           </RoundedButton>
         </div>
