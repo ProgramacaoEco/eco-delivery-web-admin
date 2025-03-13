@@ -40,7 +40,7 @@ export default function CategoryForm({
     formState: { errors },
   } = useForm<Category>({
     defaultValues: {
-      id: "",
+      id: Date.now().toString(),
       name: "",
       pictureUrl: "",
     },

@@ -22,7 +22,7 @@ export default function useSetCategory(isEditing: boolean = false) {
 
     if (file !== undefined) {
       return await upload({
-        id: category.name,
+        id: category.id,
         file: file,
         onError: () => {
           setError(errorMessage("ao cadastrar imagem da categoria."));
@@ -30,7 +30,7 @@ export default function useSetCategory(isEditing: boolean = false) {
         },
         onSuccess: async (imagePath) => {
           const newCategory = new Category(
-            category.name,
+            category.id,
             category.name,
             imagePath!
           );
@@ -63,7 +63,7 @@ export default function useSetCategory(isEditing: boolean = false) {
     }
 
     const newCategory = new Category(
-      category.name,
+      category.id,
       category.name,
       category.pictureUrl
     );

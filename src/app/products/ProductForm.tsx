@@ -184,7 +184,7 @@ export default function ProductForm({
                 value={field.value?.id}
                 onChange={(selectedValue) => {
                   const selectedCategory = categories.find(
-                    (c) => c.name === selectedValue.target.value
+                    (c) => c.id === selectedValue.target.value
                   );
                   if (selectedCategory) {
                     field.onChange(selectedCategory); // Update form value with Category object
@@ -192,7 +192,7 @@ export default function ProductForm({
                 }}
               >
                 {categories.map(({ id, name }) => (
-                  <DropdownItem key={id} value={name}>
+                  <DropdownItem key={id} value={id}>
                     {name}
                   </DropdownItem>
                 ))}
