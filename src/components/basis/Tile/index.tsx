@@ -1,8 +1,9 @@
+import { tile, tileContainer } from "./style.css";
+
 import Delete from "@icons/Delete";
 import { Edit } from "@icons/index";
 import { IconButton } from "@mui/material";
 import { PropsWithChildren } from "react";
-import { tile } from "./style.css";
 
 interface TileProps {
   isDeletable?: boolean;
@@ -19,7 +20,11 @@ export default function Tile({
   onDelete,
 }: PropsWithChildren<TileProps>) {
   return (
-    <div>
+    <div
+      onClick={onEdit}
+      style={{ cursor: onEdit ? "pointer" : "default" }}
+      className={tileContainer}
+    >
       <div className={tile}>
         <div>{children}</div>
         <div>
