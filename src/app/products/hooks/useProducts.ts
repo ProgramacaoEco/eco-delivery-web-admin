@@ -1,10 +1,12 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useEffect, useState } from "react";
 
-import { Category } from "@/helpers/firestore/model/product/category";
 import { Collections } from "@/helpers/firestore/collections";
-import { Product } from "@/helpers/firestore/model/product/product";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { Product } from "@/helpers/firestore/model/product/product";
+import { Folders } from "@/helpers/storage/folders";
+import useStorage from "@/helpers/storage/hooks/useStorage";
 
 export default function useProducts() {
   const [loading, setLoading] = useState(false);
@@ -45,24 +47,35 @@ export default function useProducts() {
   };
 
   const useDeleteProducts = () => {
-    const { remove } = useFirebase();
+    const { remove: removeFirebase } = useFirebase();
+    const { remove: removeStorage } = useStorage(Folders.Produtos);
 
     const collection = Collections.Produtos;
     const removeProduct = async (id: string) => {
       setError(null);
       setLoading(true);
-      await remove({
-        collection: collection,
-        id,
-        data: products,
-        onData: setProducts,
+      removeStorage({
+        id: id,
         onError: () => {
           setError(errorMessage("ao remover o produto."));
           setLoading(false);
+          return;
         },
-        onSuccess: () => {
-          setSuccess(successMessage("Produto removido"));
-          setLoading(false);
+        onSuccess: async () => {
+          await removeFirebase({
+            collection: collection,
+            id,
+            data: products,
+            onData: setProducts,
+            onError: () => {
+              setError(errorMessage("ao remover o produto."));
+              setLoading(false);
+            },
+            onSuccess: () => {
+              setSuccess(successMessage("Produto removido"));
+              setLoading(false);
+            },
+          });
         },
       });
     };

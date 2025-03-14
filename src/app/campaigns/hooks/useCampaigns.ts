@@ -75,7 +75,7 @@ export default function useCampaigns() {
     });
   };
 
-  const save = async (id: string, campaignOrder: number, file?: File) => {
+  const save = async (id: string, file?: File) => {
     setSuccess(null);
 
     setLoading(true);
