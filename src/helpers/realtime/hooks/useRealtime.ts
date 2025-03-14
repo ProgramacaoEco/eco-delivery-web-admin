@@ -1,7 +1,14 @@
-import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
+import {
+  getDatabase,
+  get as getQuery,
+  onValue,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
 
-import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { app } from "@/firebase-config";
+import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { useCallback } from "react";
 
 interface UseRealtimeParams<T extends BaseModel> {
@@ -75,19 +82,41 @@ export default function useRealtime<T extends BaseModel>() {
     []
   );
 
-  const getSingle = useCallback(
+  const get = useCallback(
     async ({
       onError,
-
       onData,
       reference,
-      id,
-    }: UseRealtimeParams<T>) => {
+    }: Omit<UseRealtimeParams<T>, "id">) => {
+      const db = getDatabase(app);
+      const query = ref(db, reference);
+
+      try {
+        const snapshot = await getQuery(query);
+
+        if (!snapshot.exists()) {
+          onData([]);
+          return;
+        }
+
+        const data = Object.values(snapshot.val());
+
+        onData(data);
+      } catch (error) {
+        console.log(error);
+        onError();
+      }
+    },
+    []
+  );
+
+  const getSingle = useCallback(
+    async ({ onError, onData, reference, id }: UseRealtimeParams<T>) => {
       const db = getDatabase(app);
       const query = ref(db, `${reference}/${id}`);
 
       try {
-        const snapshot = await get(query);
+        const snapshot = await getQuery(query);
 
         if (!snapshot.exists()) {
           onData(undefined);
@@ -122,5 +151,5 @@ export default function useRealtime<T extends BaseModel>() {
     []
   );
 
-  return { listenToValue, getSingle, setValue, deleteSingle };
+  return { listenToValue, getSingle, setValue, deleteSingle, get };
 }

@@ -1,21 +1,22 @@
 import { useCallback, useContext } from "react";
 
-import Address from "@/helpers/realtime/model/order/address";
-import { Category } from "@/helpers/firestore/model/product/category";
 import { Collections } from "@/helpers/firestore/collections";
-import Item from "@/helpers/realtime/model/order/item";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import Order from "@/helpers/realtime/model/order/order";
-import { OrderContext } from "../context/OrderContext";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import { Category } from "@/helpers/firestore/model/product/category";
 import { Product } from "@/helpers/firestore/model/product/product";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import Address from "@/helpers/realtime/model/order/address";
+import Item from "@/helpers/realtime/model/order/item";
+import Order from "@/helpers/realtime/model/order/order";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import { OrderContext } from "../context/OrderContext";
 
 export default function useOrders() {
-  const { getSingle, listenToValue, setValue, deleteSingle } = useRealtime();
+  const { getSingle, listenToValue, setValue, deleteSingle, get } =
+    useRealtime();
   const { set } = useFirebase();
 
   const { setError, setLoading, setOrders, setSelectedOrder, orders } =
@@ -89,6 +90,22 @@ export default function useOrders() {
     },
     [getSingle, setError, setLoading, setSelectedOrder]
   );
+
+  const getOrders = useCallback(async () => {
+    setError(undefined);
+    setLoading(true);
+    return await get({
+      onData: (data) => {
+        setOrders(data.map((o: Order) => createOrder(o, o.isViewed, o.status)));
+        setLoading(false);
+      },
+      onError: () => {
+        setError(errorMessage("ao obter os pedidos"));
+        setLoading(false);
+      },
+      reference: References.orders,
+    });
+  }, [get, setError, setLoading, setOrders]);
 
   const listenToOrders = useCallback(async () => {
     setError(undefined);
@@ -168,5 +185,6 @@ export default function useOrders() {
     listenToOrders,
     deleteOrder,
     setInvoice,
+    getOrders,
   };
 }

@@ -1,15 +1,22 @@
 "use client";
 
-import Link from "next/link";
+import { useContext, useEffect } from "react";
+
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { OrderContext } from "./context/OrderContext";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
-import { useContext } from "react";
+import Link from "next/link";
+import { OrderContext } from "./context/OrderContext";
+import useOrders from "./hooks/useOrders";
 
 export default function Orders() {
   const { loading, error, orders } = useContext(OrderContext);
+  const { getOrders } = useOrders();
+
+  useEffect(() => {
+    getOrders();
+  }, []);
 
   return (
     <>
