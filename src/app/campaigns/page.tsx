@@ -48,7 +48,7 @@ export default function Campaigns() {
                   await deleteCampaign("campaign-1");
                 }
                 if (event.target.files)
-                  save("campaign-1", 0, event.target.files[0]);
+                  save("campaign-1", event.target.files[0]);
               }}
             />
           </SwiperSlide>
@@ -64,7 +64,7 @@ export default function Campaigns() {
                   await deleteCampaign("campaign-2");
                 }
                 if (event.target.files)
-                  save("campaign-2", 1, event.target.files[0]);
+                  save("campaign-2", event.target.files[0]);
               }}
             />
           </SwiperSlide>
@@ -80,7 +80,7 @@ export default function Campaigns() {
                   await deleteCampaign("campaign-3");
                 }
                 if (event.target.files)
-                  save("campaign-3", 2, event.target.files[0]);
+                  save("campaign-3", event.target.files[0]);
               }}
             />
           </SwiperSlide>
