@@ -9,12 +9,12 @@ import {
 } from "./style.css";
 
 import GoogleButton from "@/components/basis/Button/GoogleButton";
-import Image from "next/image";
 import LinkButton from "@/components/basis/LinkButton";
 import { Typography } from "@/components/basis/Typography";
-import { signIn } from "next-auth/react";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { viewPort } from "@/theme/constants";
+import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 export default function SignIn() {
   const matchMedia = useMediaQuery(viewPort.small);
@@ -55,7 +55,9 @@ export default function SignIn() {
             É sempre bom vê-lo novamente.
           </Typography.TitleLight>
           <GoogleButton action={signIn} />
-          <LinkButton href="#">Precisa de ajuda?</LinkButton>
+          <LinkButton href="https://wa.me/5551991672281?text=Preciso%20de%20ajuda%20com%20o%20Eco%20Delivery.">
+            Precisa de ajuda?
+          </LinkButton>
         </div>
       </div>
     </main>
