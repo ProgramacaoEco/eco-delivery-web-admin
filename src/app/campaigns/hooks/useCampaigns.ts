@@ -25,8 +25,7 @@ export default function useCampaigns() {
     setLoading(true);
     get({
       collection: collection,
-      transformer: (data) =>
-        new Campaign(data.id, data.campaignDownloadUrl, data.order),
+      transformer: (data) => new Campaign(data.id, data.campaignDownloadUrl),
       onData: (campaigns: Campaign[]) => {
         const updatedCampaigns = new Map<string, Campaign>();
         campaigns.forEach((c) => updatedCampaigns.set(c.id, c));
@@ -95,10 +94,7 @@ export default function useCampaigns() {
             onSuccess: () => {
               setSuccess(successMessage("Campanha cadastrada"));
               const updatedCampaigns = campaigns;
-              updatedCampaigns.set(
-                id,
-                new Campaign(id, imagePath, campaignOrder)
-              );
+              updatedCampaigns.set(id, new Campaign(id, imagePath));
               setCampaigns(updatedCampaigns);
               setLoading(false);
             },
@@ -107,7 +103,7 @@ export default function useCampaigns() {
               setLoading(false);
             },
             collection,
-            body: new Campaign(id, imagePath, campaignOrder),
+            body: new Campaign(id, imagePath),
           });
         },
       });
