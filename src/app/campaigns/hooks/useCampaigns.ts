@@ -14,18 +14,23 @@ export default function useCampaigns() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaigns, setCampaigns] = useState<Map<string, Campaign>>(new Map());
 
   const collection = Collections.Campanhas;
+
+  let data: Campaign[] = [];
 
   useEffect(() => {
     setError(null);
     setLoading(true);
     get({
       collection: collection,
-      transformer: (data) => new Campaign(data.id, data.campaignDownloadUrl),
-      onData: (campaigns) => {
-        setCampaigns(campaigns);
+      transformer: (data) =>
+        new Campaign(data.id, data.campaignDownloadUrl, data.order),
+      onData: (campaigns: Campaign[]) => {
+        const updatedCampaigns = new Map<string, Campaign>();
+        campaigns.forEach((c) => updatedCampaigns.set(c.id, c));
+        setCampaigns(updatedCampaigns);
         setLoading(false);
       },
       onError: () => {
@@ -57,15 +62,21 @@ export default function useCampaigns() {
             setError(errorMessage("ao remover a campanha"));
             setLoading(false);
           },
-          onData: setCampaigns,
+          onData: () => {
+            const updatedCampaigns = campaigns;
+            updatedCampaigns.delete(id);
+            setCampaigns(updatedCampaigns);
+            data = [];
+            campaigns.forEach((v, k) => data.push(v));
+          },
           collection: collection,
-          data: campaigns,
+          data: data,
         });
       },
     });
   };
 
-  const save = async (id: string, file?: File) => {
+  const save = async (id: string, campaignOrder: number, file?: File) => {
     setSuccess(null);
 
     setLoading(true);
@@ -83,7 +94,12 @@ export default function useCampaigns() {
           set({
             onSuccess: () => {
               setSuccess(successMessage("Campanha cadastrada"));
-              setCampaigns((c) => [...c, new Campaign(id, imagePath)]);
+              const updatedCampaigns = campaigns;
+              updatedCampaigns.set(
+                id,
+                new Campaign(id, imagePath, campaignOrder)
+              );
+              setCampaigns(updatedCampaigns);
               setLoading(false);
             },
             onError: () => {
@@ -91,7 +107,7 @@ export default function useCampaigns() {
               setLoading(false);
             },
             collection,
-            body: new Campaign(id, imagePath),
+            body: new Campaign(id, imagePath, campaignOrder),
           });
         },
       });

@@ -1,5 +1,6 @@
 "use client";
 
+import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 import {
   Assignment,
   AssignmentCheck,
@@ -11,22 +12,21 @@ import {
   Report,
   Settings,
 } from "@icons/index";
-import { homeContainer, homeGrid, homeHeader } from "./style.css";
 import { signOut, useSession } from "next-auth/react";
-import toast, { Toaster } from "react-hot-toast";
 import { useContext, useEffect, useState } from "react";
-import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
+import toast, { Toaster } from "react-hot-toast";
+import { homeContainer, homeGrid, homeHeader } from "./style.css";
 
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
-import { Howl } from "howler";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { OrderContext } from "../orders/context/OrderContext";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { themeVars } from "@/theme/theme.css";
+import { IconButton } from "@mui/material";
+import { Howl } from "howler";
+import Image from "next/image";
+import { OrderContext } from "../orders/context/OrderContext";
 import useOrders from "../orders/hooks/useOrders";
 
 export default function Page() {

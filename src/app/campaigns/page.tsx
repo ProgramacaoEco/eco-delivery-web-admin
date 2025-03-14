@@ -12,17 +12,16 @@ import ActionFeedback from "@/components/basis/ActionFeedback";
 import ImagePicker from "@/components/basis/ImagePicker";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import { swiperContainer } from "./style.css";
-import useCampaigns from "./hooks/useCampaigns";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { viewPort } from "@/theme/constants";
+import useCampaigns from "./hooks/useCampaigns";
+import { swiperContainer } from "./style.css";
 
 export default function Campaigns() {
   const { campaigns, error, loading, save, success, deleteCampaign } =
     useCampaigns();
 
   const matchQuerySmall = useMediaQuery(viewPort.small);
-
   return (
     <>
       <PageTitle isLoading={loading} dark color="white" title="Campanhas" />
@@ -37,24 +36,54 @@ export default function Campaigns() {
           spaceBetween={10}
           slidesPerView={matchQuerySmall ? 1 : 3}
         >
-          {Array.from(Array(3).keys()).map((n, index) => {
-            return (
-              <SwiperSlide id={`campanha-${n}`} key={`campanha-${n}`}>
-                <ImagePicker
-                  onRemove={() => deleteCampaign(campaigns[index].id)}
-                  defaultImage={campaigns[index]?.campaignDownloadUrl}
-                  placeholder="Selecione a imagem da campanha"
-                  onChange={async (event) => {
-                    if (campaigns[index]) {
-                      await deleteCampaign(`campanha-${n}`);
-                    }
-                    if (event.target.files)
-                      save(`campanha-${n}`, event.target.files[0]);
-                  }}
-                />
-              </SwiperSlide>
-            );
-          })}
+          <SwiperSlide id={"campaign-1"} key={"campaign-1"}>
+            <ImagePicker
+              id={"campaign-1"}
+              key={"campaign-1"}
+              onRemove={() => deleteCampaign("campaign-1")}
+              defaultImage={campaigns.get("campaign-1")?.campaignDownloadUrl}
+              placeholder="Selecione a imagem da campanha"
+              onChange={async (event) => {
+                if (campaigns.has("campaign-1")) {
+                  await deleteCampaign("campaign-1");
+                }
+                if (event.target.files)
+                  save("campaign-1", 0, event.target.files[0]);
+              }}
+            />
+          </SwiperSlide>
+          <SwiperSlide id={"campaign-2"} key={"campaign-2"}>
+            <ImagePicker
+              id={"campaign-2"}
+              key={"campaign-2"}
+              onRemove={() => deleteCampaign("campaign-2")}
+              defaultImage={campaigns.get("campaign-2")?.campaignDownloadUrl}
+              placeholder="Selecione a imagem da campanha"
+              onChange={async (event) => {
+                if (campaigns.has("campaign-2")) {
+                  await deleteCampaign("campaign-2");
+                }
+                if (event.target.files)
+                  save("campaign-2", 1, event.target.files[0]);
+              }}
+            />
+          </SwiperSlide>
+          <SwiperSlide id={"campaign-3"} key={"campaign-3"}>
+            <ImagePicker
+              id={"campaign-3"}
+              key={"campaign-3"}
+              onRemove={() => deleteCampaign("campaign-3")}
+              defaultImage={campaigns.get("campaign-3")?.campaignDownloadUrl}
+              placeholder="Selecione a imagem da campanha"
+              onChange={async (event) => {
+                if (campaigns.has("campaign-3")) {
+                  await deleteCampaign("campaign-3");
+                }
+                if (event.target.files)
+                  save("campaign-3", 2, event.target.files[0]);
+              }}
+            />
+          </SwiperSlide>
         </Swiper>
       </LoadingContainer>
       {success && (
