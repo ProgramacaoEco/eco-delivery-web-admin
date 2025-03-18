@@ -51,7 +51,6 @@ export default function ProductForm({
   } = useForm<Product>({
     defaultValues: {
       id: "",
-      category: categories[0],
       value: 0,
       inventory: 0,
     },
@@ -70,28 +69,24 @@ export default function ProductForm({
   }, [defaultValue, reset]);
 
   const submit = () =>
-    handleSubmit(
-      ({ id, category: { name }, description, value, inventory }, event) => {
-        event?.preventDefault();
-        if (
-          Object.entries(errors).find(
-            ([_, value]) => value.message !== undefined
-          )
-        )
-          return;
+    handleSubmit(({ id, category, description, value, inventory }, event) => {
+      event?.preventDefault();
+      if (
+        Object.entries(errors).find(([_, value]) => value.message !== undefined)
+      )
+        return;
 
-        const c = categories.find((c) => c.name === name);
+      const c = categories.find((c) => c.id === category.id);
 
-        if (!c) return;
+      if (!c) return;
 
-        onSubmit(
-          new Product(id, description, value, c, inventory, image),
-          c,
-          binaryImage
-        );
-        reset();
-      }
-    );
+      onSubmit(
+        new Product(id, description, value, c, inventory, image),
+        c,
+        binaryImage
+      );
+      reset();
+    });
 
   return (
     <LoadingContainer
@@ -174,6 +169,7 @@ export default function ProductForm({
           <Controller
             control={control}
             name="category"
+            defaultValue={categories[0]}
             render={({ field }) => (
               <Dropdown
                 {...field}
