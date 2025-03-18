@@ -14,3 +14,8 @@ export const tile = style({
   textTransform: "uppercase",
   padding: "10px",
 });
+
+export const newOrderBadge = style({
+  color: "orange",
+  fontWeight: "bold",
+});

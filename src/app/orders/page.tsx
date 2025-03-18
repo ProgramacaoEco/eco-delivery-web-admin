@@ -12,11 +12,11 @@ import useOrders from "./hooks/useOrders";
 
 export default function Orders() {
   const { loading, error, orders } = useContext(OrderContext);
-  const { getOrders } = useOrders();
+  const { listenToOrders } = useOrders();
 
   useEffect(() => {
-    getOrders();
-  }, []);
+    listenToOrders();
+  }, [listenToOrders]);
 
   return (
     <>
@@ -25,14 +25,16 @@ export default function Orders() {
         {orders && (
           <>
             <ListTile>
-              {orders.map(({ orderIssuer, id, createdOn }) => (
-                <Link key={id} href={`/orders/${id}`}>
-                  <Tile isDeletable={false}>
-                    {createdOn?.toLocaleDateString("pt-BR")}{" "}
-                    {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
-                  </Tile>
-                </Link>
-              ))}
+              {orders
+                .sort((a, b) => -1)
+                .map(({ orderIssuer, id, createdOn, isViewed }) => (
+                  <Link key={id} href={`/orders/${id}`}>
+                    <Tile isDeletable={false} isNewOrder={!isViewed}>
+                      {createdOn?.toLocaleDateString("pt-BR")}{" "}
+                      {createdOn?.toLocaleTimeString("pt-BR")} - {orderIssuer}
+                    </Tile>
+                  </Link>
+                ))}
             </ListTile>
           </>
         )}

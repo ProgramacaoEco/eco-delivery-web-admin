@@ -1,12 +1,14 @@
+import { newOrderBadge, tile } from "./style.css";
+
 import Delete from "@icons/Delete";
 import { Edit } from "@icons/index";
 import { IconButton } from "@mui/material";
 import { PropsWithChildren } from "react";
-import { tile } from "./style.css";
 
 interface TileProps {
   isDeletable?: boolean;
   isEditable?: boolean;
+  isNewOrder?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -15,6 +17,7 @@ export default function Tile({
   children,
   isDeletable = true,
   isEditable = false,
+  isNewOrder = false,
   onEdit,
   onDelete,
 }: PropsWithChildren<TileProps>) {
@@ -36,6 +39,7 @@ export default function Tile({
               <Delete />
             </IconButton>
           )}
+          {isNewOrder && <div className={newOrderBadge}>Novo pedido!</div>}
         </div>
       </div>
     </div>

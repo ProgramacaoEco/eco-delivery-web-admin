@@ -91,22 +91,6 @@ export default function useOrders() {
     [getSingle, setError, setLoading, setSelectedOrder]
   );
 
-  const getOrders = useCallback(async () => {
-    setError(undefined);
-    setLoading(true);
-    return await get({
-      onData: (data) => {
-        setOrders(data.map((o: Order) => createOrder(o, o.isViewed, o.status)));
-        setLoading(false);
-      },
-      onError: () => {
-        setError(errorMessage("ao obter os pedidos"));
-        setLoading(false);
-      },
-      reference: References.orders,
-    });
-  }, [get, setError, setLoading, setOrders]);
-
   const listenToOrders = useCallback(async () => {
     setError(undefined);
     setLoading(true);
@@ -185,6 +169,5 @@ export default function useOrders() {
     listenToOrders,
     deleteOrder,
     setInvoice,
-    getOrders,
   };
 }
