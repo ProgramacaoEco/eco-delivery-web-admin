@@ -27,7 +27,7 @@ export default function useUser() {
       transformer: (data) =>
         new User(data.id, data.email, data.name, data.isAdmin),
       onData: (users) => {
-        if (sessionData && loading) {
+        if (sessionData) {
           setLoading(false);
         }
         setUsers(users);
@@ -39,7 +39,7 @@ export default function useUser() {
       },
       onError: () => {
         setError(errorMessage("ao obter os usuários"));
-        if (sessionData && loading) {
+        if (sessionData) {
           setLoading(false);
         }
       },

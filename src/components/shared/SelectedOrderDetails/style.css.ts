@@ -64,6 +64,9 @@ globalStyle("table", {
     "screen and (max-width: 768px)": {
       border: 0,
     },
+    print: {
+      border: 0,
+    },
   },
 });
 
@@ -72,12 +75,25 @@ globalStyle("table caption", {
     "screen and (max-width: 768px)": {
       fontSize: "1.3em",
     },
+    print: {
+      fontSize: "1.3em",
+    },
   },
 });
 
 globalStyle("table thead", {
   "@media": {
     "screen and (max-width: 768px)": {
+      border: "none",
+      clip: "rect(0 0 0 0)",
+      height: "1px",
+      margin: "-1px",
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      width: "1px",
+    },
+    print: {
       border: "none",
       clip: "rect(0 0 0 0)",
       height: "1px",
@@ -96,12 +112,22 @@ globalStyle("table tr", {
       display: "block",
       marginBottom: ".625em",
     },
+    print: {
+      display: "block",
+      marginBottom: ".625em",
+    },
   },
 });
 
 globalStyle("table td", {
   "@media": {
     "screen and (max-width: 768px)": {
+      borderBottom: "1px solid #ddd",
+      display: "block",
+      fontSize: ".8em",
+      textAlign: "right",
+    },
+    print: {
       borderBottom: "1px solid #ddd",
       display: "block",
       fontSize: ".8em",
@@ -118,12 +144,22 @@ globalStyle("table td::before", {
       fontWeight: "bold",
       textTransform: "uppercase",
     },
+    print: {
+      content: "attr(data-label)",
+      float: "left",
+      fontWeight: "bold",
+      textTransform: "uppercase",
+    },
   },
 });
 
 globalStyle("table td:last-child", {
   "@media": {
     "screen and (max-width: 768px)": {
+      borderBottom: 0,
+      marginBottom: "1em",
+    },
+    print: {
       borderBottom: 0,
       marginBottom: "1em",
     },

@@ -1,11 +1,11 @@
 import { Close, CloseDark } from "@icons/index";
 import { useEffect, useState } from "react";
 
+import { Typography } from "@/components/basis/Typography";
+import { themeVars } from "@/theme/theme.css";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { Typography } from "@/components/basis/Typography";
-import { themeVars } from "@/theme/theme.css";
 import { useRouter } from "next/navigation";
 
 interface PageTitleProps {
@@ -13,6 +13,7 @@ interface PageTitleProps {
   onClose?: () => void;
   isLoading: boolean;
   title: string;
+  subtitle?: string;
   dark?: boolean;
 }
 
@@ -22,6 +23,7 @@ export default function PageTitle({
   title,
   isLoading = false,
   dark = false,
+  subtitle = undefined,
 }: PageTitleProps) {
   const router = useRouter();
 
@@ -40,7 +42,8 @@ export default function PageTitle({
   const closeIconButton: React.CSSProperties = {
     fontSize: "2rem",
     position: "absolute",
-    right: "2.5rem",
+    right: "1rem",
+    bottom: "1.5rem",
     padding: "0",
   };
 
@@ -71,7 +74,12 @@ export default function PageTitle({
           <Typography.TitleRegular
             color={dark ? themeVars.color.background : "white"}
           >
-            {title}
+            <div style={{ textAlign: "center" }}>
+              {title}
+              <br />
+              {subtitle}
+            </div>
+
             <IconButton
               style={closeIconButton}
               onClick={

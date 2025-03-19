@@ -6,6 +6,17 @@ globalStyle(".MuiSnackbarContent-root", {
   backgroundColor: "red",
 });
 
+export const userForm = style({
+  display: "flex",
+  alignItems: "center",
+  gap: "1.25rem",
+  "@media": {
+    [viewPort.small]: {
+      flexDirection: "column",
+    },
+  },
+});
+
 const users = style({
   display: "flex",
   flexDirection: "column",

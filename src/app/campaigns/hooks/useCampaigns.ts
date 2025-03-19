@@ -37,7 +37,7 @@ export default function useCampaigns() {
         setLoading(false);
       },
     });
-  }, []);
+  }, [get, collection]);
 
   const deleteCampaign = async (id: string) => {
     setSuccess(null);

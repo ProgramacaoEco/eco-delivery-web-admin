@@ -2,14 +2,14 @@
 
 import "./style.css";
 
-import { useContext, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
 
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { OrderContext } from "../context/OrderContext";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import SelectedOrderDetails from "../../../components/shared/SelectedOrderDetails";
+import { OrderContext } from "../context/OrderContext";
 import useOrders from "../hooks/useOrders";
 
 export default function OrderDetails() {
@@ -49,11 +49,10 @@ export default function OrderDetails() {
         title={
           selectedOrder
             ? `${selectedOrder.createdOn?.toLocaleDateString("pt-BR")}
-            ${selectedOrder.createdOn?.toLocaleTimeString("pt-BR")} - ${
-                selectedOrder.orderIssuer
-              }`
+            ${selectedOrder.createdOn?.toLocaleTimeString("pt-BR")}`
             : ""
         }
+        subtitle={selectedOrder?.orderIssuer}
       />
       <LoadingContainer
         loading={loading}

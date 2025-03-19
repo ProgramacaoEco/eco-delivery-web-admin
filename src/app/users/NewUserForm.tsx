@@ -1,9 +1,10 @@
-import Check from "@icons/Check";
-import { IconButton } from "@mui/material";
 import InputText from "@/components/basis/InputText/InputText";
 import { User } from "@/helpers/firestore/model/admin/user";
-import { emailVerificationRegex } from "../../../constants";
+import Check from "@icons/Check";
+import { IconButton } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { emailVerificationRegex } from "../../../constants";
+import { userForm } from "./style.css";
 
 type NewUserFormType = {
   email: string;
@@ -33,11 +34,7 @@ export default function NewUserForm({ onSubmit }: NewUserFormProps) {
           reset();
         }
       })}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "1.25rem",
-      }}
+      className={userForm}
     >
       <InputText
         label="E-mail do usuário"
