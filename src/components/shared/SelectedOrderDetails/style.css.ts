@@ -167,12 +167,7 @@ globalStyle("table td:last-child", {
       marginBottom: "1em",
     },
     print: {
-      // borderBottom: 0,
       marginBottom: "1em",
     },
   },
 });
-
-globalStyle("td[data-label]='Descrição'", {
-  content: ''
-})
