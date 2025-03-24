@@ -1,5 +1,7 @@
 import "./style.css";
 
+import { useEffect, useState } from "react";
+
 import Order from "@/helpers/realtime/model/order/order";
 import OrderButton from "./OrderButton";
 import OrderHeader from "./OrderHeader";
@@ -8,7 +10,6 @@ import OrderTable from "./OrderTable";
 import OrderTableBody from "./OrderTableBody";
 import OrderTableHead from "./OrderTableHead";
 import { orderButtonContainer } from "./style.css";
-import { useEffect } from "react";
 
 interface OrderDetailsProps {
   selectedOrder?: Order | null;
@@ -24,7 +25,7 @@ export default function SelectedOrderDetails({
 
     if (selectedOrder.status === OrderStatus.new) {
       onUpdateStatus(OrderStatus.picking);
-    }
+    }    
   }, [onUpdateStatus, selectedOrder]);
 
   const total =
@@ -49,6 +50,7 @@ export default function SelectedOrderDetails({
           flexDirection: "column",
           gap: "1rem",
           marginTop: "1rem",
+          
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between" }}>

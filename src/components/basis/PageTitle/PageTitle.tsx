@@ -1,11 +1,12 @@
 import { Close, CloseDark } from "@icons/index";
 import { useEffect, useState } from "react";
 
-import { Typography } from "@/components/basis/Typography";
-import { themeVars } from "@/theme/theme.css";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import { Typography } from "@/components/basis/Typography";
+import { hideInPrint } from "./style.css";
+import { themeVars } from "@/theme/theme.css";
 import { useRouter } from "next/navigation";
 
 interface PageTitleProps {
@@ -68,7 +69,7 @@ export default function PageTitle({
   const CloseIcon = dark ? CloseDark : Close;
 
   return (
-    <Box sx={{ height: "5.5rem" }}>
+    <Box sx={{ height: "5.5rem" }} className={hideInPrint}>
       {show && (
         <AppBar style={appbarStyle}>
           <Typography.TitleRegular

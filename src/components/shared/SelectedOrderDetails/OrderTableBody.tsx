@@ -1,5 +1,7 @@
 import "./style.css";
 
+import { useEffect, useState } from "react";
+
 import Item from "@/helpers/realtime/model/order/item";
 import Order from "@/helpers/realtime/model/order/order";
 
@@ -8,6 +10,7 @@ interface OrderTableBodyProps {
 }
 
 export default function OrderTableBody({ selectedOrder }: OrderTableBodyProps) {
+
   return (
     <tbody>
       {selectedOrder?.items?.map(
@@ -16,7 +19,7 @@ export default function OrderTableBody({ selectedOrder }: OrderTableBodyProps) {
             <td scope="row" data-label="Cód">
               {id}
             </td>
-            <td scope="row" data-label="Descrição">
+            <td scope="row" data-label={!window.matchMedia("print").matches ? "" : "Descrição"}>
               {product.description}
             </td>
             <td scope="row" data-label="Quantidade">

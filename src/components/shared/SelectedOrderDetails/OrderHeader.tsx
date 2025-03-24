@@ -18,6 +18,7 @@ export default function OrderHeader({ selectedOrder }: OrderHeaderProps) {
         {selectedOrder?.address.postalCode}
       </h3>
       <h3>{selectedOrder?.address.reference}</h3>
+      <h3>{selectedOrder?.createdOn.toLocaleDateString()} - {selectedOrder?.createdOn.toLocaleTimeString()}</h3>
     </caption>
   );
 }

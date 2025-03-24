@@ -33,6 +33,11 @@ globalStyle("table", {
   color: "white",
   width: "100%",
   tableLayout: "fixed",
+  "@media": {
+    print: {
+      border: "1px solid black",
+    },
+  },
 });
 
 globalStyle("table caption", {
@@ -44,6 +49,11 @@ globalStyle("table tr", {
   border: "1px solid #ddd",
   padding: ".35em",
   backgroundColor: themeVars.color.tileOdd,
+  "@media": {
+    print: {
+      border: "1px solid black",
+    },
+  },
 });
 
 globalStyle("table th, table td", {
@@ -94,7 +104,6 @@ globalStyle("table thead", {
       width: "1px",
     },
     print: {
-      border: "none",
       clip: "rect(0 0 0 0)",
       height: "1px",
       margin: "-1px",
@@ -128,10 +137,9 @@ globalStyle("table td", {
       textAlign: "right",
     },
     print: {
-      borderBottom: "1px solid #ddd",
+      borderBottom: "1px solid black",
       display: "block",
       fontSize: ".8em",
-      textAlign: "right",
     },
   },
 });
@@ -146,7 +154,6 @@ globalStyle("table td::before", {
     },
     print: {
       content: "attr(data-label)",
-      float: "left",
       fontWeight: "bold",
       textTransform: "uppercase",
     },
@@ -160,8 +167,12 @@ globalStyle("table td:last-child", {
       marginBottom: "1em",
     },
     print: {
-      borderBottom: 0,
+      // borderBottom: 0,
       marginBottom: "1em",
     },
   },
 });
+
+globalStyle("td[data-label]='Descrição'", {
+  content: ''
+})
