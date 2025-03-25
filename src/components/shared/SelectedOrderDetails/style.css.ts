@@ -200,7 +200,7 @@ globalStyle(
 globalStyle(`${printerTicket} th`, {
   fontWeight: "inherit",
   padding: `${printerPaddingBase} 0`,
-  textAlign: "center",
+  textAlign: "left",
   borderBottom: `1px dashed ${colorGray}`,
 });
 
