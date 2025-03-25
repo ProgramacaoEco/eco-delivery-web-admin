@@ -178,6 +178,8 @@ globalStyle(`${printerTicket}, ${printerTicket} *`, {
   textAlign: "left",
   color: "black !important",
   fontSize: "10px",
+  margin: "0",
+  padding: "0",
 });
 
 globalStyle(
