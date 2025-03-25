@@ -1,5 +1,10 @@
-import { style } from "@vanilla-extract/css";
+import { fontFace, style } from "@vanilla-extract/css";
+
 import { viewPort } from "@/theme/constants";
+
+fontFace({
+  src: "/fonts/subvario-ot-w03-cond-dry.ttf",
+});
 
 export const container = style({
   display: "grid",

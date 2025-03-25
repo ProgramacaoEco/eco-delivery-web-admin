@@ -1,15 +1,16 @@
 import "./style.css";
 
-import { useEffect, useState } from "react";
+import { orderButtonContainer, totalContainer } from "./style.css";
 
 import Order from "@/helpers/realtime/model/order/order";
 import OrderButton from "./OrderButton";
 import OrderHeader from "./OrderHeader";
+import OrderPrintLayout from "./OrderPrintLayout";
 import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import OrderTable from "./OrderTable";
 import OrderTableBody from "./OrderTableBody";
 import OrderTableHead from "./OrderTableHead";
-import { orderButtonContainer } from "./style.css";
+import { useEffect } from "react";
 
 interface OrderDetailsProps {
   selectedOrder?: Order | null;
@@ -25,7 +26,7 @@ export default function SelectedOrderDetails({
 
     if (selectedOrder.status === OrderStatus.new) {
       onUpdateStatus(OrderStatus.picking);
-    }    
+    }
   }, [onUpdateStatus, selectedOrder]);
 
   const total =
@@ -44,15 +45,7 @@ export default function SelectedOrderDetails({
         <OrderTableBody selectedOrder={selectedOrder} />
       </OrderTable>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          marginTop: "1rem",
-          
-        }}
-      >
+      <div className={totalContainer}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ fontWeight: "bold" }}>Entrega</div>
           <div>
@@ -89,6 +82,7 @@ export default function SelectedOrderDetails({
           selectedOrder={selectedOrder}
         />
       </div>
+      <OrderPrintLayout selectedOrder={selectedOrder} />
     </>
   );
 }

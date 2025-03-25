@@ -35,7 +35,7 @@ globalStyle("table", {
   tableLayout: "fixed",
   "@media": {
     print: {
-      border: "1px solid black",
+      display: "none",
     },
   },
 });
@@ -49,11 +49,6 @@ globalStyle("table tr", {
   border: "1px solid #ddd",
   padding: ".35em",
   backgroundColor: themeVars.color.tileOdd,
-  "@media": {
-    print: {
-      border: "1px solid black",
-    },
-  },
 });
 
 globalStyle("table th, table td", {
@@ -74,18 +69,12 @@ globalStyle("table", {
     "screen and (max-width: 768px)": {
       border: 0,
     },
-    print: {
-      border: 0,
-    },
   },
 });
 
 globalStyle("table caption", {
   "@media": {
     "screen and (max-width: 768px)": {
-      fontSize: "1.3em",
-    },
-    print: {
       fontSize: "1.3em",
     },
   },
@@ -103,25 +92,12 @@ globalStyle("table thead", {
       position: "absolute",
       width: "1px",
     },
-    print: {
-      clip: "rect(0 0 0 0)",
-      height: "1px",
-      margin: "-1px",
-      overflow: "hidden",
-      padding: 0,
-      position: "absolute",
-      width: "1px",
-    },
   },
 });
 
 globalStyle("table tr", {
   "@media": {
     "screen and (max-width: 768px)": {
-      display: "block",
-      marginBottom: ".625em",
-    },
-    print: {
       display: "block",
       marginBottom: ".625em",
     },
@@ -136,11 +112,6 @@ globalStyle("table td", {
       fontSize: ".8em",
       textAlign: "right",
     },
-    print: {
-      borderBottom: "1px solid black",
-      display: "block",
-      fontSize: ".8em",
-    },
   },
 });
 
@@ -149,11 +120,6 @@ globalStyle("table td::before", {
     "screen and (max-width: 768px)": {
       content: "attr(data-label)",
       float: "left",
-      fontWeight: "bold",
-      textTransform: "uppercase",
-    },
-    print: {
-      content: "attr(data-label)",
       fontWeight: "bold",
       textTransform: "uppercase",
     },
@@ -166,8 +132,98 @@ globalStyle("table td:last-child", {
       borderBottom: 0,
       marginBottom: "1em",
     },
+  },
+});
+
+export const totalContainer = style({
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
+  marginTop: "1rem",
+  "@media": {
     print: {
-      marginBottom: "1em",
+      display: "none",
     },
   },
+});
+
+const colorGray = "#BCBCBC";
+const printerPaddingBase = "10px";
+
+export const textCenter = style({
+  textAlign: "right",
+});
+
+export const ttu = style({
+  textTransform: "uppercase",
+});
+
+export const printerTicket = style({
+  all: "initial",
+  display: "none",
+  width: "100%",
+  maxWidth: "400px",
+  lineHeight: "1.3em",
+  textAlign: "left",
+  "@media": {
+    print: {
+      display: "table !important",
+    },
+  },
+});
+
+// Apply global styles within the printerTicket container
+globalStyle(`${printerTicket}, ${printerTicket} *`, {
+  fontFamily: "Tahoma, Geneva, sans-serif",
+  textAlign: "left",
+  color: "black !important",
+  fontSize: "10px",
+});
+
+globalStyle(
+  `${printerTicket} th:nth-child(2), ${printerTicket} td:nth-child(2)`,
+  {
+    width: "50px",
+  }
+);
+
+globalStyle(
+  `${printerTicket} th:nth-child(3), ${printerTicket} td:nth-child(3)`,
+  {
+    width: "90px",
+    textAlign: "right",
+  }
+);
+
+globalStyle(`${printerTicket} th`, {
+  fontWeight: "inherit",
+  padding: `${printerPaddingBase} 0`,
+  textAlign: "center",
+  borderBottom: `1px dashed ${colorGray}`,
+});
+
+globalStyle(`${printerTicket} tbody tr:last-child td`, {
+  paddingBottom: printerPaddingBase,
+});
+
+globalStyle(`${printerTicket} tfoot .sup td`, {
+  padding: `${printerPaddingBase} 0`,
+  borderTop: `1px dashed ${colorGray}`,
+});
+
+globalStyle(`${printerTicket} tfoot .sup.p--0 td`, {
+  paddingBottom: "0",
+});
+
+globalStyle(`${printerTicket} .title`, {
+  fontSize: "1.5em",
+  padding: "15px 0",
+});
+
+globalStyle(`${printerTicket} .top td`, {
+  paddingTop: printerPaddingBase,
+});
+
+globalStyle(`${printerTicket} .last td`, {
+  paddingBottom: printerPaddingBase,
 });
