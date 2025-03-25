@@ -37,7 +37,9 @@ export default function OrderPrintLayout({
         </tr>
         <tr>
           <th className={ttu} colSpan={3}>
-            <b>Cupom não fiscal</b>
+            <b>
+              NÃO É DOCUMENTO FISCAL <br /> SIMPLES COMPROVANTE DE PEDIDO
+            </b>
           </th>
         </tr>
       </thead>
