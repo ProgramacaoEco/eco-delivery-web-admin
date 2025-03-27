@@ -1,15 +1,19 @@
-import Loading from "../Loading";
 import { PropsWithChildren } from "react";
+import Loading from "../Loading";
 import { Typography } from "../Typography";
 import { loadingContainer } from "./style.css";
 
 interface LoadingContainerProps {
   error: boolean;
   loading: boolean;
+  isEmpty?: boolean;
+  emptyMessage?: string;
 }
 export default function LoadingContainer({
   error,
   loading,
+  isEmpty = false,
+  emptyMessage,
   children,
 }: PropsWithChildren<LoadingContainerProps>) {
   if (loading && !error) {
@@ -28,6 +32,22 @@ export default function LoadingContainer({
           recarregue a página e tente novamente. Se o erro persistir, contate o
           suporte.
         </Typography.TitleBold>
+      </div>
+    );
+  }
+
+  if (isEmpty) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+        }}
+      >
+        {emptyMessage}
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { printerTicket, ttu } from "./style.css";
 
 import Order from "@/helpers/realtime/model/order/order";
+import React from "react";
 
 interface OrderPrintLayoutProps {
   selectedOrder?: Order | null;
@@ -10,7 +11,7 @@ export default function OrderPrintLayout({
   selectedOrder,
 }: OrderPrintLayoutProps) {
   const subTotal = selectedOrder?.items.reduce(
-    (acc, nextValue) => acc + nextValue.quantity * nextValue.value,
+    (acc, nextValue) => acc + nextValue.quantity * nextValue.product.value,
     0
   );
   const freightCost = selectedOrder?.address.neighborhood.freightCost;
@@ -44,15 +45,15 @@ export default function OrderPrintLayout({
         </tr>
       </thead>
       <tbody>
-        {selectedOrder?.items.map(({ product, quantity, notes, value }) => (
-          <>
+        {selectedOrder?.items.map(({ id, product, quantity, notes, value }) => (
+          <React.Fragment key={id}>
             <tr className="top">
               <td colSpan={3}>{product.description}</td>
             </tr>
             <tr>
               <td>
                 R$
-                {value.toLocaleString("pt-BR", {
+                {product.value.toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -60,14 +61,14 @@ export default function OrderPrintLayout({
               <td>{quantity}</td>
               <td>
                 R$
-                {(quantity * value).toLocaleString("pt-BR", {
+                {(quantity * product.value).toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </td>
               <td>{notes}</td>
             </tr>
-          </>
+          </React.Fragment>
         ))}
       </tbody>
       <tfoot>

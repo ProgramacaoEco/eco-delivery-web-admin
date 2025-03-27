@@ -44,7 +44,12 @@ export default function Invoiced() {
         />
       </div>
 
-      <LoadingContainer loading={loading} error={error !== undefined}>
+      <LoadingContainer
+        loading={loading}
+        error={error !== undefined}
+        isEmpty={orders === undefined || orders?.length <= 0}
+        emptyMessage="Não há pedidos faturados"
+      >
         {orders && (
           <ListTile>
             {filteredOrders?.map(({ orderIssuer, id, createdOn }: Order) => (

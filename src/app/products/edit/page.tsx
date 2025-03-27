@@ -40,7 +40,12 @@ export default function ListProducts() {
         title="Atualizar Cadastro"
         color="orange"
       />
-      <LoadingContainer loading={loading} error={error !== null}>
+      <LoadingContainer
+        loading={loading}
+        error={error !== null}
+        isEmpty={products === undefined || products?.length <= 0}
+        emptyMessage="Não há produtos cadastrados"
+      >
         <div
           style={{
             padding: "1rem",

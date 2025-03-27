@@ -31,7 +31,7 @@ export default function SelectedOrderDetails({
 
   const total =
     selectedOrder?.items.reduce(
-      (acc, { quantity, value }) => acc + quantity * value,
+      (acc, { quantity, product }) => acc + quantity * product.value,
       0
     ) ?? 0;
 

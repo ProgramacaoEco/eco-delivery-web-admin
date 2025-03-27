@@ -3,11 +3,11 @@
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import NewNeighborhoodForm from "./NewNeighborhoodForm";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import useNeighborhood from "./hooks/useNeighborhood";
+import NewNeighborhoodForm from "./NewNeighborhoodForm";
 
 export default function NeighborhoodPage() {
   const {
@@ -22,7 +22,12 @@ export default function NeighborhoodPage() {
   return (
     <>
       <PageTitle isLoading={loading} color="#81D1F0" title="Bairros" />
-      <LoadingContainer loading={loading} error={error !== null}>
+      <LoadingContainer
+        loading={loading}
+        error={error !== null}
+        isEmpty={neighborhoods === undefined || neighborhoods?.length <= 0}
+        emptyMessage="Não há bairros cadastrados"
+      >
         <div>
           <div style={{ marginTop: "20px", width: "inherit" }}>
             <NewNeighborhoodForm

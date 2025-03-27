@@ -24,7 +24,7 @@ export default function OrderTableBody({ selectedOrder }: OrderTableBodyProps) {
             </td>
             <td scope="row" data-label="Preço">
               R$
-              {(quantity * value).toLocaleString("pt-BR", {
+              {(quantity * product.value).toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}

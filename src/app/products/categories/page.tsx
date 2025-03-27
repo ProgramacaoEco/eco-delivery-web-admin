@@ -17,7 +17,12 @@ export default function ListProducts() {
   return (
     <>
       <PageTitle isLoading={loading} title="Categorias" color="orange" />
-      <LoadingContainer loading={loading} error={error !== null}>
+      <LoadingContainer
+        loading={loading}
+        error={error !== null}
+        isEmpty={categories === undefined || categories?.length <= 0}
+        emptyMessage="Não há categorias cadastradas"
+      >
         <div>
           <Link href={`/products/categories/new`}>
             <div
