@@ -90,7 +90,7 @@ export default function PageTitle({
                       if (!!onClose) {
                         onClose();
                       }
-                      return router.back();
+                      return router.push("/");
                     }
               }
             >

@@ -22,6 +22,20 @@ export default function NeighborhoodPage() {
   return (
     <>
       <PageTitle isLoading={loading} color="#81D1F0" title="Bairros" />
+      <div style={{ marginTop: "20px", width: "inherit" }}>
+        <NewNeighborhoodForm
+          onSubmit={async ({ freightCost, neighborhoodName }) => {
+            const neighborhoodId = `${neighborhoodName?.at(
+              0
+            )}${neighborhoodName?.at(1)}-${Math.round(
+              new Date().getTime() / 1000
+            )}`;
+            setNeighborhood(
+              new Neighborhood(neighborhoodId, neighborhoodName!, freightCost!)
+            );
+          }}
+        />
+      </div>
       <LoadingContainer
         loading={loading}
         error={error !== null}
@@ -29,25 +43,6 @@ export default function NeighborhoodPage() {
         emptyMessage="Não há bairros cadastrados"
       >
         <div>
-          <div style={{ marginTop: "20px", width: "inherit" }}>
-            <NewNeighborhoodForm
-              onSubmit={async ({ freightCost, neighborhoodName }) => {
-                const neighborhoodId = `${neighborhoodName?.at(
-                  0
-                )}${neighborhoodName?.at(1)}-${Math.round(
-                  new Date().getTime() / 1000
-                )}`;
-                setNeighborhood(
-                  new Neighborhood(
-                    neighborhoodId,
-                    neighborhoodName!,
-                    freightCost!
-                  )
-                );
-              }}
-            />
-          </div>
-
           <ListTile>
             {neighborhoods.length > 0 &&
               neighborhoods.map(

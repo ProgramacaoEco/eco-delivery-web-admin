@@ -169,6 +169,18 @@ export default function Page() {
             Icon={Person}
             label="Usuários"
           />
+          {/* <DrawerTile
+            type="link"
+            href="/minimum-order-price"
+            Icon={ShoppingCart}
+            label="Pedido mínimo"
+          />
+          <DrawerTile
+            type="link"
+            href="/discount-campaign"
+            Icon={Discount}
+            label="Campanha de desconto"
+          /> */}
           <DrawerTile
             type="link"
             href="#"
