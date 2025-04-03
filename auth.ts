@@ -1,11 +1,12 @@
-import { Collections } from "@/helpers/firestore/collections";
 import { FirestoreHelper } from "@/helpers/firestore";
-import Google from "next-auth/providers/google";
+import { Collections } from "@/helpers/firestore/collections";
 import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
 
 const provider = Google({});
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [provider],
   pages: {
     signIn: "/signin",
