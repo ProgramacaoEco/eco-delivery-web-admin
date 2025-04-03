@@ -11,24 +11,29 @@ import { OrderContext } from "./context/OrderContext";
 import useOrders from "./hooks/useOrders";
 
 export default function Orders() {
-  const { loading, error, orders, storeStatus } = useContext(OrderContext);
+  const { loading, error, orders, storeStatus, getStoreStatus } =
+    useContext(OrderContext);
   const { listenToOrders } = useOrders();
 
   useEffect(() => {
     listenToOrders(storeStatus);
-  }, [listenToOrders, storeStatus]);
+    getStoreStatus();
+    console.log(storeStatus);
+  }, [listenToOrders, storeStatus, getStoreStatus]);
 
   return (
     <>
       <PageTitle isLoading={loading} color="blue" title="Pedidos" />
       <LoadingContainer
-        loading={loading || (storeStatus ?? false)}
+        loading={loading || storeStatus === undefined}
         error={error !== undefined}
         isEmpty={orders === undefined || orders?.length <= 0}
         emptyMessage={
-          storeStatus && (orders === undefined || orders.length <= 0)
+          storeStatus === false
+            ? "A loja está fechada. Abra a loja para ver os pedidos."
+            : orders === undefined || orders.length <= 0
             ? "Não há pedidos em andamento"
-            : "A loja está fechada. Abra a loja para ver os pedidos."
+            : undefined
         }
       >
         {orders && (

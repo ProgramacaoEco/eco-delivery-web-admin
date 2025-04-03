@@ -12,4 +12,5 @@ export type OrderContextType = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   setOrders: Dispatch<SetStateAction<Order[] | undefined>>;
   setSelectedOrder: Dispatch<SetStateAction<Order | undefined>>;
+  getStoreStatus: () => void;
 };

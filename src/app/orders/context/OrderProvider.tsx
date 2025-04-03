@@ -14,7 +14,7 @@ export default function OrderProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const { storeStatus, listenToStoreStatus } = useStoreStatus();
+  const { storeStatus, listenToStoreStatus, getStoreStatus } = useStoreStatus();
 
   const notificationSound = useMemo(
     () =>
@@ -70,6 +70,7 @@ export default function OrderProvider({ children }: PropsWithChildren) {
         error,
         storeStatus: storeStatus?.storeStatus,
         selectedOrder,
+        getStoreStatus: getStoreStatus,
       }}
     >
       {children}

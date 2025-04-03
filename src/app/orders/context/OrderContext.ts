@@ -6,5 +6,6 @@ export const OrderContext = createContext<OrderContextType>({
   setError: () => {},
   setLoading: () => {},
   setOrders: () => {},
+  getStoreStatus: () => {},
   setSelectedOrder: () => {},
 });
