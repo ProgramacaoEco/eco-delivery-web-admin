@@ -2,15 +2,15 @@ import "./style.css";
 
 import { orderButtonContainer, totalContainer } from "./style.css";
 
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import Order from "@/helpers/realtime/model/order/order";
+import { useEffect } from "react";
 import OrderButton from "./OrderButton";
 import OrderHeader from "./OrderHeader";
 import OrderPrintLayout from "./OrderPrintLayout";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
 import OrderTable from "./OrderTable";
 import OrderTableBody from "./OrderTableBody";
 import OrderTableHead from "./OrderTableHead";
-import { useEffect } from "react";
 
 interface OrderDetailsProps {
   selectedOrder?: Order | null;
@@ -24,8 +24,18 @@ export default function SelectedOrderDetails({
   useEffect(() => {
     if (!selectedOrder) return;
 
-    if (selectedOrder.status === OrderStatus.new) {
-      onUpdateStatus(OrderStatus.picking);
+    if (
+      selectedOrder.address === null &&
+      selectedOrder.status === OrderStatus.new
+    ) {
+      return onUpdateStatus(OrderStatus.sent);
+    }
+
+    if (
+      selectedOrder.address !== null &&
+      selectedOrder.status === OrderStatus.new
+    ) {
+      return onUpdateStatus(OrderStatus.picking);
     }
   }, [onUpdateStatus, selectedOrder]);
 
@@ -35,7 +45,7 @@ export default function SelectedOrderDetails({
       0
     ) ?? 0;
 
-  const freightCost = selectedOrder?.address.neighborhood.freightCost ?? 0;
+  const freightCost = selectedOrder?.address?.neighborhood?.freightCost ?? 0;
 
   return (
     <>
@@ -48,15 +58,19 @@ export default function SelectedOrderDetails({
       <div className={totalContainer}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ fontWeight: "bold" }}>Entrega</div>
-          <div>
-            R$
-            {(
-              selectedOrder?.address.neighborhood.freightCost ?? 0
-            ).toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </div>
+          {selectedOrder?.address?.neighborhood?.freightCost ? (
+            <div>
+              R$
+              {(
+                selectedOrder?.address?.neighborhood.freightCost ?? 0
+              ).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </div>
+          ) : (
+            <div>RETIRADA</div>
+          )}
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>

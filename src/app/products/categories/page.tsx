@@ -17,6 +17,22 @@ export default function ListProducts() {
   return (
     <>
       <PageTitle isLoading={loading} title="Categorias" color="orange" />
+      <Link href={`/products/categories/new`}>
+        <div
+          style={{
+            borderRadius: "3rem",
+            padding: "2rem",
+            border: "2px solid",
+            gap: "1rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {" "}
+          <Add /> Nova Categoria
+        </div>
+      </Link>
       <LoadingContainer
         loading={loading}
         error={error !== null}
@@ -24,22 +40,6 @@ export default function ListProducts() {
         emptyMessage="Não há categorias cadastradas"
       >
         <div>
-          <Link href={`/products/categories/new`}>
-            <div
-              style={{
-                borderRadius: "3rem",
-                padding: "2rem",
-                border: "2px solid",
-                gap: "1rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {" "}
-              <Add /> Nova Categoria
-            </div>
-          </Link>
           <ListTile>
             {categories.map(({ name, id }) => (
               <Tile

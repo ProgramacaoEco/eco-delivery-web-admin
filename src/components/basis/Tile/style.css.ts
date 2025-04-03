@@ -16,6 +16,6 @@ export const tile = style({
 });
 
 export const newOrderBadge = style({
-  color: "orange",
+  color: "lightgreen",
   fontWeight: "bold",
 });

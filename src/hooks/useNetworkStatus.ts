@@ -15,7 +15,7 @@ export const useOnlineStatus = () => {
     // Optional: Verify connection with a fetch request if needed
     const checkNetworkStatus = async () => {
       try {
-        await fetch("https://httpbin.org/get", {
+        await fetch("https://innerclearshiningverse.neverssl.com/online/", {
           cache: "no-cache",
           mode: "no-cors",
         });

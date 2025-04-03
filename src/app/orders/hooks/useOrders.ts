@@ -1,18 +1,18 @@
 import { useCallback, useContext } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import { Category } from "@/helpers/firestore/model/product/category";
-import { Product } from "@/helpers/firestore/model/product/product";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import Address from "@/helpers/realtime/model/order/address";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { Collections } from "@/helpers/firestore/collections";
 import Item from "@/helpers/realtime/model/order/item";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
 import Order from "@/helpers/realtime/model/order/order";
+import { OrderContext } from "../context/OrderContext";
+import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import { Product } from "@/helpers/firestore/model/product/product";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
-import { OrderContext } from "../context/OrderContext";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export default function useOrders() {
   const { getSingle, listenToValue, setValue, deleteSingle, get } =
@@ -31,18 +31,20 @@ export default function useOrders() {
       data?.id,
       !isViewed ? data?.isViewed : isViewed,
       data?.orderIssuer,
-      new Address(
-        data?.address?.address,
-        data?.address?.number,
-        data?.address?.apt,
-        new Neighborhood(
-          data?.address?.neighborhood.id,
-          data?.address?.neighborhood.neighborhoodName,
-          data?.address?.neighborhood.freightCost
-        ),
-        data?.address?.reference,
-        data?.address?.postalCode
-      ),
+      data.address
+        ? new Address(
+            data?.address?.address,
+            data?.address?.number,
+            data?.address?.apt,
+            new Neighborhood(
+              data?.address?.neighborhood.id,
+              data?.address?.neighborhood.neighborhoodName,
+              data?.address?.neighborhood.freightCost
+            ),
+            data?.address?.reference,
+            data?.address?.postalCode
+          )
+        : null,
       data?.items?.map(
         (content: any) =>
           new Item(
@@ -91,21 +93,33 @@ export default function useOrders() {
     [getSingle, setError, setLoading, setSelectedOrder]
   );
 
-  const listenToOrders = useCallback(async () => {
-    setError(undefined);
-    setLoading(true);
-    return await listenToValue({
-      onData: (data) => {
-        setOrders(data.map((o: Order) => createOrder(o, o.isViewed, o.status)));
-        setLoading(false);
-      },
-      onError: () => {
-        setError(errorMessage("ao obter os pedidos"));
-        setLoading(false);
-      },
-      reference: References.orders,
-    });
-  }, [listenToValue, setError, setLoading, setOrders]);
+  const listenToOrders = useCallback(
+    async (isStoreOpen?: boolean) => {
+      if (isStoreOpen !== undefined) {
+        if (!isStoreOpen) {
+          setOrders([]);
+          return;
+        }
+
+        setError(undefined);
+        setLoading(true);
+        return await listenToValue({
+          onData: (data) => {
+            setOrders(
+              data.map((o: Order) => createOrder(o, o.isViewed, o.status))
+            );
+            setLoading(false);
+          },
+          onError: () => {
+            setError(errorMessage("ao obter os pedidos"));
+            setLoading(false);
+          },
+          reference: References.orders,
+        });
+      }
+    },
+    [listenToValue, setError, setLoading, setOrders]
+  );
 
   const updateOrderStatus = useCallback(
     async (

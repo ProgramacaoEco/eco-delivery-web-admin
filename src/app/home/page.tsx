@@ -5,16 +5,17 @@ import {
   Assignment,
   AssignmentCheck,
   Campaign,
+  Discount,
   Liquor,
   LocalShipping,
   Logout,
   Person,
   Report,
   Settings,
+  ShoppingCart,
 } from "@icons/index";
 import { signOut, useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
 
 import Card from "@/components/basis/Card";
@@ -24,7 +25,6 @@ import LoadingContainer from "@/components/basis/LoadingContainer";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { themeVars } from "@/theme/theme.css";
 import { IconButton } from "@mui/material";
-import { Howl } from "howler";
 import Image from "next/image";
 import { OrderContext } from "../orders/context/OrderContext";
 import useOrders from "../orders/hooks/useOrders";
@@ -42,43 +42,15 @@ export default function Page() {
     loading: loadingStoreStatus,
     storeStatus,
   } = useStoreStatus();
-  const { loading, error, orders } = useContext(OrderContext);
+  const { loading, error } = useContext(OrderContext);
 
   useEffect(() => {
-    listenToOrders();
-  }, [listenToOrders]);
+    listenToOrders(storeStatus?.storeStatus);
+  }, [listenToOrders, storeStatus]);
 
   useEffect(() => {
     getStoreStatus();
   }, [getStoreStatus]);
-
-  useEffect(() => {
-    toast.dismiss();
-
-    if (orders === undefined) return;
-
-    const orderQuantity = orders.filter((o) => !o.isViewed).length;
-
-    if (
-      storeStatus &&
-      storeStatus.storeStatus &&
-      orders &&
-      orderQuantity &&
-      orderQuantity > 0
-    ) {
-      toast.success(
-        `Você tem ${orderQuantity} ${
-          orderQuantity > 1 ? "novos pedidos" : "novo pedido"
-        }`
-      );
-
-      new Howl({
-        src: ["/sound/notification.wav"],
-        html5: true,
-        autoplay: true,
-      }).play();
-    }
-  }, [orders, storeStatus]);
 
   return (
     <>
@@ -169,7 +141,7 @@ export default function Page() {
             Icon={Person}
             label="Usuários"
           />
-          {/* <DrawerTile
+          <DrawerTile
             type="link"
             href="/minimum-order-price"
             Icon={ShoppingCart}
@@ -180,7 +152,7 @@ export default function Page() {
             href="/discount-campaign"
             Icon={Discount}
             label="Campanha de desconto"
-          /> */}
+          />
           <DrawerTile
             type="link"
             href="#"
@@ -188,15 +160,6 @@ export default function Page() {
             label="Relatórios (em breve!)"
           />
         </DrawerSettings>
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            duration: 10000000,
-            style: {
-              width: "100%",
-            },
-          }}
-        />
       </LoadingContainer>
     </>
   );

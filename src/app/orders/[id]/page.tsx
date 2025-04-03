@@ -3,7 +3,7 @@
 import "./style.css";
 
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
@@ -22,24 +22,30 @@ export default function OrderDetails() {
     getSingleOrder(id);
   }, [getSingleOrder, id]);
 
-  const onUpdateStatus = (status: OrderStatus) => {
-    if (status === OrderStatus.sent) {
-      window.print();
-      if (selectedOrder) {
-        selectedOrder.isViewed = true;
+  const onUpdateStatus = useCallback(
+    (status: OrderStatus) => {
+      if (status == OrderStatus.picking) {
+        if (selectedOrder) {
+          selectedOrder.isViewed = true;
+        }
+        updateOrderStatus(status, selectedOrder);
+      } else if (status == OrderStatus.sent) {
+        window.print();
+        if (selectedOrder) {
+          selectedOrder.isViewed = true;
+        }
+        updateOrderStatus(status, selectedOrder);
+      } else if (status === OrderStatus.delivered) {
+        if (selectedOrder) {
+          updateOrderStatus(status, selectedOrder, async (updatedOrder) => {
+            await setInvoice(updatedOrder);
+            router.back();
+          });
+        }
       }
-      updateOrderStatus(status, selectedOrder);
-    } else if (status === OrderStatus.delivered) {
-      if (selectedOrder) {
-        updateOrderStatus(status, selectedOrder, async (updatedOrder) => {
-          await setInvoice(updatedOrder);
-          router.back();
-        });
-      }
-    } else {
-      updateOrderStatus(status, selectedOrder);
-    }
-  };
+    },
+    [router, selectedOrder, setInvoice, updateOrderStatus]
+  );
 
   return (
     <>

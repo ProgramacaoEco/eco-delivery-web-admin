@@ -9,7 +9,7 @@ export default class Order implements BaseModel {
     id: string,
     isViewed: boolean,
     orderIssuer: string,
-    address: Address,
+    address: Address | null,
     items: Item[],
     phoneNumber: string,
     createdOn: Date,
@@ -51,8 +51,8 @@ export default class Order implements BaseModel {
     this._isViewed = isViewed;
   }
 
-  private readonly _address: Address;
-  public get address(): Address {
+  private readonly _address: Address | null;
+  public get address(): Address | null {
     return this._address;
   }
 
@@ -86,7 +86,7 @@ export default class Order implements BaseModel {
       id: this.id,
       isViewed: this._isViewed,
       orderIssuer: this._orderIssuer,
-      address: this._address.toJson(),
+      address: this._address?.toJson() ?? null,
       items: this._items.map((item) => item.toJson()),
       phoneNumber: this._phoneNumber,
       createdOn: this._createdOn.toISOString(),

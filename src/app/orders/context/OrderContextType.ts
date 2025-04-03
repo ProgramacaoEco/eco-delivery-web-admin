@@ -5,6 +5,7 @@ import Order from "@/helpers/realtime/model/order/order";
 export type OrderContextType = {
   orders?: Order[] | undefined;
   selectedOrder?: Order;
+  storeStatus?: boolean;
   loading: boolean;
   error?: string;
   setError: Dispatch<SetStateAction<string | undefined>>;

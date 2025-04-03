@@ -1,18 +1,20 @@
 "use client";
 
-import { layout, loginLayout } from "./layout.css";
 import { useEffect, useRef, useState } from "react";
+import { layout, loginLayout } from "./layout.css";
 
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import OrderProvider from "./orders/context/OrderProvider";
+import LinkButton from "@/components/basis/LinkButton";
+import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import { Typography } from "@/components/basis/Typography";
+import { useOnlineStatus } from "@/hooks/useNetworkStatus";
+import { cn } from "@/utils/classNames";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { Typography } from "@/components/basis/Typography";
-import { cn } from "@/utils/classNames";
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
-import { useOnlineStatus } from "@/hooks/useNetworkStatus";
+import { Inter } from "next/font/google";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Toaster } from "react-hot-toast";
+import OrderProvider from "./orders/context/OrderProvider";
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
@@ -57,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <head>
-        <title>Eco Delivery</title>
+        <title>Empório das Bebidas</title>
         <meta name="description" content="Description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
@@ -80,12 +82,29 @@ export default function RootLayout({
         />
 
         {!hasMounted ? (
-          // Show empty state during hydration
-          <div className={loadingContainer}></div>
+          <div className={loadingContainer}>Carregando...</div>
         ) : isOnline ? (
           <OrderProvider>
             <SessionProvider session={params.session}>
               {children}
+              <div
+                style={{
+                  zIndex: "100",
+                  right: 40,
+                  bottom: 0,
+                  paddingBottom: "1rem",
+                  position: "fixed",
+                }}
+              >
+                <LinkButton href="https://wa.me/5551991672281">
+                  <Image
+                    src="/whatsapp.svg"
+                    width={60}
+                    height={60}
+                    alt="Suporte pelo WhatsApp"
+                  />
+                </LinkButton>
+              </div>
             </SessionProvider>
           </OrderProvider>
         ) : (
@@ -96,6 +115,15 @@ export default function RootLayout({
             </Typography.TitleBold>
           </div>
         )}
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            duration: 10000000,
+            style: {
+              width: "100%",
+            },
+          }}
+        />
       </body>
     </html>
   );

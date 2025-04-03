@@ -14,7 +14,7 @@ export default function OrderPrintLayout({
     (acc, nextValue) => acc + nextValue.quantity * nextValue.product.value,
     0
   );
-  const freightCost = selectedOrder?.address.neighborhood.freightCost;
+  const freightCost = selectedOrder?.address?.neighborhood?.freightCost;
 
   return (
     <table className={printerTicket}>
@@ -29,11 +29,19 @@ export default function OrderPrintLayout({
           <th colSpan={3}>
             {selectedOrder?.orderIssuer}
             <br />
-            {selectedOrder?.address.address}, {selectedOrder?.address.number} -{" "}
-            {selectedOrder?.address.apt}
+            {selectedOrder?.phoneNumber}
             <br />
-            {selectedOrder?.address.neighborhood.neighborhoodName},{" "}
-            {selectedOrder?.address.postalCode}
+            {selectedOrder?.address ? (
+              <>
+                {selectedOrder?.address.address},{" "}
+                {selectedOrder?.address.number} - {selectedOrder?.address.apt}
+                <br />
+                {selectedOrder?.address.neighborhood.neighborhoodName},{" "}
+                {selectedOrder?.address.postalCode}
+              </>
+            ) : (
+              <div>RETIRADA</div>
+            )}
           </th>
         </tr>
         <tr>
@@ -89,24 +97,41 @@ export default function OrderPrintLayout({
         </tr>
         <tr className={ttu}>
           <td colSpan={2}>Taxa de entrega</td>
-          <td align="right">
-            R$
-            {freightCost?.toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </td>
+          {selectedOrder?.address ? (
+            <>
+              <td align="right">
+                R$
+                {freightCost?.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </td>
+            </>
+          ) : (
+            <td>RETIRADA</td>
+          )}
         </tr>
         {/* <tr className={ttu}>
           <td colSpan={2}>Desconto</td>
           <td align="right">5,00%</td>
         </tr> */}
-        {subTotal && freightCost && (
+        {subTotal && freightCost ? (
           <tr className={ttu}>
             <td colSpan={2}>Total</td>
             <td align="right">
               R$
               {(subTotal + freightCost).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </td>
+          </tr>
+        ) : (
+          <tr className={ttu}>
+            <td colSpan={2}>Total</td>
+            <td align="right">
+              R$
+              {subTotal?.toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}

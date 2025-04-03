@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 
-import Address from "@/helpers/realtime/model/order/address";
 import { Collections } from "@/helpers/firestore/collections";
-import Item from "@/helpers/realtime/model/order/item";
-import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import Order from "@/helpers/realtime/model/order/order";
-import { Product } from "@/helpers/firestore/model/product/product";
-import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
+import { Product } from "@/helpers/firestore/model/product/product";
+import Address from "@/helpers/realtime/model/order/address";
+import Item from "@/helpers/realtime/model/order/item";
+import Order from "@/helpers/realtime/model/order/order";
+import { errorMessage } from "@/utils/texts";
 
 export default function useInvoices() {
   const { get, getBy } = useFirebase<Order>();
@@ -24,18 +24,19 @@ export default function useInvoices() {
       data?.id,
       data?.isViewed,
       data?.orderIssuer,
-      new Address(
-        data?.address.address,
-        data?.address.number,
-        data?.address.apt,
-        new Neighborhood(
-          data?.address?.neighborhood.id,
-          data?.address?.neighborhood.neighborhoodName,
-          data?.address?.neighborhood.freightCost
+      data.address &&
+        new Address(
+          data?.address?.address,
+          data?.address?.number,
+          data?.address?.apt,
+          new Neighborhood(
+            data?.address?.neighborhood.id,
+            data?.address?.neighborhood.neighborhoodName,
+            data?.address?.neighborhood.freightCost
+          ),
+          data?.address?.reference,
+          data?.address?.postalCode
         ),
-        data?.address.reference,
-        data?.address.postalCode
-      ),
       data?.items.map(
         (content: any) =>
           new Item(
