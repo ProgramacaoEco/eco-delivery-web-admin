@@ -149,9 +149,9 @@ export default function Page() {
           />
           <DrawerTile
             type="link"
-            href="/discount-campaign"
+            href="#"
             Icon={Discount}
-            label="Campanha de desconto"
+            label="Campanha de desconto (em breve!)"
           />
           <DrawerTile
             type="link"

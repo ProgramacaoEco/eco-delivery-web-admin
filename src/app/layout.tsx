@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { layout, loginLayout } from "./layout.css";
+import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 
 import LinkButton from "@/components/basis/LinkButton";
 import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
@@ -88,6 +88,7 @@ export default function RootLayout({
             <SessionProvider session={params.session}>
               {children}
               <div
+                className={hideWhatsappButtonOnPrint}
                 style={{
                   zIndex: "100",
                   right: 40,
