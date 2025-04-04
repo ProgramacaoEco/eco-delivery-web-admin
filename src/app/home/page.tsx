@@ -14,6 +14,11 @@ import {
   Settings,
   ShoppingCart,
 } from "@icons/index";
+import {
+  fetchAndActivate,
+  getRemoteConfig,
+  getString,
+} from "firebase/remote-config";
 import { signOut, useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
@@ -23,6 +28,7 @@ import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import StoreSwitch from "@/components/basis/StoreSwitch";
+import { app } from "@/firebase-config";
 import { themeVars } from "@/theme/theme.css";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
@@ -33,6 +39,20 @@ export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const session = useSession();
+
+  const [icon, setIcon] = useState("");
+  const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    const remoteConfig = getRemoteConfig(app);
+    fetchAndActivate(remoteConfig).then((_) => {
+      const title = getString(remoteConfig, "title");
+      const icon = getString(remoteConfig, "favicon");
+
+      setIcon(icon);
+      setTitle(title);
+    });
+  }, []);
 
   const { listenToOrders } = useOrders();
   const {
@@ -83,12 +103,7 @@ export default function Page() {
                   changeStoreStatus(new StoreStatus("store-status", isOpen))
                 }
               />
-              <Image
-                src="/test_logo.png"
-                width={75}
-                height={75}
-                alt="Test LOGO"
-              />
+              <Image src={icon} width={75} height={75} alt={title} />
             </div>
             <Card
               shadow={themeVars.shadow.shadowBlue}

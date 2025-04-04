@@ -1,11 +1,17 @@
 "use client";
 
+import {
+  fetchAndActivate,
+  getRemoteConfig,
+  getString,
+} from "firebase/remote-config";
 import { useEffect, useRef, useState } from "react";
 import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 
 import LinkButton from "@/components/basis/LinkButton";
 import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { Typography } from "@/components/basis/Typography";
+import { app } from "@/firebase-config";
 import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { cn } from "@/utils/classNames";
 import { Session } from "next-auth";
@@ -32,6 +38,32 @@ export default function RootLayout({
   const mounted = useRef<boolean>(false);
 
   const isOnline = useOnlineStatus();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const remoteConfig = getRemoteConfig(app);
+      await fetchAndActivate(remoteConfig);
+
+      const title = getString(remoteConfig, "title");
+      const favicon = getString(remoteConfig, "favicon");
+
+      if (typeof document !== "undefined") {
+        document.title = title;
+      }
+
+      const link = document.querySelector(
+        "link[rel~='icon']"
+      ) as HTMLLinkElement;
+      if (link) {
+        link.href = favicon;
+      }
+    };
+
+    if (hasMounted) {
+      fetchConfig();
+    }
+  }, [hasMounted]);
 
   useEffect(() => {
     addEventListener("beforeprint", () => {
@@ -54,14 +86,14 @@ export default function RootLayout({
   }, []);
 
   // Add this state
-  const [hasMounted, setHasMounted] = useState(false);
 
   return (
     <html lang="pt">
       <head>
-        <title>Empório das Bebidas</title>
+        <title></title>
         <meta name="description" content="Description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" />
       </head>
       <body
         className={cn(inter.className, pathname === "/" ? loginLayout : layout)}
