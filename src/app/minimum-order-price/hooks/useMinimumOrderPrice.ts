@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 import { MinimumOrder } from "@/helpers/realtime/model/minimum-order/minimum-order";
 import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
+import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export default function useMinimumOrderPrice() {
   const [error, setError] = useState<string | undefined>(undefined);
@@ -26,7 +26,7 @@ export default function useMinimumOrderPrice() {
           setLoading(false);
         },
         onError: () => {
-          setError(errorMessage("ao obter o pedido selecionado"));
+          setError(errorMessage("ao cadastrar o valor de pedido mínimo"));
           setLoading(false);
         },
         value,
@@ -53,7 +53,7 @@ export default function useMinimumOrderPrice() {
         setLoading(false);
       },
       onError: () => {
-        setError(errorMessage("ao obter o pedido selecionado"));
+        setError(errorMessage("ao obter o valor cadastrado de pedido mínimo"));
         setLoading(false);
       },
       reference: References.minimumOrder,

@@ -1,11 +1,11 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Category } from "@/helpers/firestore/model/product/category";
+import { Collections } from "@/helpers/firestore/collections";
 import { Folders } from "@/helpers/storage/folders";
-import useStorage from "@/helpers/storage/hooks/useStorage";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { useState } from "react";
+import useStorage from "@/helpers/storage/hooks/useStorage";
 
 export default function useSetCategory(isEditing: boolean = false) {
   const [category, setCategory] = useState<Category>();

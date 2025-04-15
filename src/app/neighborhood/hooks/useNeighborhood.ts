@@ -2,8 +2,8 @@ import { errorMessage, successMessage } from "@/utils/texts";
 import { useCallback, useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useNeighborhood() {
   const { set, get, remove } = useFirebase();
@@ -27,7 +27,7 @@ export default function useNeighborhood() {
         setLoading(false);
       },
       onError: () => {
-        setError(errorMessage("ao obter os usuários"));
+        setError(errorMessage("ao obter os bairros"));
         setLoading(false);
       },
     });
@@ -43,11 +43,11 @@ export default function useNeighborhood() {
     await set({
       collection: collection,
       onError: () => {
-        setError(errorMessage("ao adicionar o usuário"));
+        setError(errorMessage("ao cadastrar bairro"));
         setLoading(false);
       },
       onSuccess: () => {
-        setSuccess(successMessage("Usuário adicionado"));
+        setSuccess(successMessage("Bairro cadastrado"));
         setNeighborhoods((n) => [...n, neighborhood]);
         setLoading(false);
       },
@@ -64,11 +64,11 @@ export default function useNeighborhood() {
       data: neighborhoods,
       onData: setNeighborhoods,
       onError: () => {
-        setError(errorMessage("ao remover o usuário"));
+        setError(errorMessage("ao remover o bairro"));
         setLoading(false);
       },
       onSuccess: () => {
-        setSuccess(successMessage("Usuário removido"));
+        setSuccess(successMessage("Bairro removido"));
         setLoading(false);
       },
     });

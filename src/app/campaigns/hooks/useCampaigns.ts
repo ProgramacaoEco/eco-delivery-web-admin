@@ -1,10 +1,10 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useEffect, useState } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import Campaign from "@/helpers/firestore/model/campaign/campaign";
+import { Collections } from "@/helpers/firestore/collections";
 import { Folders } from "@/helpers/storage/folders";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import useStorage from "@/helpers/storage/hooks/useStorage";
 
 export default function useCampaigns() {
@@ -47,7 +47,7 @@ export default function useCampaigns() {
     return await removeStorage({
       id: id,
       onError: () => {
-        setError(errorMessage("ao cadastrar campanha."));
+        setError(errorMessage("ao remover a campanha."));
         setLoading(false);
       },
       onSuccess: async () => {
@@ -86,7 +86,7 @@ export default function useCampaigns() {
         id: id,
         file: file,
         onError: () => {
-          setError(errorMessage("ao cadastrar imagem do produto."));
+          setError(errorMessage("ao cadastrar campanha."));
           setLoading(false);
         },
         onSuccess: async (imagePath) => {

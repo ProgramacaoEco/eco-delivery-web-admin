@@ -20,6 +20,9 @@ interface UploadParams {
 export default function useStorage(folder: Folders) {
   const storage = getStorage(app);
 
+  storage.maxOperationRetryTime = 0;
+  storage.maxUploadRetryTime = 0;
+
   const upload = async ({ file, id, onError, onSuccess }: UploadParams) => {
     try {
       if (!file) return;
