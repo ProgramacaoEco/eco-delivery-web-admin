@@ -8,14 +8,13 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 
+import AuthGuard from "@/components/basis/AuthGuard";
 import LinkButton from "@/components/basis/LinkButton";
 import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { Typography } from "@/components/basis/Typography";
 import { app } from "@/firebase-config";
 import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { cn } from "@/utils/classNames";
-import { Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -26,12 +25,8 @@ const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
 export default function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: {
-    session: Session;
-  };
 }>) {
   const pathname = usePathname();
   const noPrint = useRef<HTMLImageElement>(null);
@@ -116,8 +111,8 @@ export default function RootLayout({
         {!hasMounted ? (
           <div className={loadingContainer}>Carregando...</div>
         ) : isOnline ? (
-          <OrderProvider>
-            <SessionProvider session={params.session}>
+          <AuthGuard>
+            <OrderProvider>
               {children}
               <div
                 className={hideWhatsappButtonOnPrint}
@@ -138,8 +133,8 @@ export default function RootLayout({
                   />
                 </LinkButton>
               </div>
-            </SessionProvider>
-          </OrderProvider>
+            </OrderProvider>
+          </AuthGuard>
         ) : (
           <div className={loadingContainer}>
             <Typography.TitleBold>

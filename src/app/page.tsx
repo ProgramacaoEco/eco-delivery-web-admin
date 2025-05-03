@@ -1,5 +1,4 @@
 "use client";
-
 import {
   container,
   imageContainer,
@@ -11,13 +10,15 @@ import {
 import GoogleButton from "@/components/basis/Button/GoogleButton";
 import LinkButton from "@/components/basis/LinkButton";
 import { Typography } from "@/components/basis/Typography";
+import useAuth from "@/hooks/useAuth";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { viewPort } from "@/theme/constants";
-import { signIn } from "next-auth/react";
 import Image from "next/image";
 
 export default function SignIn() {
   const matchMedia = useMediaQuery(viewPort.small);
+
+  const { handleLogin } = useAuth();
 
   return (
     <main className={container}>
@@ -54,7 +55,7 @@ export default function SignIn() {
           <Typography.TitleLight>
             É sempre bom vê-lo novamente.
           </Typography.TitleLight>
-          <GoogleButton action={signIn} />
+          <GoogleButton action={handleLogin} />
           <LinkButton href="https://wa.me/5551991672281?text=Preciso%20de%20ajuda%20com%20o%20Eco%20Delivery.">
             Precisa de ajuda?
           </LinkButton>

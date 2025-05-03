@@ -1,5 +1,5 @@
 "use client";
-
+import { app } from "@/firebase-config";
 import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 import {
   Assignment,
@@ -19,7 +19,6 @@ import {
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { signOut, useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
 
@@ -28,7 +27,7 @@ import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import StoreSwitch from "@/components/basis/StoreSwitch";
-import { app } from "@/firebase-config";
+import useAuth from "@/hooks/useAuth";
 import { themeVars } from "@/theme/theme.css";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
@@ -38,7 +37,7 @@ import useOrders from "../orders/hooks/useOrders";
 export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const session = useSession();
+  const { handleSignOut } = useAuth();
 
   const [icon, setIcon] = useState("");
   const [title, setTitle] = useState("");
@@ -138,13 +137,13 @@ export default function Page() {
           </div>
         </div>
         <DrawerSettings
-          userLogged={session.data?.user?.name?.split(" ")[0] ?? ""}
+          userLogged={""}
           open={openDrawer}
           onClose={() => setOpenDrawer(false)}
           footerTile={
             <DrawerTile
               type="button"
-              onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+              onClick={handleSignOut}
               Icon={Logout}
               label="Sair do sistema"
             />
