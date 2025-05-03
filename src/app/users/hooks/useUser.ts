@@ -1,13 +1,13 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useCallback, useEffect, useState } from "react";
 
+import { auth } from "@/firebase-config";
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { User } from "@/helpers/firestore/model/admin/user";
-import { useSession } from "next-auth/react";
 
 export default function useUser() {
-  const { data: sessionData } = useSession();
+  const session = auth.currentUser;
 
   const { set, get, remove } = useFirebase();
 
@@ -27,30 +27,22 @@ export default function useUser() {
       transformer: (data) =>
         new User(data.id, data.email, data.name, data.isAdmin),
       onData: (users) => {
-        if (sessionData) {
-          setLoading(false);
-        }
         setUsers(users);
         setCurrentUser(
-          users.filter(
-            ({ email }: User) => email === sessionData?.user?.email
-          )[0]
+          users.filter(({ email }: User) => email === session?.email)[0]
         );
       },
       onError: () => {
         setError(errorMessage("ao obter os usuários"));
-        if (sessionData) {
-          setLoading(false);
-        }
       },
     });
-  }, [collection, get, sessionData]);
+  }, [collection, get, session]);
 
   useEffect(() => {
-    if (sessionData) {
+    if (session) {
       getUser();
     }
-  }, [getUser, sessionData]);
+  }, [getUser, session]);
 
   const setUser = async (user: User) => {
     setError(null);
