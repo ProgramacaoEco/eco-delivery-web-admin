@@ -2,12 +2,11 @@ import "./style.css";
 
 import { orderButtonContainer, totalContainer } from "./style.css";
 
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
-import Order from "@/helpers/realtime/model/order/order";
-import { useEffect } from "react";
+import Order from "@/helpers/firestore/model/order/order";
 import OrderButton from "./OrderButton";
 import OrderHeader from "./OrderHeader";
 import OrderPrintLayout from "./OrderPrintLayout";
+import { OrderStatus } from "@/helpers/firestore/enum/order-status";
 import OrderTable from "./OrderTable";
 import OrderTableBody from "./OrderTableBody";
 import OrderTableHead from "./OrderTableHead";
@@ -21,26 +20,8 @@ export default function SelectedOrderDetails({
   selectedOrder,
   onUpdateStatus,
 }: OrderDetailsProps) {
-  useEffect(() => {
-    if (!selectedOrder) return;
-
-    if (
-      selectedOrder.address === null &&
-      selectedOrder.status === OrderStatus.new
-    ) {
-      return onUpdateStatus(OrderStatus.sent);
-    }
-
-    if (
-      selectedOrder.address !== null &&
-      selectedOrder.status === OrderStatus.new
-    ) {
-      return onUpdateStatus(OrderStatus.picking);
-    }
-  }, [onUpdateStatus, selectedOrder]);
-
   const total =
-    selectedOrder?.items.reduce(
+    selectedOrder?.items?.reduce(
       (acc, { quantity, product }) => acc + quantity * product.value,
       0
     ) ?? 0;

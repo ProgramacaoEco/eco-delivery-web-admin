@@ -4,8 +4,8 @@ import {
   orderButtonSentStatus,
 } from "./style.css";
 
-import Order from "@/helpers/realtime/model/order/order";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import Order from "@/helpers/firestore/model/order/order";
+import { OrderStatus } from "@/helpers/firestore/enum/order-status";
 import RoundedButton from "@/components/basis/Button/RoundedButton";
 
 interface OrderButtonProps {

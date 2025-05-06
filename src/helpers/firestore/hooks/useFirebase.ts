@@ -1,5 +1,6 @@
 import { FirestoreHelper } from "@/helpers/firestore";
 import { Collections } from "@/helpers/firestore/collections";
+import { DocumentData } from "firebase/firestore";
 import { useCallback } from "react";
 import { BaseModel } from "../model/baseModel";
 
@@ -28,7 +29,7 @@ interface GetByProps<T extends BaseModel> {
 interface RemoveProps<T extends BaseModel> {
   id: string;
   collection: Collections;
-  data: T[];
+  data: T[] | undefined;
   onData: (data: any) => void;
   onSuccess: () => void;
   onError: () => void;
@@ -71,6 +72,26 @@ export default function useFirebase<T extends BaseModel>() {
     []
   );
 
+  const getRealtime = useCallback(
+    ({
+      collection,
+      onData,
+      onError,
+    }: {
+      collection: Collections;
+      onData: (data?: DocumentData) => void;
+      onError: () => void;
+    }) => {
+      try {
+        FirestoreHelper.getRealtime(collection, onData);
+      } catch (error) {
+        console.error(error);
+        onError();
+      }
+    },
+    []
+  );
+
   const getBy = useCallback(
     async ({ id, collection, onData, onError, transformer }: GetByProps<T>) => {
       try {
@@ -104,9 +125,10 @@ export default function useFirebase<T extends BaseModel>() {
 
         if (success) {
           onSuccess();
-          const newData: T[] = data.filter(
-            ({ id: currentIdIterated }: T) => currentIdIterated !== id
-          );
+          const newData: T[] =
+            data?.filter(
+              ({ id: currentIdIterated }: T) => currentIdIterated !== id
+            ) ?? [];
           onData(newData);
         } else {
           onError();
@@ -119,5 +141,5 @@ export default function useFirebase<T extends BaseModel>() {
     []
   );
 
-  return { set, get, getBy, remove };
+  return { set, get, getBy, remove, getRealtime };
 }

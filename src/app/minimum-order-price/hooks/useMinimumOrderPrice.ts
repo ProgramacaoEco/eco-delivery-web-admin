@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
-import { MinimumOrder } from "@/helpers/realtime/model/minimum-order/minimum-order";
-import { References } from "@/helpers/realtime/references";
+import { Collections } from "@/helpers/firestore/collections";
+import { MinimumOrder } from "@/helpers/firestore/model/minimum-order/minimum-order";
 import { errorMessage } from "@/utils/texts";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useMinimumOrderPrice() {
   const [error, setError] = useState<string | undefined>(undefined);
@@ -12,16 +12,15 @@ export default function useMinimumOrderPrice() {
     MinimumOrder | undefined
   >(undefined);
 
-  const { get, setValue } = useRealtime();
+  const { get, set } = useFirebase();
 
   const setMinimumOrderPrice = useCallback(
     async (minimumOrderValue: number) => {
       setError(undefined);
       setLoading(true);
       const value = new MinimumOrder("minimumOrder", minimumOrderValue);
-      await setValue({
-        id: "minimumOrder",
-        onData: () => {
+      await set({
+        onSuccess: () => {
           setMinimumOrderPriceData(value);
           setLoading(false);
         },
@@ -29,20 +28,22 @@ export default function useMinimumOrderPrice() {
           setError(errorMessage("ao cadastrar o valor de pedido mínimo"));
           setLoading(false);
         },
-        value,
-        reference: References.minimumOrder,
+        body: value,
+        collection: Collections.Pedido_Minimo,
       });
     },
-    [setValue]
+    [set]
   );
 
   const getMinimumOrderPrice = useCallback(() => {
     setError(undefined);
     setLoading(true);
     get({
+      transformer: (data) =>
+        new MinimumOrder("minimumOrder", data.minimumOrderValue),
       onData: async (data) => {
         console.log(data);
-        if (data.length !== 0) {
+        if (data) {
           setMinimumOrderPriceData(
             new MinimumOrder("minimumOrder", data[0].minimumOrderValue)
           );
@@ -56,7 +57,7 @@ export default function useMinimumOrderPrice() {
         setError(errorMessage("ao obter o valor cadastrado de pedido mínimo"));
         setLoading(false);
       },
-      reference: References.minimumOrder,
+      collection: Collections.Pedido_Minimo,
     });
   }, [get, setMinimumOrderPrice]);
 

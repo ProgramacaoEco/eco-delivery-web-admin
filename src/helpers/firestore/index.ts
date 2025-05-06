@@ -1,10 +1,12 @@
 import {
+  DocumentData,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
+  onSnapshot,
   setDoc,
 } from "firebase/firestore";
 
@@ -13,6 +15,20 @@ import { Collections } from "./collections";
 import { app } from "@/firebase-config";
 
 const db = getFirestore(app);
+
+async function getRealtime(
+  currentCollection: Collections,
+  onData: (data?: DocumentData) => void
+) {
+  try {
+    onSnapshot(collection(db, currentCollection), (doc) =>
+      onData(doc.docs.map((doc) => doc.data()))
+    );
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 async function get(currentCollection: Collections) {
   try {
@@ -44,7 +60,6 @@ async function remove(id: string, currentCollection: Collections) {
   } catch (error) {
     console.error(error);
     return false;
-    throw error;
   }
 }
 
@@ -56,11 +71,9 @@ async function set<T extends BaseModel>(
     await setDoc(doc(db, currentCollection, data.id), data.toJson());
     return true;
   } catch (error) {
-    console.log(data);
     console.error(error);
     return false;
-    throw error;
   }
 }
 
-export const FirestoreHelper = { get, getBy, set, remove };
+export const FirestoreHelper = { get, getBy, set, remove, getRealtime };

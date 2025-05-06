@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 
-import Order from "@/helpers/realtime/model/order/order";
+import Order from "@/helpers/firestore/model/order/order";
 
 export type OrderContextType = {
   orders?: Order[] | undefined;

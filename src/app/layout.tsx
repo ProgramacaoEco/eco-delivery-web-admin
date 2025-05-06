@@ -5,21 +5,25 @@ import {
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { useEffect, useRef, useState } from "react";
 import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
+import { useEffect, useRef, useState } from "react";
 
 import AuthGuard from "@/components/basis/AuthGuard";
+import Image from "next/image";
+import { Inter } from "next/font/google";
 import LinkButton from "@/components/basis/LinkButton";
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import OrderProvider from "./orders/context/OrderProvider";
+import { Toaster } from "react-hot-toast";
 import { Typography } from "@/components/basis/Typography";
 import { app } from "@/firebase-config";
-import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { cn } from "@/utils/classNames";
-import { Inter } from "next/font/google";
-import Image from "next/image";
+import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { usePathname } from "next/navigation";
-import { Toaster } from "react-hot-toast";
-import OrderProvider from "./orders/context/OrderProvider";
+
+declare global {
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
 
 const inter = Inter({ subsets: ["latin"], weight: "variable" });
 
@@ -72,7 +76,6 @@ export default function RootLayout({
         noPrint.current.style.visibility = "visible";
       }
     });
-
     mounted.current = true;
   }, []);
 

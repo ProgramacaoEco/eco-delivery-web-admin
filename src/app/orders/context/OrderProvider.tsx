@@ -1,10 +1,11 @@
 import { PropsWithChildren, useEffect, useMemo, useState } from "react";
 
-import Order from "@/helpers/realtime/model/order/order";
-import useStoreStatus from "@/hooks/useStoreStatus";
 import { Howl } from "howler";
-import toast from "react-hot-toast";
+import Order from "@/helpers/firestore/model/order/order";
 import { OrderContext } from "./OrderContext";
+import { auth } from "@/firebase-config";
+import toast from "react-hot-toast";
+import useStoreStatus from "@/hooks/useStoreStatus";
 
 export default function OrderProvider({ children }: PropsWithChildren) {
   const [orders, setOrders] = useState<Order[] | undefined>(undefined);
@@ -28,6 +29,8 @@ export default function OrderProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
+    if (!auth.currentUser) return;
+
     listenToStoreStatus();
   }, [listenToStoreStatus]);
 

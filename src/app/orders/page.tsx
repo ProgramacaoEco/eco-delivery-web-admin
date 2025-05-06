@@ -2,12 +2,12 @@
 
 import { useContext, useEffect } from "react";
 
+import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
+import { OrderContext } from "./context/OrderContext";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
-import Link from "next/link";
-import { OrderContext } from "./context/OrderContext";
 import useOrders from "./hooks/useOrders";
 
 export default function Orders() {
@@ -18,7 +18,6 @@ export default function Orders() {
   useEffect(() => {
     listenToOrders(storeStatus);
     getStoreStatus();
-    console.log(storeStatus);
   }, [listenToOrders, storeStatus, getStoreStatus]);
 
   return (

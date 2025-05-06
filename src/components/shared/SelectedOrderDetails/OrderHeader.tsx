@@ -1,4 +1,4 @@
-import Order from "@/helpers/realtime/model/order/order";
+import Order from "@/helpers/firestore/model/order/order";
 import { orderHeader } from "./style.css";
 
 interface OrderHeaderProps {

@@ -6,7 +6,7 @@ import { container, form } from "./style.css";
 import { CurrencyInput } from "react-currency-mask";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { MinimumOrder } from "@/helpers/realtime/model/minimum-order/minimum-order";
+import { MinimumOrder } from "@/helpers/firestore/model/minimum-order/minimum-order";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import RoundedButton from "@/components/basis/Button/RoundedButton";
 import { useEffect } from "react";

@@ -1,7 +1,7 @@
 import "./style.css";
 
-import Item from "@/helpers/realtime/model/order/item";
-import Order from "@/helpers/realtime/model/order/order";
+import Item from "@/helpers/firestore/model/order/item";
+import Order from "@/helpers/firestore/model/order/order";
 
 interface OrderTableBodyProps {
   selectedOrder?: Order | null;

@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
-import { References } from "@/helpers/realtime/references";
+import { Collections } from "@/helpers/firestore/collections";
 import { errorMessage } from "@/utils/texts";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export class StoreStatus implements BaseModel {
   constructor(id: string, storeStatus: boolean) {
@@ -27,63 +27,70 @@ export class StoreStatus implements BaseModel {
 }
 
 export default function useStoreStatus() {
-  const { setValue, getSingle, listenToValue } = useRealtime();
+  const { set, getBy, getRealtime } = useFirebase();
   const [storeStatus, setStoreStatus] = useState<StoreStatus | undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
 
-  const listenToStoreStatus = useCallback(() => {
-    listenToValue({
-      onData: async (data) => {
-        setStoreStatus(new StoreStatus(data[0].id, data[0].storeStatus));
-        setLoading(false);
-      },
-      onError: () => {
-        setError(errorMessage("ao obter o estado da loja"));
-        setLoading(false);
-      },
-      reference: References.storeStatus,
-    });
-  }, [listenToValue]);
-
   const changeStoreStatus = useCallback(
     async (value: StoreStatus) => {
       setLoading(true);
-      await setValue({
-        id: "storeStatus",
-        onData: (data) => {
-          setStoreStatus(data);
+      await set({
+        onSuccess: () => {
+          setStoreStatus(value);
           setLoading(false);
         },
         onError: () => {
           setError(errorMessage("ao definir o estado da loja"));
           setLoading(false);
         },
-        reference: References.storeStatus,
-        value,
+        collection: Collections.Status_Loja,
+        body: value,
       });
     },
-    [setValue]
+    [set]
   );
 
-  const getStoreStatus = useCallback(() => {
-    setLoading(true);
-    getSingle({
-      id: "storeStatus",
+  const listenToStoreStatus = useCallback(() => {
+    getRealtime({
       onData: async (data) => {
-        if (data === undefined) {
-          await changeStoreStatus(new StoreStatus("store-status", true));
+        if (data) {
+          setStoreStatus(new StoreStatus(data[0].id, data[0].storeStatus));
+        } else {
+          await changeStoreStatus(new StoreStatus("storeStatus", true));
         }
-        setStoreStatus(new StoreStatus(data.id, data.storeStatus));
         setLoading(false);
       },
       onError: () => {
         setError(errorMessage("ao obter o estado da loja"));
         setLoading(false);
       },
-      reference: References.storeStatus,
+      collection: Collections.Status_Loja,
     });
-  }, [changeStoreStatus, getSingle]);
+  }, [changeStoreStatus, getRealtime]);
+
+  const getStoreStatus = useCallback(() => {
+    setLoading(true);
+    getBy({
+      transformer: (data) => new StoreStatus(data.id, data.storeStatus),
+      id: "storeStatus",
+      onData: async (data) => {
+        if (!data) {
+          const initialStatus = new StoreStatus("storeStatus", true);
+          await changeStoreStatus(initialStatus);
+          setStoreStatus(initialStatus);
+        } else {
+          setStoreStatus(data);
+        }
+        setLoading(false);
+      },
+      onError: () => {
+        setError(errorMessage("ao obter o estado da loja"));
+        setLoading(false);
+      },
+      collection: Collections.Status_Loja,
+    });
+  }, [changeStoreStatus, getBy]);
 
   return {
     storeStatus,

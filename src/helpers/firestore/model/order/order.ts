@@ -1,8 +1,8 @@
+import Address from "./address";
 import { BaseModel } from "@/helpers/firestore/model/baseModel";
+import Item from "./item";
 import { OrderStatus } from "../../enum/order-status";
 import { PaymentMethod } from "../../enum/payment-method";
-import Address from "./address";
-import Item from "./item";
 
 export default class Order implements BaseModel {
   constructor(

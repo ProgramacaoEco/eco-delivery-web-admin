@@ -1,16 +1,22 @@
 // AuthGuard.tsx
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
-
-import { auth } from "@/firebase-config";
+import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
+import { app, auth } from "@/firebase-config";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function AuthGuard({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""
+      ),
+    });
+
     let isMounted = true;
 
     console.log("AuthGuard Effect triggered. Pathname:", pathname);
@@ -19,7 +25,7 @@ export default function AuthGuard({ children }: PropsWithChildren) {
     // to detect the user's state after the popup closes or on initial load.
     const unsubscribe = auth.onAuthStateChanged((user) => {
       console.log(
-        "AuthGuard: onAuthStateChanged triggered. User:",
+        "AuthGuard: onAuthStateChanged triggered.",
         user?.uid || null
       );
       if (!isMounted) return;
@@ -53,5 +59,6 @@ export default function AuthGuard({ children }: PropsWithChildren) {
 
   // If not loading, render the children (protected content)
   // The redirection logic inside useEffect handles unauthorized access.
+
   return <>{children}</>;
 }

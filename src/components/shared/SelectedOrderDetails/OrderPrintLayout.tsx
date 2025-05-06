@@ -1,6 +1,6 @@
 import { printerTicket, ttu } from "./style.css";
 
-import Order from "@/helpers/realtime/model/order/order";
+import Order from "@/helpers/firestore/model/order/order";
 import React from "react";
 
 interface OrderPrintLayoutProps {

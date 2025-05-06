@@ -1,6 +1,5 @@
 "use client";
-import { app } from "@/firebase-config";
-import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
+
 import {
   Assignment,
   AssignmentCheck,
@@ -19,19 +18,21 @@ import {
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { useContext, useEffect, useState } from "react";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { useContext, useEffect, useState } from "react";
+import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 
 import Card from "@/components/basis/Card";
 import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
 import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
-import LoadingContainer from "@/components/basis/LoadingContainer";
-import StoreSwitch from "@/components/basis/StoreSwitch";
-import useAuth from "@/hooks/useAuth";
-import { themeVars } from "@/theme/theme.css";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
+import LoadingContainer from "@/components/basis/LoadingContainer";
 import { OrderContext } from "../orders/context/OrderContext";
+import StoreSwitch from "@/components/basis/StoreSwitch";
+import { app } from "@/firebase-config";
+import { themeVars } from "@/theme/theme.css";
+import useAuth from "@/hooks/useAuth";
 import useOrders from "../orders/hooks/useOrders";
 
 export default function Page() {
@@ -99,7 +100,7 @@ export default function Page() {
               <StoreSwitch
                 isOpen={storeStatus?.storeStatus ?? false}
                 onStoreOpen={(isOpen) =>
-                  changeStoreStatus(new StoreStatus("store-status", isOpen))
+                  changeStoreStatus(new StoreStatus("storeStatus", isOpen))
                 }
               />
               <Image src={icon} width={75} height={75} alt={title} />

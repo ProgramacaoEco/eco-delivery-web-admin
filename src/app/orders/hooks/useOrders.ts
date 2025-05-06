@@ -1,33 +1,29 @@
 import { useCallback, useContext } from "react";
 
-import Address from "@/helpers/realtime/model/order/address";
+import Address from "@/helpers/firestore/model/order/address";
 import { Category } from "@/helpers/firestore/model/product/category";
 import { Collections } from "@/helpers/firestore/collections";
-import Item from "@/helpers/realtime/model/order/item";
+import Item from "@/helpers/firestore/model/order/item";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import Order from "@/helpers/realtime/model/order/order";
+import Order from "@/helpers/firestore/model/order/order";
 import { OrderContext } from "../context/OrderContext";
-import { OrderStatus } from "@/helpers/realtime/enum/order-status";
+import { OrderStatus } from "@/helpers/firestore/enum/order-status";
 import { Product } from "@/helpers/firestore/model/product/product";
-import { References } from "@/helpers/realtime/references";
 import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import useRealtime from "@/helpers/realtime/hooks/useRealtime";
 
 export default function useOrders() {
-  const { getSingle, listenToValue, setValue, deleteSingle, get } =
-    useRealtime();
-  const { set } = useFirebase();
+  const { getBy, getRealtime, set, remove, get } = useFirebase();
 
-  const { setError, setLoading, setOrders, setSelectedOrder, orders } =
+  const { setError, setLoading, setOrders, setSelectedOrder, orders, loading } =
     useContext(OrderContext);
 
   const createOrder = (
     data: any,
     isViewed: boolean = false,
     status?: OrderStatus
-  ) =>
-    new Order(
+  ) => {
+    return new Order(
       data?.id,
       !isViewed ? data?.isViewed : isViewed,
       data?.orderIssuer,
@@ -72,13 +68,15 @@ export default function useOrders() {
       data?.paymentMethod,
       data?.uidOrderIssuer
     );
+  };
 
   const getSingleOrder = useCallback(
     (id: string) => {
       setError(undefined);
       setLoading(true);
-      getSingle({
+      getBy({
         id: id,
+        transformer: createOrder,
         onData: (data) => {
           setSelectedOrder(createOrder(data));
           setLoading(false);
@@ -87,10 +85,10 @@ export default function useOrders() {
           setError(errorMessage("ao obter o pedido selecionado"));
           setLoading(false);
         },
-        reference: References.orders,
+        collection: Collections.Pedidos,
       });
     },
-    [getSingle, setError, setLoading, setSelectedOrder]
+    [getBy, setError, setLoading, setSelectedOrder]
   );
 
   const listenToOrders = useCallback(
@@ -103,8 +101,9 @@ export default function useOrders() {
 
         setError(undefined);
         setLoading(true);
-        return await listenToValue({
+        return getRealtime({
           onData: (data) => {
+            if (!data) return;
             setOrders(
               data.map((o: Order) => createOrder(o, o.isViewed, o.status))
             );
@@ -114,53 +113,58 @@ export default function useOrders() {
             setError(errorMessage("ao obter os pedidos"));
             setLoading(false);
           },
-          reference: References.orders,
+          collection: Collections.Pedidos,
         });
       }
     },
-    [listenToValue, setError, setLoading, setOrders]
+    [getRealtime, setError, setLoading, setOrders]
   );
 
   const updateOrderStatus = useCallback(
     async (
       status: OrderStatus,
       order?: Order,
-      onUpdate?: (data: any) => any
+      onUpdate?: (order: Order) => void
     ) => {
       setError(undefined);
       setLoading(true);
       if (order !== undefined) {
-        await setValue({
-          id: order.id,
-          onData: async (data) => {
-            const updatedOrder = createOrder(data);
+        await set({
+          onSuccess: () => {
+            const updatedOrder = createOrder(order.toJson(), true, status);
             setSelectedOrder(updatedOrder);
-            if (onUpdate) await onUpdate(updatedOrder);
+            if (onUpdate) onUpdate(updatedOrder);
             setLoading(false);
           },
           onError: () => {
             setError(errorMessage("ao atualizar o estado do pedido"));
-            setLoading(false);
           },
-          reference: References.orders,
-          value: createOrder(order.toJson(), true, status),
+          collection: Collections.Pedidos,
+          body: createOrder(order.toJson(), true, status),
         });
       } else {
         throw Error("Order cannot be null.");
       }
+      if (order) getSingleOrder(order.id);
     },
-    [setError, setLoading, setSelectedOrder, setValue]
+    [getSingleOrder, set, setError, setLoading, setSelectedOrder]
   );
 
   const deleteOrder = useCallback(
     (id: string) => {
-      deleteSingle({
+      remove({
+        data: orders,
+        onData: (data) =>
+          setOrders(
+            data.map((o: Order) => createOrder(o, o.isViewed, o.status))
+          ),
+        onSuccess: () => setError(undefined),
         id,
         onError: () => setError(errorMessage("ao remover o pedido finalizado")),
-        reference: References.orders,
+        collection: Collections.Pedidos,
       });
     },
-    [deleteSingle, setError]
+    [orders, remove, setError, setOrders]
   );
 
   const setInvoice = useCallback(
@@ -178,6 +182,7 @@ export default function useOrders() {
   );
 
   return {
+    loading,
     updateOrderStatus,
     getSingleOrder,
     listenToOrders,
