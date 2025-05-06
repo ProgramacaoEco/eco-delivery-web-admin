@@ -11,6 +11,10 @@ export default function AuthGuard({ children }: PropsWithChildren) {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
+
     initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""

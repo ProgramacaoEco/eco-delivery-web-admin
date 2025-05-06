@@ -27,7 +27,7 @@ export default function useOrders() {
       data?.id,
       !isViewed ? data?.isViewed : isViewed,
       data?.orderIssuer,
-      data.address
+      data?.address
         ? new Address(
             data?.address?.address,
             data?.address?.number,
