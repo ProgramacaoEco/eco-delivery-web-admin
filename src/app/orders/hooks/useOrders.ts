@@ -51,8 +51,7 @@ export default function useOrders() {
               content.product.value,
               new Category(
                 content.product.category.id,
-                content.product.category.name,
-                content.product.category.pictureUrl
+                content.product.category.name
               ),
               content.product.inventory,
               content.product.image
