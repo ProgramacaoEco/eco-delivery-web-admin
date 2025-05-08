@@ -1,11 +1,11 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useEffect, useState } from "react";
 
-import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Category } from "@/helpers/firestore/model/product/category";
-import { Product } from "@/helpers/firestore/model/product/product";
+import { Collections } from "@/helpers/firestore/collections";
 import { Folders } from "@/helpers/storage/folders";
+import { Product } from "@/helpers/firestore/model/product/product";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import useStorage from "@/helpers/storage/hooks/useStorage";
 
 export default function useProducts() {
@@ -34,11 +34,7 @@ export default function useProducts() {
             data.id,
             data.description,
             data.value,
-            new Category(
-              data.category.id,
-              data.category.name,
-              data.category.pictureUrl
-            ),
+            new Category(data.category.id, data.category.name),
             data.inventory,
             data.image
           ),

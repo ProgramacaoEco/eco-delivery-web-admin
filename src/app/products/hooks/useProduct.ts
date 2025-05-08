@@ -31,11 +31,7 @@ export default function useProduct(id: string) {
           data.id,
           data.description,
           data.value,
-          new Category(
-            data.category.id,
-            data.category.name,
-            data.category.pictureUrl
-          ),
+          new Category(data.category.id, data.category.name),
           data.inventory,
           data.image
         ),
