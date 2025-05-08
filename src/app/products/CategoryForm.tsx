@@ -1,16 +1,15 @@
-import { ChangeEvent, useEffect, useState } from "react";
 import { form, formFields, saveButton } from "./style.css";
 
 import RoundedButton from "@/components/basis/Button/RoundedButton";
-import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import { Category } from "@/helpers/firestore/model/product/category";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface CategoryFormProps {
   defaultValue?: Category | null;
-  onSubmit: (category: Category, file?: File) => void;
+  onSubmit: (category: Category) => void;
   loading: boolean;
   error: string | null;
 }
@@ -21,18 +20,6 @@ export default function CategoryForm({
   loading,
   error,
 }: CategoryFormProps) {
-  const [image, setImage] = useState<string | undefined>(
-    defaultValue?.pictureUrl
-  );
-  const [binaryImage, setBinaryImage] = useState<File | undefined>(undefined);
-
-  const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-      setBinaryImage(event.target.files[0]);
-    }
-  };
-
   const {
     handleSubmit,
     register,
@@ -42,42 +29,33 @@ export default function CategoryForm({
     defaultValues: {
       id: Date.now().toString(),
       name: "",
-      pictureUrl: "",
     },
     reValidateMode: "onChange",
   });
 
   useEffect(() => {
     if (defaultValue !== null && defaultValue !== undefined) {
-      const { id, name, pictureUrl } = defaultValue;
+      const { id, name } = defaultValue;
 
-      reset({ id, name, pictureUrl });
-
-      setImage(image);
+      reset({ id, name });
     }
-  }, [defaultValue, image, reset]);
+  }, [defaultValue, reset]);
 
   const submit = () =>
-    handleSubmit(({ id, name, pictureUrl }, event) => {
+    handleSubmit(({ id, name }, event) => {
       event?.preventDefault();
       if (
         Object.entries(errors).find(([_, value]) => value.message !== undefined)
       )
         return;
 
-      onSubmit(new Category(id, name, pictureUrl), binaryImage);
+      onSubmit(new Category(id, name));
       reset();
     });
 
   return (
     <LoadingContainer loading={loading} error={error !== null}>
       <form onSubmit={submit()} className={form}>
-        <ImagePicker
-          defaultImage={defaultValue?.pictureUrl}
-          placeholder="Selecione a imagem da categoria"
-          onChange={handleImage}
-        />
-
         <div className={formFields}>
           <InputText
             {...register("name", {

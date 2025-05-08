@@ -24,7 +24,7 @@ export default function useCategories() {
         setError(errorMessage("ao obter as categorias."));
         setLoading(false);
       },
-      transformer: (data) => new Category(data.id, data.name, data.pictureUrl),
+      transformer: (data) => new Category(data.id, data.name),
     });
   }, [get]);
 

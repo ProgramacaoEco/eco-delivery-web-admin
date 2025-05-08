@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { Category } from "@/helpers/firestore/model/product/category";
 import { Collections } from "@/helpers/firestore/collections";
-import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { errorMessage } from "@/utils/texts";
 
 export default function useCategory(id: string) {
   const { getBy } = useFirebase();
@@ -17,15 +17,15 @@ export default function useCategory(id: string) {
     getBy({
       id,
       collection: Collections.Categorias,
-      onData: (product) => {
-        setCategory(product);
+      onData: (category) => {
+        setCategory(category);
         setLoading(false);
       },
       onError: () => {
         setError(errorMessage("ao obter a categoria."));
         setLoading(false);
       },
-      transformer: (data) => new Category(data.id, data.name, data.pictureUrl),
+      transformer: (data) => new Category(data.id, data.name),
     });
   }, [getBy, id]);
 

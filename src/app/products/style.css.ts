@@ -20,6 +20,8 @@ export const form = style({
 export const formFields = style({
   width: "60%",
   display: "flex",
+  minHeight: "80vh",
+  justifyContent: "center",
   flexDirection: "column",
   gap: "30px",
 
@@ -32,6 +34,7 @@ export const formFields = style({
 
 export const saveButton = style({
   backgroundColor: "orange",
+  width: "100%",
 });
 
 export const menuButton = style({
