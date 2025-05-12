@@ -12,9 +12,7 @@ import { AppCheckProvider } from "@/components/basis/AppCheckProvider";
 import AuthGuard from "@/components/basis/AuthGuard";
 import LinkButton from "@/components/basis/LinkButton";
 import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
-import { Typography } from "@/components/basis/Typography";
 import { app } from "@/firebase-config";
-import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 import { cn } from "@/utils/classNames";
 import { Inter } from "next/font/google";
 import Image from "next/image";
@@ -37,7 +35,6 @@ export default function RootLayout({
   const noPrint = useRef<HTMLImageElement>(null);
   const mounted = useRef<boolean>(false);
 
-  const isOnline = useOnlineStatus();
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -111,10 +108,9 @@ export default function RootLayout({
             right: -120,
           }}
         />
-
         {!hasMounted ? (
           <div className={loadingContainer}>Carregando...</div>
-        ) : isOnline ? (
+        ) : (
           <AppCheckProvider>
             <AuthGuard>
               <OrderProvider>
@@ -141,14 +137,8 @@ export default function RootLayout({
               </OrderProvider>
             </AuthGuard>
           </AppCheckProvider>
-        ) : (
-          <div className={loadingContainer}>
-            <Typography.TitleBold>
-              Você está sem internet. Por favor, verifique sua conexão e tente
-              novamente.
-            </Typography.TitleBold>
-          </div>
         )}
+
         <Toaster
           position="bottom-center"
           toastOptions={{

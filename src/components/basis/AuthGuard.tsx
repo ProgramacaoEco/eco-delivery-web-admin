@@ -2,8 +2,9 @@
 
 import { app, auth } from "@/firebase-config";
 import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
+import { getDatabase, onValue, ref } from "firebase/database";
 import { usePathname, useRouter } from "next/navigation";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
@@ -12,13 +13,39 @@ import { FirebaseError } from "firebase/app";
 import { User } from "firebase/auth";
 import toast from "react-hot-toast";
 import { useAppCheck } from "./AppCheckProvider";
+import { loadingContainer } from "./LoadingContainer/style.css";
+import { Typography } from "./Typography";
 
 export default function AuthGuard({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const { getBy } = useFirebase();
 
+  const [isOnline, setIsOnline] = useState(true);
+
   const { setAppCheck, appCheck: providerAppCheck } = useAppCheck();
+
+  const checkNetworkStatus = async () => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    if (!auth.currentUser) return handleOnline();
+
+    try {
+      const db = getDatabase();
+      const connectedRef = ref(db, ".info/connected");
+      onValue(connectedRef, (snap) => {
+        if (snap.val() === true) {
+          handleOnline();
+        } else {
+          console.log("here");
+          handleOffline();
+        }
+      });
+    } catch {
+      handleOffline();
+    }
+  };
 
   useEffect(() => {
     auth.beforeAuthStateChanged(async (user) => {
@@ -73,6 +100,8 @@ export default function AuthGuard({ children }: PropsWithChildren) {
     // With signInWithPopup, we primarily rely on onAuthStateChanged
     // to detect the user's state after the popup closes or on initial load.
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      checkNetworkStatus();
+
       console.log(
         "AuthGuard: onAuthStateChanged triggered.",
         user?.uid || null
@@ -105,9 +134,21 @@ export default function AuthGuard({ children }: PropsWithChildren) {
       unsubscribe();
     };
   }, [router, pathname, setAppCheck]); // Dependencies remain the same
-
   // If not loading, render the children (protected content)
   // The redirection logic inside useEffect handles unauthorized access.
 
-  return <>{children}</>;
+  return (
+    <>
+      {isOnline ? (
+        children
+      ) : (
+        <div className={loadingContainer}>
+          <Typography.TitleBold>
+            Você está sem internet. Por favor, verifique sua conexão e tente
+            novamente.
+          </Typography.TitleBold>
+        </div>
+      )}
+    </>
+  );
 }
