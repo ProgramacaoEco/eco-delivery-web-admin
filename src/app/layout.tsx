@@ -5,21 +5,22 @@ import {
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 import { useEffect, useRef, useState } from "react";
+import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 
+import { AppCheckProvider } from "@/components/basis/AppCheckProvider";
 import AuthGuard from "@/components/basis/AuthGuard";
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import LinkButton from "@/components/basis/LinkButton";
-import OrderProvider from "./orders/context/OrderProvider";
-import { Toaster } from "react-hot-toast";
+import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { Typography } from "@/components/basis/Typography";
 import { app } from "@/firebase-config";
-import { cn } from "@/utils/classNames";
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { useOnlineStatus } from "@/hooks/useNetworkStatus";
+import { cn } from "@/utils/classNames";
+import { Inter } from "next/font/google";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Toaster } from "react-hot-toast";
+import OrderProvider from "./orders/context/OrderProvider";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -114,30 +115,32 @@ export default function RootLayout({
         {!hasMounted ? (
           <div className={loadingContainer}>Carregando...</div>
         ) : isOnline ? (
-          <AuthGuard>
-            <OrderProvider>
-              {children}
-              <div
-                className={hideWhatsappButtonOnPrint}
-                style={{
-                  zIndex: "100",
-                  right: 40,
-                  bottom: 0,
-                  paddingBottom: "1rem",
-                  position: "fixed",
-                }}
-              >
-                <LinkButton href="https://wa.me/5551991672281">
-                  <Image
-                    src="/whatsapp.svg"
-                    width={60}
-                    height={60}
-                    alt="Suporte pelo WhatsApp"
-                  />
-                </LinkButton>
-              </div>
-            </OrderProvider>
-          </AuthGuard>
+          <AppCheckProvider>
+            <AuthGuard>
+              <OrderProvider>
+                {children}
+                <div
+                  className={hideWhatsappButtonOnPrint}
+                  style={{
+                    zIndex: "100",
+                    right: 40,
+                    bottom: 0,
+                    paddingBottom: "1rem",
+                    position: "fixed",
+                  }}
+                >
+                  <LinkButton href="https://wa.me/5551991672281">
+                    <Image
+                      src="/whatsapp.svg"
+                      width={60}
+                      height={60}
+                      alt="Suporte pelo WhatsApp"
+                    />
+                  </LinkButton>
+                </div>
+              </OrderProvider>
+            </AuthGuard>
+          </AppCheckProvider>
         ) : (
           <div className={loadingContainer}>
             <Typography.TitleBold>

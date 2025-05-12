@@ -1,11 +1,12 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useEffect, useState } from "react";
 
-import Campaign from "@/helpers/firestore/model/campaign/campaign";
 import { Collections } from "@/helpers/firestore/collections";
-import { Folders } from "@/helpers/storage/folders";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import Campaign from "@/helpers/firestore/model/campaign/campaign";
+import { Folders } from "@/helpers/storage/folders";
 import useStorage from "@/helpers/storage/hooks/useStorage";
+import { useCompressImage } from "@/hooks/useCompressImage";
 
 export default function useCampaigns() {
   const { upload, remove: removeStorage } = useStorage(Folders.Campanhas);
@@ -15,6 +16,8 @@ export default function useCampaigns() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [campaigns, setCampaigns] = useState<Map<string, Campaign>>(new Map());
+
+  const compress = useCompressImage();
 
   const collection = Collections.Campanhas;
 
@@ -82,9 +85,15 @@ export default function useCampaigns() {
     setError(null);
 
     if (file !== undefined) {
+      const compressedBlob = await compress(file);
+
+      const compressedFile = new File([compressedBlob], file.name, {
+        type: compressedBlob.type,
+      });
+
       return await upload({
         id: id,
-        file: file,
+        file: compressedFile,
         onError: () => {
           setError(errorMessage("ao cadastrar campanha."));
           setLoading(false);

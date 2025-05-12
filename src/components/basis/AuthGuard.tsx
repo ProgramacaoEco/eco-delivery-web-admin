@@ -1,26 +1,71 @@
-// AuthGuard.tsx
 "use client";
 
-import { PropsWithChildren, useEffect } from "react";
-import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
 import { app, auth } from "@/firebase-config";
+import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
 import { usePathname, useRouter } from "next/navigation";
+import { PropsWithChildren, useEffect } from "react";
+
+import { Collections } from "@/helpers/firestore/collections";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { User as UserModel } from "@/helpers/firestore/model/admin/user";
+import { FirebaseError } from "firebase/app";
+import { User } from "firebase/auth";
+import toast from "react-hot-toast";
+import { useAppCheck } from "./AppCheckProvider";
 
 export default function AuthGuard({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
+  const { getBy } = useFirebase();
+
+  const { setAppCheck, appCheck: providerAppCheck } = useAppCheck();
+
+  useEffect(() => {
+    auth.beforeAuthStateChanged(async (user) => {
+      if (user === null) {
+        toast.dismiss();
+        return;
+      }
+
+      await getBy({
+        id: user?.email ?? "",
+        collection: Collections.Usuarios,
+        onData: (data?: User) => {
+          console.log("User exists: ", data);
+          if (!data) {
+            toast.dismiss();
+            toast.error("Usuário não possui permissão para acessar o sistema.");
+            throw new FirebaseError("user-not-found", "User does not exist");
+          }
+        },
+        onError: () => {
+          throw new FirebaseError("user-not-found", "User does not exist");
+        },
+        transformer: (data) =>
+          new UserModel(data?.id, data?.email, data?.userName, data?.isAdmin),
+      });
+    });
+  }, [getBy]);
+
+  useEffect(() => {
+    console.log("Provider app check: ", providerAppCheck);
+  }, [providerAppCheck]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
     }
 
-    initializeAppCheck(app, {
+    const appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""
       ),
     });
 
+    setAppCheck(appCheck);
+  }, [setAppCheck]);
+
+  useEffect(() => {
     let isMounted = true;
 
     console.log("AuthGuard Effect triggered. Pathname:", pathname);
@@ -59,7 +104,7 @@ export default function AuthGuard({ children }: PropsWithChildren) {
       isMounted = false;
       unsubscribe();
     };
-  }, [router, pathname]); // Dependencies remain the same
+  }, [router, pathname, setAppCheck]); // Dependencies remain the same
 
   // If not loading, render the children (protected content)
   // The redirection logic inside useEffect handles unauthorized access.
