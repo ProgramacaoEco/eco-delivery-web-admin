@@ -9,4 +9,5 @@ Para fazer alterações no projeto, utilize a branch **MAIN**. Por favor, não m
 Para rodar o projeto localmente, por favor, verifique o arquivo em anexo enviado. Após realizar todos os passos no arquivo, basta apenas rodar os seguintes comandos
 
 - `npm install`
-- `npm run dev`
+- `npm run build`
+- `npm start`
