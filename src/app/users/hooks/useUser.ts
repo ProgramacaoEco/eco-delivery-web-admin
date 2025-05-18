@@ -31,9 +31,11 @@ export default function useUser() {
         setCurrentUser(
           users.filter(({ email }: User) => email === session?.email)[0]
         );
+        setLoading(false);
       },
       onError: () => {
         setError(errorMessage("ao obter os usuários"));
+        setLoading(false);
       },
     });
   }, [collection, get, session]);

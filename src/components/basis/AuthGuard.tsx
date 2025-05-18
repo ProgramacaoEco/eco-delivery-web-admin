@@ -29,20 +29,29 @@ export default function AuthGuard({ children }: PropsWithChildren) {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    if (!auth.currentUser) return handleOnline();
-
     try {
       const db = getDatabase();
       const connectedRef = ref(db, ".info/connected");
-      onValue(connectedRef, (snap) => {
-        if (snap.val() === true) {
-          handleOnline();
-        } else {
-          console.log("here");
-          handleOffline();
-        }
-      });
+      onValue(
+        connectedRef,
+        async (snap) => {
+          console.log(snap);
+          try {
+            const snapshot = await snap.val();
+
+            if (snapshot === true) {
+              return handleOnline();
+            }
+
+            throw Error("No internet connection");
+          } catch {
+            handleOffline();
+          }
+        },
+        handleOffline
+      );
     } catch {
+      console.error("error");
       handleOffline();
     }
   };
@@ -99,8 +108,8 @@ export default function AuthGuard({ children }: PropsWithChildren) {
 
     // With signInWithPopup, we primarily rely on onAuthStateChanged
     // to detect the user's state after the popup closes or on initial load.
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      checkNetworkStatus();
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      await checkNetworkStatus();
 
       console.log(
         "AuthGuard: onAuthStateChanged triggered.",
