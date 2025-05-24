@@ -2,13 +2,13 @@
 
 import { app, auth } from "@/firebase-config";
 import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
-import { getDatabase, onValue, ref } from "firebase/database";
 import { usePathname, useRouter } from "next/navigation";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { User as UserModel } from "@/helpers/firestore/model/admin/user";
+import { useNetworkState } from "@uidotdev/usehooks";
 import { FirebaseError } from "firebase/app";
 import { User } from "firebase/auth";
 import toast from "react-hot-toast";
@@ -21,40 +21,9 @@ export default function AuthGuard({ children }: PropsWithChildren) {
   const pathname = usePathname();
   const { getBy } = useFirebase();
 
-  const [isOnline, setIsOnline] = useState(true);
-
   const { setAppCheck, appCheck: providerAppCheck } = useAppCheck();
 
-  const checkNetworkStatus = async () => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    try {
-      const db = getDatabase();
-      const connectedRef = ref(db, ".info/connected");
-      onValue(
-        connectedRef,
-        async (snap) => {
-          console.log(snap);
-          try {
-            const snapshot = await snap.val();
-
-            if (snapshot === true) {
-              return handleOnline();
-            }
-
-            throw Error("No internet connection");
-          } catch {
-            handleOffline();
-          }
-        },
-        handleOffline
-      );
-    } catch {
-      console.error("error");
-      handleOffline();
-    }
-  };
+  const { online } = useNetworkState();
 
   useEffect(() => {
     auth.beforeAuthStateChanged(async (user) => {
@@ -109,8 +78,6 @@ export default function AuthGuard({ children }: PropsWithChildren) {
     // With signInWithPopup, we primarily rely on onAuthStateChanged
     // to detect the user's state after the popup closes or on initial load.
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      await checkNetworkStatus();
-
       console.log(
         "AuthGuard: onAuthStateChanged triggered.",
         user?.uid || null
@@ -148,7 +115,7 @@ export default function AuthGuard({ children }: PropsWithChildren) {
 
   return (
     <>
-      {isOnline ? (
+      {online ? (
         children
       ) : (
         <div className={loadingContainer}>

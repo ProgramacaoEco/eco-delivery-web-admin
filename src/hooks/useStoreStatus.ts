@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
-import { BaseModel } from "@/helpers/firestore/model/baseModel";
 import { Collections } from "@/helpers/firestore/collections";
-import { errorMessage } from "@/utils/texts";
 import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { BaseModel } from "@/helpers/firestore/model/baseModel";
+import { errorMessage } from "@/utils/texts";
 
 export class StoreStatus implements BaseModel {
   constructor(id: string, storeStatus: boolean) {
@@ -55,7 +55,7 @@ export default function useStoreStatus() {
     getRealtime({
       onData: async (data) => {
         if (data) {
-          setStoreStatus(new StoreStatus(data[0].id, data[0].storeStatus));
+          setStoreStatus(new StoreStatus(data.id, data.storeStatus));
         } else {
           await changeStoreStatus(new StoreStatus("storeStatus", true));
         }
