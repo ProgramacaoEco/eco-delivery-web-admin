@@ -13,7 +13,6 @@
     "@egjs/react-flicking": "^4.11.3",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^7.1.0",
     "@mui/material": "^5.15.18",
     "@uidotdev/usehooks": "^2.4.1",
     "@vanilla-extract/css": "^1.15.2",
