@@ -4,14 +4,8 @@ import {
   Assignment,
   AssignmentCheck,
   Campaign,
-  Discount,
   Liquor,
   LocalShipping,
-  Logout,
-  Person,
-  Report,
-  Settings,
-  ShoppingCart,
 } from "@icons/index";
 import {
   fetchAndActivate,
@@ -19,27 +13,24 @@ import {
   getString,
 } from "firebase/remote-config";
 import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { useContext, useEffect, useState } from "react";
 import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 
 import Card from "@/components/basis/Card";
-import DrawerSettings from "@/components/basis/Drawer/DrawerSettings";
-import DrawerTile from "@/components/basis/Drawer/DrawerSettings/drawerTile";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import LoadingContainer from "@/components/basis/LoadingContainer";
+import MenuIcon from "@mui/icons-material/Menu";
 import { OrderContext } from "../orders/context/OrderContext";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { app } from "@/firebase-config";
 import { themeVars } from "@/theme/theme.css";
-import useAuth from "@/hooks/useAuth";
+import useMediaQuery from "@/hooks/useMediaQuery";
 import useOrders from "../orders/hooks/useOrders";
+import { viewPort } from "@/theme/constants";
 
 export default function Page() {
-  const [openDrawer, setOpenDrawer] = useState(false);
-
-  const { handleSignOut } = useAuth();
-
   const [icon, setIcon] = useState("");
   const [title, setTitle] = useState("");
 
@@ -53,6 +44,9 @@ export default function Page() {
       setTitle(title);
     });
   }, []);
+
+  const [_, setDrawerOpen] = useQueryState("drawerOpen", parseAsBoolean);
+  const isMobile = useMediaQuery(viewPort.small);
 
   const { listenToOrders } = useOrders();
   const {
@@ -94,9 +88,13 @@ export default function Page() {
         <div className={homeContainer}>
           <div className={homeGrid}>
             <div className={homeHeader}>
-              <IconButton onClick={() => setOpenDrawer(true)}>
-                <Settings />
-              </IconButton>
+              {isMobile ? (
+                <IconButton onClick={() => setDrawerOpen(true)}>
+                  <MenuIcon />
+                </IconButton>
+              ) : (
+                <div></div>
+              )}
               <StoreSwitch
                 isOpen={storeStatus?.storeStatus ?? false}
                 onStoreOpen={(isOpen) =>
@@ -137,44 +135,6 @@ export default function Page() {
             />
           </div>
         </div>
-        <DrawerSettings
-          userLogged={""}
-          open={openDrawer}
-          onClose={() => setOpenDrawer(false)}
-          footerTile={
-            <DrawerTile
-              type="button"
-              onClick={handleSignOut}
-              Icon={Logout}
-              label="Sair do sistema"
-            />
-          }
-        >
-          <DrawerTile
-            type="link"
-            href="/users"
-            Icon={Person}
-            label="Usuários"
-          />
-          <DrawerTile
-            type="link"
-            href="/minimum-order-price"
-            Icon={ShoppingCart}
-            label="Pedido mínimo"
-          />
-          <DrawerTile
-            type="link"
-            href="#"
-            Icon={Discount}
-            label="Campanha de desconto (em breve!)"
-          />
-          <DrawerTile
-            type="link"
-            href="#"
-            Icon={Report}
-            label="Relatórios (em breve!)"
-          />
-        </DrawerSettings>
       </LoadingContainer>
     </>
   );

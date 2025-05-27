@@ -11,11 +11,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import ImagePicker from "@/components/basis/ImagePicker";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
+import { swiperContainer } from "./style.css";
+import useCampaigns from "./hooks/useCampaigns";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { viewPort } from "@/theme/constants";
-import useCampaigns from "./hooks/useCampaigns";
-import { swiperContainer } from "./style.css";
 
 export default function Campaigns() {
   const { campaigns, error, loading, save, success, deleteCampaign } =
@@ -24,15 +23,15 @@ export default function Campaigns() {
   const matchQuerySmall = useMediaQuery(viewPort.small);
   return (
     <>
-      <PageTitle isLoading={loading} dark color="white" title="Campanhas" />
       <LoadingContainer loading={loading} error={error !== null}>
         <Swiper
+          observer
+          observeSlideChildren
           resizeObserver
+          updateOnWindowResize
           className={swiperContainer}
           navigation={matchQuerySmall}
-          centeredSlidesBounds
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          centeredSlides
           spaceBetween={10}
           slidesPerView={matchQuerySmall ? 1 : 3}
         >

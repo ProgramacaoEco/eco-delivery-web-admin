@@ -1,11 +1,14 @@
 "use client";
 
+import { parseAsBoolean, useQueryState } from "nuqs";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
+import CategoryForm from "../../CategoryForm";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import { useParams } from "next/navigation";
-import CategoryForm from "../../CategoryForm";
 import useCategory from "../../hooks/useCategory";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 import useSetCategory from "../../hooks/useSetCategory";
 
 export default function EditProduct() {
@@ -20,6 +23,15 @@ export default function EditProduct() {
     success: successSave,
     category: updated,
   } = useSetCategory(true);
+
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
 
   return (
     <>
