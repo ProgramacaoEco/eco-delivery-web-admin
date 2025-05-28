@@ -5,9 +5,10 @@ import { parseAsBoolean, useQueryState } from "nuqs";
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import CategoryForm from "../../CategoryForm";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
+
 import { useEffect } from "react";
 import useSetCategory from "../../hooks/useSetCategory";
+import PageTitle from "@/components/basis/PageTitle/PageTitle";
 
 export default function NewCategory() {
   const {
@@ -28,7 +29,6 @@ export default function NewCategory() {
   return (
     <>
       <PageTitle
-        color="orange"
         title="Nova Categoria"
         isLoading={loadingSave}
       />

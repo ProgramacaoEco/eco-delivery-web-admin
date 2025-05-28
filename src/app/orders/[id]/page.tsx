@@ -106,7 +106,6 @@ export default function OrderDetails() {
     <>
       <PageTitle
         isLoading={loading}
-        color="blue"
         title={
           selectedOrder
             ? `${selectedOrder.createdOn?.toLocaleDateString("pt-BR")}

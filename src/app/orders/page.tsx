@@ -22,7 +22,7 @@ export default function Orders() {
 
   return (
     <>
-      <PageTitle isLoading={loading} color="blue" title="Pedidos" />
+      <PageTitle isLoading={loading} title="Pedidos" />
       <LoadingContainer
         loading={loading || storeStatus === undefined}
         error={error !== undefined}

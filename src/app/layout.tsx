@@ -25,6 +25,7 @@ import { themeVars } from "@/theme/theme.css";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
 import { viewPort } from "@/theme/constants";
+import LoadingContainer from "@/components/basis/LoadingContainer";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -120,7 +121,7 @@ export default function RootLayout({
             }}
           />
           {!hasMounted ? (
-            <div className={loadingContainer}>Carregando...</div>
+            <LoadingContainer error={false} loading={true} />
           ) : (
             <AppCheckProvider>
               <AuthGuard>

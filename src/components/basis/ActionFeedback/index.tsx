@@ -20,9 +20,8 @@ const Success = ({
   isClosable = true,
   fullWidth = false,
   children,
-}: PropsWithChildren<ActionFeedbackProps>) => {
-  const [hide, setHide] = useState(open);
-
+  onClose,
+}: PropsWithChildren<ActionFeedbackProps> & { onClose?: () => void }) => {
   const theme = createTheme({
     components: {
       MuiSnackbarContent: {
@@ -47,11 +46,12 @@ const Success = ({
   return (
     <ThemeProvider theme={theme}>
       <Snackbar
-        onClose={() => setHide(!hide)}
+        open={open}
+        onClose={onClose}
+        onClick={onClose}
         ClickAwayListenerProps={{
           onClickAway: isClosable ? () => false : () => {},
         }}
-        open={hide}
         message={message}
         autoHideDuration={autoHideDuration}
       />
@@ -60,9 +60,12 @@ const Success = ({
   );
 };
 
-const Error = ({ message, open, autoHideDuration }: ActionFeedbackProps) => {
-  const [hide, setHide] = useState(open);
-
+const Error = ({
+  message,
+  open,
+  autoHideDuration,
+  onClose,
+}: ActionFeedbackProps & { onClose?: () => void }) => {
   const theme = createTheme({
     components: {
       MuiSnackbarContent: {
@@ -80,8 +83,9 @@ const Error = ({ message, open, autoHideDuration }: ActionFeedbackProps) => {
   return (
     <ThemeProvider theme={theme}>
       <Snackbar
-        open={hide}
-        onClose={() => setHide(!hide)}
+        open={open}
+        onClose={onClose}
+        onClick={onClose}
         message={message}
         autoHideDuration={autoHideDuration}
       />
@@ -96,7 +100,8 @@ export default function ActionFeedback({
   state,
   fullWidth,
   children,
-}: PropsWithChildren<ActionFeedbackProps>) {
+  onClose,
+}: PropsWithChildren<ActionFeedbackProps> & { onClose?: () => void }) {
   return state === "success" ? (
     <Success
       message={message}
@@ -104,6 +109,7 @@ export default function ActionFeedback({
       state={state}
       fullWidth={fullWidth}
       autoHideDuration={autoHideDuration}
+      onClose={onClose}
     >
       {children}
     </Success>
@@ -113,6 +119,7 @@ export default function ActionFeedback({
       open={open}
       state={state}
       autoHideDuration={autoHideDuration}
+      onClose={onClose}
     />
   );
 }

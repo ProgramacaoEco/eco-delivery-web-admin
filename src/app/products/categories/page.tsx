@@ -28,7 +28,7 @@ export default function ListProducts() {
 
   return (
     <>
-      <PageTitle isLoading={loading} title="Categorias" color="orange" />
+      <PageTitle isLoading={loading} title="Categorias" />
       <Link href={`/products/categories/new`}>
         <div
           style={{

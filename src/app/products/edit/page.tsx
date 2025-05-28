@@ -49,7 +49,6 @@ export default function ListProducts() {
       <PageTitle
         isLoading={loading}
         title="Atualizar Cadastro"
-        color="orange"
       />
       <LoadingContainer
         loading={loading}

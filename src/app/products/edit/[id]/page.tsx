@@ -36,7 +36,6 @@ export default function EditProduct() {
   return (
     <>
       <PageTitle
-        color="orange"
         title="Cadastro de produtos"
         isLoading={loadingSave || loading}
       />

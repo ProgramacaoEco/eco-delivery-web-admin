@@ -26,7 +26,7 @@ export default function Invoiced() {
 
   return (
     <>
-      <PageTitle isLoading={loading} color="blue" title="Pedidos faturados" />
+      <PageTitle isLoading={loading} title="Pedidos faturados" />
       <div
         style={{
           padding: "1rem",

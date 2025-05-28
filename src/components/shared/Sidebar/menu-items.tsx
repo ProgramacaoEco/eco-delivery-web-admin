@@ -78,8 +78,8 @@ export const menuItems: MenuItemType[] = [
   },
   {
     icon: <DiscountIcon />,
-    path: "#",
-    label: "Descontos (em breve!)",
+    path: "/discount-club",
+    label: "Club de descontos",
   },
   {
     icon: <ReportIcon />,

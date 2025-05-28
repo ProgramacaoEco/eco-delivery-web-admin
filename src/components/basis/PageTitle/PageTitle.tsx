@@ -10,7 +10,6 @@ import { themeVars } from "@/theme/theme.css";
 import { useRouter } from "next/navigation";
 
 interface PageTitleProps {
-  color: string;
   onClose?: () => void;
   isLoading: boolean;
   title: string;
@@ -19,7 +18,6 @@ interface PageTitleProps {
 }
 
 export default function PageTitle({
-  color,
   onClose,
   title,
   isLoading = false,
@@ -29,7 +27,7 @@ export default function PageTitle({
   const router = useRouter();
 
   const appbarStyle: React.CSSProperties = {
-    backgroundColor: color,
+    backgroundColor: "transparent",
     height: themeVars.height.appbarDefaultHeight,
     display: "flex",
     alignItems: "center",
@@ -38,6 +36,7 @@ export default function PageTitle({
     verticalAlign: "middle",
     marginBottom: themeVars.height.appbarDefaultHeight,
     textOverflow: "ellipsis",
+    boxShadow: "none",
   };
 
   const closeIconButton: React.CSSProperties = {
@@ -75,7 +74,7 @@ export default function PageTitle({
           <Typography.TitleRegular
             color={dark ? themeVars.color.background : "white"}
           >
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "left" }}>
               {title}
               <br />
               {subtitle}

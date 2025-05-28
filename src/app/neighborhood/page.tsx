@@ -21,7 +21,7 @@ export default function NeighborhoodPage() {
 
   return (
     <>
-      <PageTitle isLoading={loading} color="#81D1F0" title="Bairros" />
+      <PageTitle isLoading={loading} title="Bairros" />
       <div style={{ marginTop: "20px", width: "inherit" }}>
         <NewNeighborhoodForm
           onSubmit={async ({ freightCost, neighborhoodName }) => {

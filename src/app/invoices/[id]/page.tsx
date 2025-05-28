@@ -22,7 +22,6 @@ export default function InvoicedDetails() {
     <>
       <PageTitle
         isLoading={loading}
-        color="blue"
         title={
           selectedOrder
             ? `${selectedOrder.createdOn?.toLocaleDateString("pt-BR")}

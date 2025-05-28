@@ -46,7 +46,7 @@ export default function MinimumOrderPrice() {
 
   return (
     <>
-      <PageTitle isLoading={loading} color="purple" title="Pedido mínimo" />
+      <PageTitle isLoading={loading} title="Pedido mínimo" />
       <LoadingContainer error={error !== undefined} loading={loading}>
         <div className={container}>
           <form onSubmit={submit()} className={form}>
