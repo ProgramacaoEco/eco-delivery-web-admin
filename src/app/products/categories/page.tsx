@@ -6,7 +6,6 @@ import { Add } from "@icons/index";
 import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import useCategories from "../hooks/useCategories";
 import { useEffect } from "react";
@@ -28,7 +27,6 @@ export default function ListProducts() {
 
   return (
     <>
-      <PageTitle isLoading={loading} title="Categorias" />
       <Link href={`/products/categories/new`}>
         <div
           style={{

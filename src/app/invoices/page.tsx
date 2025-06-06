@@ -7,7 +7,6 @@ import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import Order from "@/helpers/firestore/model/order/order";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import useInvoices from "./hooks/useInvoices";
 
@@ -26,7 +25,6 @@ export default function Invoiced() {
 
   return (
     <>
-      <PageTitle isLoading={loading} title="Pedidos faturados" />
       <div
         style={{
           padding: "1rem",

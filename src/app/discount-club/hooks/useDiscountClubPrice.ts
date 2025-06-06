@@ -1,9 +1,9 @@
+import { errorMessage, successMessage } from "@/utils/texts";
 import { useCallback, useState } from "react";
 
 import { Collections } from "@/helpers/firestore/collections";
-import { errorMessage, successMessage } from "@/utils/texts";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { Discount } from "@/helpers/firestore/model/discount-club/discount";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useDiscountClub() {
   const [error, setError] = useState<string | undefined>(undefined);
@@ -16,18 +16,25 @@ export default function useDiscountClub() {
   const { get, set } = useFirebase();
 
   const setDiscountClub = useCallback(
-    async (purchaseStepValue: number, discountPerStepValue: number, enabled: boolean) => {
+    async (
+      purchaseStepValue: number,
+      discountPerStepValue: number,
+      enabled: boolean
+    ) => {
       setError(undefined);
       setLoading(true);
-      const value = new Discount("discountClub", purchaseStepValue, discountPerStepValue, enabled);
+      const value = new Discount(
+        "discountClub",
+        purchaseStepValue,
+        discountPerStepValue,
+        enabled
+      );
       await set({
         onSuccess: () => {
           setdiscountClubData(value);
           setLoading(false);
-          
-          setSuccess(successMessage(
-            "Club de descontos configurado"
-          ));
+
+          setSuccess(successMessage("Club de descontos configurado"));
         },
         onError: () => {
           setError(errorMessage("ao cadastrar o club de descontos"));
@@ -72,7 +79,7 @@ export default function useDiscountClub() {
       },
       collection: Collections.Club_Descontos,
     });
-  }, [get, setDiscountClub]);
+  }, [get]);
 
   return {
     setDiscountClub,

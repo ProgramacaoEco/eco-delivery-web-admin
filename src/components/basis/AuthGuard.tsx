@@ -1,25 +1,28 @@
 "use client";
 
-import { app, auth } from "@/firebase-config";
-import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
-import { usePathname, useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
+import { ReCaptchaV3Provider, initializeAppCheck } from "firebase/app-check";
+import { app, auth } from "@/firebase-config";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
-import { User as UserModel } from "@/helpers/firestore/model/admin/user";
-import { useNetworkState } from "@uidotdev/usehooks";
 import { FirebaseError } from "firebase/app";
+import { Typography } from "./Typography";
 import { User } from "firebase/auth";
+import { User as UserModel } from "@/helpers/firestore/model/admin/user";
+import { loadingContainer } from "./LoadingContainer/style.css";
 import toast from "react-hot-toast";
 import { useAppCheck } from "./AppCheckProvider";
-import { loadingContainer } from "./LoadingContainer/style.css";
-import { Typography } from "./Typography";
+import { useAuthGuard } from "./AuthGuardProvider";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
+import { useNetworkState } from "@uidotdev/usehooks";
 
 export default function AuthGuard({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
   const { getBy } = useFirebase();
+
+  const { setCurrentUser } = useAuthGuard();
 
   const { setAppCheck, appCheck: providerAppCheck } = useAppCheck();
 
@@ -85,6 +88,7 @@ export default function AuthGuard({ children }: PropsWithChildren) {
       if (!isMounted) return;
 
       if (user) {
+        setCurrentUser(user);
         // User is signed in
         console.log("AuthGuard: User is signed in.");
         // If user is logged in and tries to access the login page, redirect them away
@@ -109,7 +113,7 @@ export default function AuthGuard({ children }: PropsWithChildren) {
       isMounted = false;
       unsubscribe();
     };
-  }, [router, pathname, setAppCheck]); // Dependencies remain the same
+  }, [router, pathname, setAppCheck, setCurrentUser]); // Dependencies remain the same
   // If not loading, render the children (protected content)
   // The redirection logic inside useEffect handles unauthorized access.
 

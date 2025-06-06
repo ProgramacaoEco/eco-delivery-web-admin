@@ -1,24 +1,16 @@
 "use client";
 
-import {
-  Assignment,
-  AssignmentCheck,
-  Campaign,
-  Liquor,
-  LocalShipping,
-} from "@icons/index";
+import { Card, IconButton, Stack, Typography } from "@mui/material";
 import {
   fetchAndActivate,
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { homeContainer, homeGrid, homeHeader } from "./style.css";
+import { homeContainer, homeHeader } from "./style.css";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
 
-import Card from "@/components/basis/Card";
-import { IconButton } from "@mui/material";
 import Image from "next/image";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -26,6 +18,7 @@ import { OrderContext } from "../orders/context/OrderContext";
 import StoreSwitch from "@/components/basis/StoreSwitch";
 import { app } from "@/firebase-config";
 import { themeVars } from "@/theme/theme.css";
+import useDashboard from "./useDashboard";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import useOrders from "../orders/hooks/useOrders";
 import { viewPort } from "@/theme/constants";
@@ -34,6 +27,9 @@ export default function Page() {
   const [icon, setIcon] = useState("");
   const [title, setTitle] = useState("");
 
+  const onError = useCallback(() => {}, []);
+
+  const { avgTicket, totalIncome, totalOrders } = useDashboard(onError);
   useEffect(() => {
     const remoteConfig = getRemoteConfig(app);
     fetchAndActivate(remoteConfig).then((_) => {
@@ -86,54 +82,91 @@ export default function Page() {
         </div>
 
         <div className={homeContainer}>
-          <div className={homeGrid}>
-            <div className={homeHeader}>
-              {isMobile ? (
-                <IconButton onClick={() => setDrawerOpen(true)}>
-                  <MenuIcon />
-                </IconButton>
-              ) : (
-                <div></div>
-              )}
-              <StoreSwitch
-                isOpen={storeStatus?.storeStatus ?? false}
-                onStoreOpen={(isOpen) =>
-                  changeStoreStatus(new StoreStatus("storeStatus", isOpen))
-                }
-              />
-              <Image src={icon} width={75} height={75} alt={title} />
-            </div>
-            <Card
-              shadow={themeVars.shadow.shadowBlue}
-              Icon={Assignment}
-              label="Pedidos"
-              href="/orders"
+          <div className={homeHeader}>
+            {isMobile ? (
+              <IconButton onClick={() => setDrawerOpen(true)}>
+                <MenuIcon />
+              </IconButton>
+            ) : (
+              <div></div>
+            )}
+            <StoreSwitch
+              isOpen={storeStatus?.storeStatus ?? false}
+              onStoreOpen={(isOpen) =>
+                changeStoreStatus(new StoreStatus("storeStatus", isOpen))
+              }
             />
-            <Card
-              shadow={themeVars.shadow.shadowBlue}
-              Icon={AssignmentCheck}
-              href="/invoices"
-              label="Pedidos faturados"
-            />
-            <Card
-              href="/products"
-              shadow={themeVars.shadow.shadowOrange}
-              Icon={Liquor}
-              label="Produtos"
-            />
-            <Card
-              shadow={themeVars.shadow.shadowLightBlue}
-              Icon={LocalShipping}
-              label="Bairros"
-              href="/neighborhood"
-            />
-            <Card
-              shadow={themeVars.shadow.shadowWhite}
-              Icon={Campaign}
-              label="Campanhas"
-              href="/campaigns"
-            />
+            <Image src={icon} width={75} height={75} alt={title} />
           </div>
+
+          <Stack gap={5}>
+            <Typography
+              textAlign={"center"}
+              variant="h3"
+              color={themeVars.color.common.white}
+            >
+              Dashboard diário
+            </Typography>
+            <Stack flexDirection={isMobile ? "column" : "row"} gap={4}>
+              <Card
+                sx={{
+                  flexGrow: 1,
+                  backgroundColor: "grey",
+                  padding: 2,
+                  textAlign: "center",
+                }}
+                variant="outlined"
+              >
+                <Typography variant="h5" color={themeVars.color.common.white}>
+                  Total de pedidos
+                </Typography>
+                <Typography variant="h6" color={themeVars.color.common.white}>
+                  {totalOrders}
+                </Typography>
+              </Card>
+              <Card
+                sx={{
+                  flexGrow: 1,
+                  backgroundColor: "grey",
+                  padding: 2,
+                  textAlign: "center",
+                }}
+                variant="outlined"
+              >
+                <Typography variant="h5" color={themeVars.color.common.white}>
+                  Vendas diárias
+                </Typography>
+                <Typography variant="h6" color={themeVars.color.common.white}>
+                  R${" "}
+                  {totalIncome?.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Typography>
+              </Card>
+              <Card
+                sx={{
+                  flexGrow: 1,
+                  backgroundColor: "grey",
+                  padding: 2,
+                  textAlign: "center",
+                }}
+                variant="outlined"
+              >
+                <Typography variant="h5" color={themeVars.color.common.white}>
+                  Ticket médio
+                </Typography>
+
+                <Typography variant="h6" color={themeVars.color.common.white}>
+                  R${" "}
+                  {avgTicket.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Typography>
+              </Card>
+            </Stack>
+          </Stack>
         </div>
       </LoadingContainer>
     </>

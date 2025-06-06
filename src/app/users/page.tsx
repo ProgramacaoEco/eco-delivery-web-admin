@@ -4,11 +4,9 @@ import ActionFeedback from "@/components/basis/ActionFeedback";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import NewUserForm from "./NewUserForm";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import { User } from "@/helpers/firestore/model/admin/user";
 import style from "./style.css";
-import { themeVars } from "@/theme/theme.css";
 import { useState } from "react";
 import useUser from "./hooks/useUser";
 
@@ -20,11 +18,6 @@ export default function Users() {
 
   return (
     <>
-      <PageTitle
-        isLoading={loading}
-        color={themeVars.color.users.appbarColor}
-        title="Usuários"
-      />
       <LoadingContainer loading={loading} error={error !== null}>
         <div className={style}>
           <div style={{ marginTop: "20px", width: "inherit" }}>

@@ -4,7 +4,6 @@ import { parseAsBoolean, useQueryState } from "nuqs";
 
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import ProductForm from "../../ProductForm";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
@@ -35,10 +34,6 @@ export default function EditProduct() {
 
   return (
     <>
-      <PageTitle
-        title="Cadastro de produtos"
-        isLoading={loadingSave || loading}
-      />
       <LoadingContainer
         loading={loading || loadingSave}
         error={error !== null || product === null || errorSave !== null}

@@ -1,18 +1,29 @@
 "use client";
 
 import { Controller, useForm } from "react-hook-form";
-import { activeClubMessage, checkbox, checkboxContainer, checkboxInput, clubInfo, container, form, info, submitButton, toggleContainer, toggleInternal } from "./style.css";
+import {
+  activeClubMessage,
+  checkbox,
+  checkboxContainer,
+  checkboxInput,
+  clubInfo,
+  container,
+  form,
+  info,
+  submitButton,
+  toggleContainer,
+  toggleInternal,
+} from "./style.css";
+import { useEffect, useState } from "react";
 
+import ActionFeedback from "@/components/basis/ActionFeedback";
 import { CurrencyInput } from "react-currency-mask";
+import { Discount } from "@/helpers/firestore/model/discount-club/discount";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import RoundedButton from "@/components/basis/Button/RoundedButton";
-import { useEffect, useState } from "react";
-import useDiscountClub from "./hooks/useDiscountClubPrice";
-import { Discount } from "@/helpers/firestore/model/discount-club/discount";
-import ActionFeedback from "@/components/basis/ActionFeedback";
 import { successMessage } from "@/utils/texts";
+import useDiscountClub from "./hooks/useDiscountClubPrice";
 
 export default function DiscountClub() {
   const {
@@ -26,7 +37,15 @@ export default function DiscountClub() {
 
   const [success, setSuccess] = useState<string | null>(null);
 
-  const { handleSubmit, reset, control, watch, formState, setError, clearErrors } = useForm<Discount>({
+  const {
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    formState,
+    setError,
+    clearErrors,
+  } = useForm<Discount>({
     defaultValues: {
       id: "",
       discountPerStepValue: 0,
@@ -65,7 +84,9 @@ export default function DiscountClub() {
   useEffect(() => {
     // Sempre que os erros mudarem, atualize a mensagem de erro de validação
     if (formState.errors.discountPerStepValue?.message) {
-      setValidationError(formState.errors.discountPerStepValue.message as string);
+      setValidationError(
+        formState.errors.discountPerStepValue.message as string
+      );
     } else {
       setValidationError(null);
     }
@@ -96,15 +117,17 @@ export default function DiscountClub() {
       }
     }
 
-    setDiscountClub(data.purchaseStepValue, data.discountPerStepValue, data.enabled);
+    setDiscountClub(
+      data.purchaseStepValue,
+      data.discountPerStepValue,
+      data.enabled
+    );
 
     if (!data.enabled) {
       setSuccess(successMessage("Clube de descontos desativado"));
     } else {
       console.log("#### 1");
       setSuccess(successMessage("Club de descontos configurado"));
-      
-      
     }
 
     reset();
@@ -113,7 +136,6 @@ export default function DiscountClub() {
 
   return (
     <>
-      <PageTitle isLoading={loading} title="Club de descontos" />
       <LoadingContainer error={error !== undefined} loading={loading}>
         <div className={container}>
           <form onSubmit={onSubmit} className={form}>
@@ -153,8 +175,14 @@ export default function DiscountClub() {
                           clearErrors();
                         } else {
                           // Se estiver desativando, salva imediatamente
-                          setDiscountClub(purchaseStepValue, discountPerStepValue, false);
-                          setSuccess(successMessage("Clube de descontos desativado"));
+                          setDiscountClub(
+                            purchaseStepValue,
+                            discountPerStepValue,
+                            false
+                          );
+                          setSuccess(
+                            successMessage("Clube de descontos desativado")
+                          );
                           field.onChange(false);
                           clearErrors();
                         }
@@ -166,13 +194,19 @@ export default function DiscountClub() {
                         name={field.name}
                         ref={field.ref}
                         checked={field.value}
-                        onChange={e => {
+                        onChange={(e) => {
                           if (e.target.checked) {
                             field.onChange(true);
                             clearErrors();
                           } else {
-                            setDiscountClub(purchaseStepValue, discountPerStepValue, false);
-                            setSuccess(successMessage("Clube de descontos desativado"));
+                            setDiscountClub(
+                              purchaseStepValue,
+                              discountPerStepValue,
+                              false
+                            );
+                            setSuccess(
+                              successMessage("Clube de descontos desativado")
+                            );
                             field.onChange(false);
                             clearErrors();
                           }
@@ -197,7 +231,8 @@ export default function DiscountClub() {
                   </div>
                   {!enabled && (
                     <span className={activeClubMessage}>
-                      Ative o clube de descontos para configurar as regras de campanha e oferecer benefícios aos seus clientes.
+                      Ative o clube de descontos para configurar as regras de
+                      campanha e oferecer benefícios aos seus clientes.
                     </span>
                   )}
                 </div>
@@ -208,17 +243,23 @@ export default function DiscountClub() {
                 <div className={info}>
                   {`A cada ${
                     purchaseStepValue
-                      ? `R$ ${(Number(purchaseStepValue)).toLocaleString("pt-BR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}`
+                      ? `R$ ${Number(purchaseStepValue).toLocaleString(
+                          "pt-BR",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}`
                       : "___"
                   } gastos, ganhe ${
                     discountPerStepValue
-                      ? `R$ ${(Number(discountPerStepValue)).toLocaleString("pt-BR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}`
+                      ? `R$ ${Number(discountPerStepValue).toLocaleString(
+                          "pt-BR",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}`
                       : "___"
                   } de desconto`}
                 </div>
@@ -264,9 +305,7 @@ export default function DiscountClub() {
                     />
                   )}
                 />
-                <span
-                  className={clubInfo}
-                >
+                <span className={clubInfo}>
                   O clube só será ativado/atualizado efetivamente após salvar.
                 </span>
                 <RoundedButton
@@ -292,7 +331,7 @@ export default function DiscountClub() {
       )}
       {(error || validationError) && (
         <ActionFeedback
-          message={(error || validationError) ?? 'Erro desconhecido'}
+          message={(error || validationError) ?? "Erro desconhecido"}
           autoHideDuration={3000}
           open={!!error || !!validationError}
           state="error"

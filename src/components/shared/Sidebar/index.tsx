@@ -8,7 +8,6 @@ import {
   ListItemIcon,
   ListItemText,
   Drawer as MuiDrawer,
-  Tooltip,
   styled,
   useMediaQuery,
 } from "@mui/material";
@@ -22,7 +21,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { StyledDrawer } from "./style";
 import { menuItems } from "./menu-items";
 import useAuth from "@/hooks/useAuth";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { viewPort } from "@/theme/constants";
 
@@ -74,10 +72,6 @@ export default function Sidebar() {
   const search = useSearchParams();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(pathname);
-  }, []);
-
   return (
     <>
       {isMobile && pathname !== "/home" && pathname !== "/" && (
@@ -102,7 +96,6 @@ export default function Sidebar() {
           }}
           variant={isMobile ? "temporary" : "permanent"}
           open={isMobile ? open : open && !isMobile}
-          closeAfterTransition
           onClose={() => setOpen(false)}
         >
           <SidebarHeader
@@ -112,174 +105,171 @@ export default function Sidebar() {
           />
           <List>
             {menuItems.map(({ label, icon, path, subitems, key }) => (
-              <Tooltip placement="right" key={label} title={!open ? label : ""}>
-                <>
-                  <ListItem
-                    component={path && !subitems ? Link : "div"}
-                    href={path}
-                    onClick={
-                      subitems && key // Ensure key is present for subitems logic
-                        ? () => {
-                            const currentSearchParams = new URLSearchParams(
-                              search.toString()
-                            );
-                            const queryParamName = `open${key}`;
+              <>
+                <ListItem
+                  component={path && !subitems ? Link : "div"}
+                  href={path}
+                  onClick={
+                    subitems && key // Ensure key is present for subitems logic
+                      ? () => {
+                          const currentSearchParams = new URLSearchParams(
+                            search.toString()
+                          );
+                          const queryParamName = `open${key}`;
 
-                            if (
-                              currentSearchParams.get(queryParamName) === "true"
-                            ) {
-                              currentSearchParams.delete(queryParamName);
-                            } else {
-                              currentSearchParams.set(queryParamName, "true");
-                            }
-                            const newQueryString =
-                              currentSearchParams.toString();
-                            router.push(
-                              newQueryString
-                                ? `${pathname}?${newQueryString}`
-                                : pathname
-                            );
+                          if (
+                            currentSearchParams.get(queryParamName) === "true"
+                          ) {
+                            currentSearchParams.delete(queryParamName);
+                          } else {
+                            currentSearchParams.set(queryParamName, "true");
                           }
-                        : path // If no subitems, check for a path
-                        ? undefined
-                        : handleSignOut
-                    }
-                    key={label}
-                    disablePadding
-                    sx={{ display: "block" }}
+                          const newQueryString = currentSearchParams.toString();
+                          router.push(
+                            newQueryString
+                              ? `${pathname}?${newQueryString}`
+                              : pathname
+                          );
+                        }
+                      : path // If no subitems, check for a path
+                      ? undefined
+                      : handleSignOut
+                  }
+                  key={label}
+                  disablePadding
+                  sx={{ display: "block" }}
+                >
+                  <ListItemButton
+                    selected={pathname === path}
+                    sx={[
+                      {
+                        minHeight: 48,
+                        px: 2.5,
+                      },
+                      open
+                        ? {
+                            justifyContent: "initial",
+                          }
+                        : {
+                            justifyContent: "center",
+                          },
+                    ]}
                   >
-                    <ListItemButton
-                      selected={pathname === path}
+                    <ListItemIcon
                       sx={[
                         {
-                          minHeight: 48,
-                          px: 2.5,
+                          minWidth: 0,
+                          justifyContent: "center",
                         },
                         open
                           ? {
-                              justifyContent: "initial",
+                              mr: 3,
                             }
                           : {
-                              justifyContent: "center",
+                              mr: "auto",
                             },
                       ]}
                     >
-                      <ListItemIcon
-                        sx={[
-                          {
-                            minWidth: 0,
-                            justifyContent: "center",
-                          },
-                          open
-                            ? {
-                                mr: 3,
-                              }
-                            : {
-                                mr: "auto",
-                              },
-                        ]}
-                      >
-                        {icon}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={label}
-                        sx={[
-                          open
-                            ? {
-                                opacity: 1,
-                              }
-                            : {
-                                opacity: 0,
-                              },
-                        ]}
-                      />
-                      {subitems &&
-                        key && ( // Check for key here as well
-                          <div>
-                            {pathname.includes(key.toLowerCase()) ||
-                            search.get(`open${key}`) === "true" ? ( // Consistent check
-                              <ExpandLess />
-                            ) : (
-                              <ExpandMore />
-                            )}
-                          </div>
-                        )}
-                    </ListItemButton>
-                  </ListItem>
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={label}
+                      sx={[
+                        open
+                          ? {
+                              opacity: 1,
+                            }
+                          : {
+                              opacity: 0,
+                            },
+                      ]}
+                    />
+                    {subitems &&
+                      key && ( // Check for key here as well
+                        <div>
+                          {pathname.includes(key.toLowerCase()) ||
+                          search.get(`open${key}`) === "true" ? ( // Consistent check
+                            <ExpandLess />
+                          ) : (
+                            <ExpandMore />
+                          )}
+                        </div>
+                      )}
+                  </ListItemButton>
+                </ListItem>
 
-                  {subitems &&
-                    key && ( // Check for key here as well
-                      <Collapse
-                        in={
-                          pathname.includes(key.toLowerCase()) ||
-                          !!search.get(`open${key}`)
-                        }
-                      >
-                        {subitems.map(({ icon, label, path }) => (
-                          <ListItem
-                            component={Link}
-                            href={path}
-                            onClick={path ? undefined : handleSignOut}
-                            key={label}
-                            disablePadding
-                            sx={{ display: "block" }}
+                {subitems &&
+                  key && ( // Check for key here as well
+                    <Collapse
+                      in={
+                        pathname.includes(key.toLowerCase()) ||
+                        !!search.get(`open${key}`)
+                      }
+                    >
+                      {subitems.map(({ icon, label, path }) => (
+                        <ListItem
+                          component={Link}
+                          href={path}
+                          onClick={path ? undefined : handleSignOut}
+                          key={label}
+                          disablePadding
+                          sx={{ display: "block" }}
+                        >
+                          <ListItemButton
+                            selected={
+                              !!path &&
+                              (pathname.includes(path) || pathname === path)
+                            }
+                            sx={[
+                              {
+                                minHeight: 48,
+                                px: 2.5,
+                                pl: 4,
+                              },
+                              open
+                                ? {
+                                    justifyContent: "initial",
+                                  }
+                                : {
+                                    justifyContent: "center",
+                                  },
+                            ]}
                           >
-                            <ListItemButton
-                              selected={
-                                !!path &&
-                                (pathname.includes(path) || pathname === path)
-                              }
+                            <ListItemIcon
                               sx={[
                                 {
-                                  minHeight: 48,
-                                  px: 2.5,
-                                  pl: 4,
+                                  minWidth: 0,
+                                  justifyContent: "center",
                                 },
                                 open
                                   ? {
-                                      justifyContent: "initial",
+                                      mr: 3,
                                     }
                                   : {
-                                      justifyContent: "center",
+                                      mr: "auto",
                                     },
                               ]}
                             >
-                              <ListItemIcon
-                                sx={[
-                                  {
-                                    minWidth: 0,
-                                    justifyContent: "center",
-                                  },
-                                  open
-                                    ? {
-                                        mr: 3,
-                                      }
-                                    : {
-                                        mr: "auto",
-                                      },
-                                ]}
-                              >
-                                {icon}
-                              </ListItemIcon>
-                              <ListItemText
-                                primary={label}
-                                sx={[
-                                  open
-                                    ? {
-                                        opacity: 1,
-                                      }
-                                    : {
-                                        opacity: 0,
-                                      },
-                                ]}
-                              />
-                            </ListItemButton>
-                          </ListItem>
-                        ))}
-                      </Collapse>
-                    )}
-                </>
-              </Tooltip>
+                              {icon}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={label}
+                              sx={[
+                                open
+                                  ? {
+                                      opacity: 1,
+                                    }
+                                  : {
+                                      opacity: 0,
+                                    },
+                              ]}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </Collapse>
+                  )}
+              </>
             ))}
           </List>
         </DrawerType>

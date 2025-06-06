@@ -7,7 +7,6 @@ import ActionFeedback from "@/components/basis/ActionFeedback";
 import InputText from "@/components/basis/InputText/InputText";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import useProducts from "../hooks/useProducts";
 import { useRouter } from "next/navigation";
@@ -46,10 +45,6 @@ export default function ListProducts() {
 
   return (
     <>
-      <PageTitle
-        isLoading={loading}
-        title="Atualizar Cadastro"
-      />
       <LoadingContainer
         loading={loading}
         error={error !== null}

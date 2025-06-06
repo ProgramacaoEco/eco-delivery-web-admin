@@ -11,21 +11,19 @@ import { useEffect, useRef, useState } from "react";
 
 import { AppCheckProvider } from "@/components/basis/AppCheckProvider";
 import AuthGuard from "@/components/basis/AuthGuard";
+import AuthGuardProvider from "@/components/basis/AuthGuardProvider";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import LinkButton from "@/components/basis/LinkButton";
+import LoadingContainer from "@/components/basis/LoadingContainer";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import OrderProvider from "./orders/context/OrderProvider";
 import Sidebar from "@/components/shared/Sidebar";
 import { Toaster } from "react-hot-toast";
 import { app } from "@/firebase-config";
 import { cn } from "@/utils/classNames";
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
 import { themeVars } from "@/theme/theme.css";
-import useMediaQuery from "@/hooks/useMediaQuery";
 import { usePathname } from "next/navigation";
-import { viewPort } from "@/theme/constants";
-import LoadingContainer from "@/components/basis/LoadingContainer";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -41,7 +39,6 @@ export default function RootLayout({
   const pathname = usePathname();
   const noPrint = useRef<HTMLImageElement>(null);
   const mounted = useRef<boolean>(false);
-  const isMobile = useMediaQuery(viewPort.small);
 
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -124,49 +121,51 @@ export default function RootLayout({
             <LoadingContainer error={false} loading={true} />
           ) : (
             <AppCheckProvider>
-              <AuthGuard>
-                <OrderProvider>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      width: "100%",
-                      height: "100vh",
-                    }}
-                  >
-                    {pathname !== "/" && <Sidebar />}
-                    <Paper
+              <AuthGuardProvider>
+                <AuthGuard>
+                  <OrderProvider>
+                    <Box
                       sx={{
-                        flexGrow: 1,
-                        p: pathname !== "/" ? 4 : 0,
-                        minHeight: "100vh",
-                        overflow: "auto",
-                        background: "none",
+                        display: "flex",
+                        width: "100%",
+                        height: "100vh",
                       }}
                     >
-                      {children}
-                    </Paper>
-                  </Box>
-                  <div
-                    className={hideWhatsappButtonOnPrint}
-                    style={{
-                      zIndex: "100",
-                      right: 40,
-                      bottom: 0,
-                      paddingBottom: "1rem",
-                      position: "fixed",
-                    }}
-                  >
-                    <LinkButton href="https://wa.me/5551991672281">
-                      <Image
-                        src="/whatsapp.svg"
-                        width={60}
-                        height={60}
-                        alt="Suporte pelo WhatsApp"
-                      />
-                    </LinkButton>
-                  </div>
-                </OrderProvider>
-              </AuthGuard>
+                      {pathname !== "/" && <Sidebar />}
+                      <Paper
+                        sx={{
+                          flexGrow: 1,
+                          p: pathname !== "/" ? 4 : 0,
+                          minHeight: "100vh",
+                          overflow: "auto",
+                          background: "none",
+                        }}
+                      >
+                        {children}
+                      </Paper>
+                    </Box>
+                    <div
+                      className={hideWhatsappButtonOnPrint}
+                      style={{
+                        zIndex: "100",
+                        right: 40,
+                        bottom: 0,
+                        paddingBottom: "1rem",
+                        position: "fixed",
+                      }}
+                    >
+                      <LinkButton href="https://wa.me/5551991672281">
+                        <Image
+                          src="/whatsapp.svg"
+                          width={60}
+                          height={60}
+                          alt="Suporte pelo WhatsApp"
+                        />
+                      </LinkButton>
+                    </div>
+                  </OrderProvider>
+                </AuthGuard>
+              </AuthGuardProvider>
             </AppCheckProvider>
           )}
 

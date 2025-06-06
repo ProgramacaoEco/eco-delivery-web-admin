@@ -5,7 +5,6 @@ import { parseAsBoolean, useQueryState } from "nuqs";
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import CategoryForm from "../../CategoryForm";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import useCategory from "../../hooks/useCategory";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
@@ -35,10 +34,6 @@ export default function EditProduct() {
 
   return (
     <>
-      <PageTitle
-        title="Categorias"
-        isLoading={loadingSave || loading}
-      />
       <LoadingContainer
         loading={loading || loadingSave}
         error={error !== null || category === null || errorSave !== null}

@@ -1,15 +1,14 @@
 import { errorMessage, successMessage } from "@/utils/texts";
 import { useCallback, useEffect, useState } from "react";
 
-import { auth } from "@/firebase-config";
 import { Collections } from "@/helpers/firestore/collections";
-import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 import { User } from "@/helpers/firestore/model/admin/user";
+import { useAuthGuard } from "@/components/basis/AuthGuardProvider";
+import useFirebase from "@/helpers/firestore/hooks/useFirebase";
 
 export default function useUser() {
-  const session = auth.currentUser;
-
   const { set, get, remove } = useFirebase();
+  const { currentUser: loggedUser } = useAuthGuard();
 
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -21,7 +20,6 @@ export default function useUser() {
 
   const getUser = useCallback(async () => {
     setError(null);
-    setLoading(true);
     await get({
       collection: collection,
       transformer: (data) =>
@@ -29,7 +27,7 @@ export default function useUser() {
       onData: (users) => {
         setUsers(users);
         setCurrentUser(
-          users.filter(({ email }: User) => email === session?.email)[0]
+          users.filter(({ email }: User) => email === loggedUser?.email)[0]
         );
         setLoading(false);
       },
@@ -38,50 +36,56 @@ export default function useUser() {
         setLoading(false);
       },
     });
-  }, [collection, get, session]);
+  }, [collection, get, loggedUser?.email]);
 
   useEffect(() => {
-    if (session) {
+    if (loggedUser) {
       getUser();
     }
-  }, [getUser, session]);
+  }, [getUser, loggedUser]);
 
-  const setUser = async (user: User) => {
-    setError(null);
-    setLoading(true);
-    await set({
-      collection: collection,
-      onError: () => {
-        setError(errorMessage("ao adicionar o usuário"));
-        setLoading(false);
-      },
-      onSuccess: () => {
-        setSuccess(successMessage("Usuário adicionado"));
-        setUsers((u) => [...u, user]);
-        setLoading(false);
-      },
-      body: user,
-    });
-  };
+  const setUser = useCallback(
+    async (user: User) => {
+      {
+        setError(null);
+        await set({
+          collection: collection,
+          onError: () => {
+            setError(errorMessage("ao adicionar o usuário"));
+            setLoading(false);
+          },
+          onSuccess: () => {
+            setSuccess(successMessage("Usuário adicionado"));
+            setUsers((u) => [...u, user]);
+            setLoading(false);
+          },
+          body: user,
+        });
+      }
+    },
+    [collection, set]
+  );
 
-  const removeUser = async (id: string) => {
-    setError(null);
-    setLoading(true);
-    await remove({
-      collection: collection,
-      id,
-      data: users,
-      onData: setUsers,
-      onError: () => {
-        setError(errorMessage("ao remover o usuário"));
-        setLoading(false);
-      },
-      onSuccess: () => {
-        setSuccess(successMessage("Usuário removido"));
-        setLoading(false);
-      },
-    });
-  };
+  const removeUser = useCallback(
+    async (id: string) => {
+      setError(null);
+      await remove({
+        collection: collection,
+        id,
+        data: users,
+        onData: setUsers,
+        onError: () => {
+          setError(errorMessage("ao remover o usuário"));
+          setLoading(false);
+        },
+        onSuccess: () => {
+          setSuccess(successMessage("Usuário removido"));
+          setLoading(false);
+        },
+      });
+    },
+    [collection, remove, users]
+  );
 
   return {
     setUser,

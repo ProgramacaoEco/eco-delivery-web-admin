@@ -6,7 +6,6 @@ import Link from "next/link";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import { OrderContext } from "./context/OrderContext";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
 import useOrders from "./hooks/useOrders";
 
@@ -22,7 +21,6 @@ export default function Orders() {
 
   return (
     <>
-      <PageTitle isLoading={loading} title="Pedidos" />
       <LoadingContainer
         loading={loading || storeStatus === undefined}
         error={error !== undefined}
