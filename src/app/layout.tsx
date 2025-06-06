@@ -1,24 +1,29 @@
 "use client";
 
+import { Box, Paper } from "@mui/material";
 import {
   fetchAndActivate,
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
+import { hideWhatsappButtonOnPrint, loginLayout } from "./layout.css";
 import { useEffect, useRef, useState } from "react";
-import { hideWhatsappButtonOnPrint, layout, loginLayout } from "./layout.css";
 
 import { AppCheckProvider } from "@/components/basis/AppCheckProvider";
 import AuthGuard from "@/components/basis/AuthGuard";
+import AuthGuardProvider from "@/components/basis/AuthGuardProvider";
+import Image from "next/image";
+import { Inter } from "next/font/google";
 import LinkButton from "@/components/basis/LinkButton";
-import { loadingContainer } from "@/components/basis/LoadingContainer/style.css";
+import LoadingContainer from "@/components/basis/LoadingContainer";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import OrderProvider from "./orders/context/OrderProvider";
+import Sidebar from "@/components/shared/Sidebar";
+import { Toaster } from "react-hot-toast";
 import { app } from "@/firebase-config";
 import { cn } from "@/utils/classNames";
-import { Inter } from "next/font/google";
-import Image from "next/image";
+import { themeVars } from "@/theme/theme.css";
 import { usePathname } from "next/navigation";
-import { Toaster } from "react-hot-toast";
-import OrderProvider from "./orders/context/OrderProvider";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -92,62 +97,88 @@ export default function RootLayout({
         <link rel="icon" />
       </head>
       <body
-        className={cn(inter.className, pathname === "/" ? loginLayout : layout)}
+        className={cn(inter.className, pathname === "/" ? loginLayout : "")}
+        style={{
+          backgroundColor: themeVars.color.background,
+        }}
       >
-        <Image
-          alt="Logo ECO"
-          src="/logo.png"
-          width={512}
-          height={512}
-          draggable={false}
-          ref={noPrint}
-          style={{
-            zIndex: "-1",
-            position: "fixed",
-            bottom: -90,
-            right: -120,
-          }}
-        />
-        {!hasMounted ? (
-          <div className={loadingContainer}>Carregando...</div>
-        ) : (
-          <AppCheckProvider>
-            <AuthGuard>
-              <OrderProvider>
-                {children}
-                <div
-                  className={hideWhatsappButtonOnPrint}
-                  style={{
-                    zIndex: "100",
-                    right: 40,
-                    bottom: 0,
-                    paddingBottom: "1rem",
-                    position: "fixed",
-                  }}
-                >
-                  <LinkButton href="https://wa.me/5551991672281">
-                    <Image
-                      src="/whatsapp.svg"
-                      width={60}
-                      height={60}
-                      alt="Suporte pelo WhatsApp"
-                    />
-                  </LinkButton>
-                </div>
-              </OrderProvider>
-            </AuthGuard>
-          </AppCheckProvider>
-        )}
+        <NuqsAdapter>
+          <Image
+            alt="Logo ECO"
+            src="/logo.png"
+            width={512}
+            height={512}
+            draggable={false}
+            ref={noPrint}
+            style={{
+              zIndex: "-1",
+              position: "fixed",
+              bottom: -90,
+              right: -120,
+            }}
+          />
+          {!hasMounted ? (
+            <LoadingContainer error={false} loading={true} />
+          ) : (
+            <AppCheckProvider>
+              <AuthGuardProvider>
+                <AuthGuard>
+                  <OrderProvider>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        width: "100%",
+                        height: "100vh",
+                      }}
+                    >
+                      {pathname !== "/" && <Sidebar />}
+                      <Paper
+                        sx={{
+                          flexGrow: 1,
+                          p: pathname !== "/" ? 4 : 0,
+                          minHeight: "100vh",
+                          overflow: "auto",
+                          background: "none",
+                        }}
+                      >
+                        {children}
+                      </Paper>
+                    </Box>
+                    <div
+                      className={hideWhatsappButtonOnPrint}
+                      style={{
+                        zIndex: "100",
+                        right: 40,
+                        bottom: 0,
+                        paddingBottom: "1rem",
+                        position: "fixed",
+                      }}
+                    >
+                      <LinkButton href="https://wa.me/5551991672281">
+                        <Image
+                          src="/whatsapp.svg"
+                          width={60}
+                          height={60}
+                          alt="Suporte pelo WhatsApp"
+                        />
+                      </LinkButton>
+                    </div>
+                  </OrderProvider>
+                </AuthGuard>
+              </AuthGuardProvider>
+            </AppCheckProvider>
+          )}
 
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            duration: 10000000,
-            style: {
-              width: "100%",
-            },
-          }}
-        />
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              duration: 10000000,
+              style: {
+                width: "100%",
+              },
+            }}
+          />
+        </NuqsAdapter>
       </body>
     </html>
   );

@@ -8,4 +8,5 @@ export enum Collections {
   Campanhas = "Campanhas",
   Pedido_Minimo = "Pedido_Minimo",
   Status_Loja = "Status_Loja",
+  Club_Descontos = "Club_Descontos",
 }

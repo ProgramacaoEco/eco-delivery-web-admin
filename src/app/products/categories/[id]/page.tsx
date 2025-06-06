@@ -1,11 +1,13 @@
 "use client";
 
+import { parseAsBoolean, useQueryState } from "nuqs";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
-import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import { useParams } from "next/navigation";
 import CategoryForm from "../../CategoryForm";
+import LoadingContainer from "@/components/basis/LoadingContainer";
 import useCategory from "../../hooks/useCategory";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 import useSetCategory from "../../hooks/useSetCategory";
 
 export default function EditProduct() {
@@ -21,13 +23,17 @@ export default function EditProduct() {
     category: updated,
   } = useSetCategory(true);
 
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
+
   return (
     <>
-      <PageTitle
-        color="orange"
-        title="Categorias"
-        isLoading={loadingSave || loading}
-      />
       <LoadingContainer
         loading={loading || loadingSave}
         error={error !== null || category === null || errorSave !== null}

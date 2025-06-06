@@ -1,22 +1,32 @@
 "use client";
 
-import ListTile from "@/components/basis/ListTile";
-import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import Tile from "@/components/basis/Tile";
+import { parseAsBoolean, useQueryState } from "nuqs";
+
 import { Add } from "@icons/index";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import ListTile from "@/components/basis/ListTile";
+import LoadingContainer from "@/components/basis/LoadingContainer";
+import Tile from "@/components/basis/Tile";
 import useCategories from "../hooks/useCategories";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ListProducts() {
   const { categories, error, loading } = useCategories();
 
   const router = useRouter();
 
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
+
   return (
     <>
-      <PageTitle isLoading={loading} title="Categorias" color="orange" />
       <Link href={`/products/categories/new`}>
         <div
           style={{

@@ -1,7 +1,7 @@
 import { globalStyle, style } from "@vanilla-extract/css";
 
-import { viewPort } from "@/theme/constants";
 import { themeVars } from "@/theme/theme.css";
+import { viewPort } from "@/theme/constants";
 
 globalStyle("*", {
   padding: "0",
@@ -50,6 +50,9 @@ export const layout = style({
     },
     [viewPort.xl]: {
       maxWidth: "1280px",
+    },
+    [viewPort.xxl]: {
+      maxWidth: "1440px",
     },
   },
 });

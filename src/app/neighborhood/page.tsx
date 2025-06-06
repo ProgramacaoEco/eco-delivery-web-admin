@@ -3,11 +3,10 @@
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
-import Tile from "@/components/basis/Tile";
 import Neighborhood from "@/helpers/firestore/model/neighborhood/neighborhood";
-import useNeighborhood from "./hooks/useNeighborhood";
 import NewNeighborhoodForm from "./NewNeighborhoodForm";
+import Tile from "@/components/basis/Tile";
+import useNeighborhood from "./hooks/useNeighborhood";
 
 export default function NeighborhoodPage() {
   const {
@@ -21,7 +20,6 @@ export default function NeighborhoodPage() {
 
   return (
     <>
-      <PageTitle isLoading={loading} color="#81D1F0" title="Bairros" />
       <div style={{ marginTop: "20px", width: "inherit" }}>
         <NewNeighborhoodForm
           onSubmit={async ({ freightCost, neighborhoodName }) => {

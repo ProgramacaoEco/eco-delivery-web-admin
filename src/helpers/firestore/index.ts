@@ -1,5 +1,6 @@
 import {
   DocumentData,
+  QueryFieldFilterConstraint,
   collection,
   deleteDoc,
   doc,
@@ -7,6 +8,7 @@ import {
   getDocs,
   getFirestore,
   onSnapshot,
+  query,
   setDoc,
 } from "firebase/firestore";
 
@@ -52,6 +54,23 @@ async function getBy(id: string, currentCollection: Collections) {
   }
 }
 
+async function rawQuery(
+  currentColletion: Collections,
+  filter: QueryFieldFilterConstraint[],
+  onData: (data?: DocumentData[]) => void
+) {
+  const q = query(collection(db, currentColletion), ...filter);
+
+  try {
+    onSnapshot(q, (querySnapshot) =>
+      onData(querySnapshot.docs.map((doc) => doc.data()))
+    );
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 async function remove(id: string, currentCollection: Collections) {
   try {
     const docRef = doc(db, currentCollection, id);
@@ -76,4 +95,11 @@ async function set<T extends BaseModel>(
   }
 }
 
-export const FirestoreHelper = { get, getBy, set, remove, getRealtime };
+export const FirestoreHelper = {
+  get,
+  getBy,
+  set,
+  remove,
+  getRealtime,
+  rawQuery,
+};

@@ -2,15 +2,15 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { form, formFields, saveButton } from "./style.css";
 
-import RoundedButton from "@/components/basis/Button/RoundedButton";
+import { Category } from "@/helpers/firestore/model/product/category";
+import { CurrencyInput } from "react-currency-mask";
 import Dropdown from "@/components/basis/Dropdown";
 import DropdownItem from "@/components/basis/Dropdown/DropdownItem";
 import ImagePicker from "@/components/basis/ImagePicker";
 import InputText from "@/components/basis/InputText/InputText";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import { Category } from "@/helpers/firestore/model/product/category";
 import { Product } from "@/helpers/firestore/model/product/product";
-import { CurrencyInput } from "react-currency-mask";
+import RoundedButton from "@/components/basis/Button/RoundedButton";
 import useCategories from "./hooks/useCategories";
 
 interface ProductFormProps {

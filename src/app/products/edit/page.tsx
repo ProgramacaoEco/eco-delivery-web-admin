@@ -1,14 +1,15 @@
 "use client";
 
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { useEffect, useState } from "react";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import InputText from "@/components/basis/InputText/InputText";
 import ListTile from "@/components/basis/ListTile";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import Tile from "@/components/basis/Tile";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import useProducts from "../hooks/useProducts";
+import { useRouter } from "next/navigation";
 
 export default function ListProducts() {
   const {
@@ -19,6 +20,15 @@ export default function ListProducts() {
     success,
     products,
   } = useProducts();
+
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
 
   useReadProducts();
   const { removeProduct } = useDeleteProducts();
@@ -35,11 +45,6 @@ export default function ListProducts() {
 
   return (
     <>
-      <PageTitle
-        isLoading={loading}
-        title="Atualizar Cadastro"
-        color="orange"
-      />
       <LoadingContainer
         loading={loading}
         error={error !== null}

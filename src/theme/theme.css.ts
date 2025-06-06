@@ -1,5 +1,4 @@
 import { createGlobalTheme, globalStyle } from "@vanilla-extract/css";
-
 globalStyle("div::-webkit-scrollbar", {
   width: "10px !important",
   background: "transparent !important",
@@ -8,6 +7,8 @@ globalStyle("div::-webkit-scrollbar", {
 globalStyle("div::-webkit-scrollbar-thumb", {
   background: "white !important",
 });
+
+export const drawerWidth = 260;
 
 export const themeVars = createGlobalTheme(":root", {
   shadow: {

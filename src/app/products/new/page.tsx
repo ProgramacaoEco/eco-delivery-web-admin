@@ -1,21 +1,27 @@
 "use client";
 
+import { parseAsBoolean, useQueryState } from "nuqs";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
 import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import ProductForm from "../ProductForm";
+import { useEffect } from "react";
 import useSetProduct from "../hooks/useSetProduct";
 
 export default function EditProduct() {
   const { save, loading, error, success } = useSetProduct();
 
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
+
   return (
     <>
-      <PageTitle
-        color="orange"
-        title="Cadastro de produtos"
-        isLoading={loading}
-      />
       <LoadingContainer loading={loading} error={error !== null}>
         <div style={{ paddingBottom: "40px" }}>
           <ProductForm onSubmit={save} loading={loading} error={error} />

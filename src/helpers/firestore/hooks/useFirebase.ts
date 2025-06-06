@@ -1,8 +1,9 @@
-import { FirestoreHelper } from "@/helpers/firestore";
-import { Collections } from "@/helpers/firestore/collections";
-import { DocumentData } from "firebase/firestore";
-import { useCallback } from "react";
+import { DocumentData, QueryFieldFilterConstraint } from "firebase/firestore";
+
 import { BaseModel } from "../model/baseModel";
+import { Collections } from "@/helpers/firestore/collections";
+import { FirestoreHelper } from "@/helpers/firestore";
+import { useCallback } from "react";
 
 interface SetProps<T extends BaseModel> {
   collection: Collections;
@@ -92,6 +93,28 @@ export default function useFirebase<T extends BaseModel>() {
     []
   );
 
+  const getRawQuery = useCallback(
+    ({
+      collection,
+      filter,
+      onData,
+      onError,
+    }: {
+      collection: Collections;
+      filter: QueryFieldFilterConstraint[];
+      onData: (data?: DocumentData[]) => void;
+      onError: () => void;
+    }) => {
+      try {
+        FirestoreHelper.rawQuery(collection, filter, onData);
+      } catch (error) {
+        console.error(error);
+        onError();
+      }
+    },
+    []
+  );
+
   const getBy = useCallback(
     async ({ id, collection, onData, onError, transformer }: GetByProps<T>) => {
       try {
@@ -141,5 +164,5 @@ export default function useFirebase<T extends BaseModel>() {
     []
   );
 
-  return { set, get, getBy, remove, getRealtime };
+  return { set, get, getBy, remove, getRealtime, getRawQuery };
 }

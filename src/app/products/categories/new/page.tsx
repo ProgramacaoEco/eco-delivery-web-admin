@@ -1,9 +1,11 @@
 "use client";
 
+import { parseAsBoolean, useQueryState } from "nuqs";
+
 import ActionFeedback from "@/components/basis/ActionFeedback";
-import LoadingContainer from "@/components/basis/LoadingContainer";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import CategoryForm from "../../CategoryForm";
+import LoadingContainer from "@/components/basis/LoadingContainer";
+import { useEffect } from "react";
 import useSetCategory from "../../hooks/useSetCategory";
 
 export default function NewCategory() {
@@ -14,13 +16,16 @@ export default function NewCategory() {
     success: successSave,
   } = useSetCategory(true);
 
+  const [_, setOpenProducts] = useQueryState("openProducts", {
+    ...parseAsBoolean,
+    defaultValue: true,
+  });
+
+  useEffect(() => {
+    setOpenProducts(true);
+  }, [setOpenProducts]);
   return (
     <>
-      <PageTitle
-        color="orange"
-        title="Nova Categoria"
-        isLoading={loadingSave}
-      />
       <LoadingContainer loading={loadingSave} error={errorSave !== null}>
         <div style={{ paddingBottom: "40px" }}>
           <CategoryForm

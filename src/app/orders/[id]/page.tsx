@@ -8,7 +8,6 @@ import { useParams, useRouter } from "next/navigation";
 import LoadingContainer from "@/components/basis/LoadingContainer";
 import { OrderContext } from "../context/OrderContext";
 import { OrderStatus } from "@/helpers/firestore/enum/order-status";
-import PageTitle from "@/components/basis/PageTitle/PageTitle";
 import SelectedOrderDetails from "../../../components/shared/SelectedOrderDetails";
 import useOrders from "../hooks/useOrders";
 
@@ -104,17 +103,6 @@ export default function OrderDetails() {
 
   return (
     <>
-      <PageTitle
-        isLoading={loading}
-        color="blue"
-        title={
-          selectedOrder
-            ? `${selectedOrder.createdOn?.toLocaleDateString("pt-BR")}
-            ${selectedOrder.createdOn?.toLocaleTimeString("pt-BR")}`
-            : ""
-        }
-        subtitle={selectedOrder?.orderIssuer}
-      />
       <LoadingContainer
         loading={loading}
         error={error !== undefined || selectedOrder === undefined}
