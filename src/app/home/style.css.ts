@@ -21,3 +21,11 @@ export const homeContainer = style({
   position: "relative",
   top: 200,
 });
+
+export const containerLineChart = style({
+  margin: "30px 0px",
+  background: "#4c4c4c",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});

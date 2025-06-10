@@ -8,9 +8,6 @@ const requiredVariables = [
   "NEXT_PUBLIC_MESSAGING_SENDER_ID",
   "NEXT_PUBLIC_APP_ID",
   "NEXT_PUBLIC_MEASUREMENT_ID",
-  "AUTH_SECRET",
-  "AUTH_GOOGLE_ID",
-  "AUTH_GOOGLE_SECRET",
 ];
 
 requiredVariables.forEach((variable) => {

@@ -6,7 +6,7 @@ import {
   getRemoteConfig,
   getString,
 } from "firebase/remote-config";
-import { homeContainer, homeHeader } from "./style.css";
+import { containerLineChart, homeContainer, homeHeader } from "./style.css";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { useCallback, useContext, useEffect, useState } from "react";
 import useStoreStatus, { StoreStatus } from "@/hooks/useStoreStatus";
@@ -22,6 +22,7 @@ import useDashboard from "./useDashboard";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import useOrders from "../orders/hooks/useOrders";
 import { viewPort } from "@/theme/constants";
+import LineChartDefault from "@/components/basis/LineChartDefault/LineChartDefault";
 
 export default function Page() {
   const [icon, setIcon] = useState("");
@@ -167,6 +168,23 @@ export default function Page() {
               </Card>
             </Stack>
           </Stack>
+          <div className={containerLineChart}>
+            <LineChartDefault
+            xData={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', "Sab", "Dom"]}
+            yData={[10, 20, 5, 12, 8, 9, 10]}
+            label="Pedidos por dia"
+            xAxisConfig={{
+            scaleType: 'point',
+            labelStyle: { fill: 'orange' },
+            tickLabelStyle: { fill: 'white' },
+            }}
+            yAxisConfig={{
+            labelStyle: { fill: 'lightgreen' },
+            tickLabelStyle: { fill: 'lightgreen' },
+            }}
+
+          />
+          </div>
         </div>
       </LoadingContainer>
     </>
