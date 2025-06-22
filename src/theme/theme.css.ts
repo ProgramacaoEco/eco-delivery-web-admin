@@ -34,7 +34,7 @@ export const themeVars = createGlobalTheme(":root", {
     card: "#676767",
     tileEven: "#7A7A7A",
     tileOdd: "#545454",
-    background: "#274977",
+    background: "#333232",
     common: {
       white: "white",
       black: "black",
