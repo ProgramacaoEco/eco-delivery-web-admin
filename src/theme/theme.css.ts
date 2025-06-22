@@ -30,11 +30,11 @@ export const themeVars = createGlobalTheme(":root", {
     invoiced: {
       orderCard: "#666666",
     },
-    accent: "#F26623",
+    accent: "#ea8f4c",
     card: "#676767",
     tileEven: "#7A7A7A",
     tileOdd: "#545454",
-    background: "#404040",
+    background: "#274977",
     common: {
       white: "white",
       black: "black",

@@ -105,7 +105,7 @@ export default function RootLayout({
         <NuqsAdapter>
           <Image
             alt="Logo ECO"
-            src="/logo.png"
+            src="/logoEco.png"
             width={512}
             height={512}
             draggable={false}

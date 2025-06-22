@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const requiredVariables = [
   "NEXT_PUBLIC_API_KEY",
   "NEXT_PUBLIC_AUTH_DOMAIN",
@@ -10,13 +11,14 @@ const requiredVariables = [
   "NEXT_PUBLIC_MEASUREMENT_ID",
 ];
 
-requiredVariables.forEach((variable) => {
-  if (!process.env[variable]) {
-    console.error(
-      `Error: The ${variable} environment variable is empty or undefined`
-    );
-    process.exit(1); // Exit with an error code
-  } else {
-    console.info("All Variables are available");
-  }
-});
+const missingVariables = requiredVariables.filter(
+  (variable) => !process.env[variable]
+);
+
+if (missingVariables.length > 0) {
+  console.error(" Variáveis de ambiente ausentes:");
+  missingVariables.forEach((v) => console.error(`- ${v}`));
+  process.exit(1);
+} else {
+  console.log(" Todas as variáveis de ambiente estão presentes.");
+}

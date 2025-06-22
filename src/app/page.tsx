@@ -25,7 +25,7 @@ export default function SignIn() {
       {matchMedia ? null : (
         <Image
           className={imageContainer}
-          alt="Logo ECO"
+          alt="Imagem principal"
           src="/login_hero_image.png"
           height={0}
           width={2280}
@@ -42,7 +42,7 @@ export default function SignIn() {
       <div className={loginContainer}>
         <div className={loginContent}>
           <Image
-            alt="Logo ECO"
+            alt="Logo R B Lima"
             src="/logo.png"
             draggable={false}
             width={128}
@@ -50,10 +50,10 @@ export default function SignIn() {
             priority
           />
           <Typography.TitleLight className={welcomeBackTitle}>
-            Bem vindo de volta!
+            Olá! Seja Bem vindo.
           </Typography.TitleLight>
           <Typography.TitleLight>
-            É sempre bom vê-lo novamente.
+            Vamos organizar o dia!
           </Typography.TitleLight>
           <GoogleButton action={handleLogin} />
           <LinkButton href="https://wa.me/5551991672281?text=Preciso%20de%20ajuda%20com%20o%20Eco%20Delivery.">
