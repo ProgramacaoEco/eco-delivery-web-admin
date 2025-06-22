@@ -26,7 +26,7 @@ export default function SignIn() {
         <Image
           className={imageContainer}
           alt="Imagem principal"
-          src="/login_hero_image.png"
+          src="/login_hero_image.webp"
           height={0}
           width={2280}
           style={{
