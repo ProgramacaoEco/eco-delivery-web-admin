@@ -128,7 +128,7 @@ export default function Page() {
               <Card
                 sx={{
                   flexGrow: 1,
-                  backgroundColor: "grey",
+                  backgroundColor: "#0e6ceaf7",
                   padding: 2,
                   textAlign: "center",
                 }}
@@ -148,7 +148,7 @@ export default function Page() {
               <Card
                 sx={{
                   flexGrow: 1,
-                  backgroundColor: "grey",
+                  backgroundColor: "#0e6ceaf7",
                   padding: 2,
                   textAlign: "center",
                 }}
