@@ -75,8 +75,8 @@ export default function Page() {
         <div
           style={{
             textAlign: "center",
-            backgroundColor: "black",
-            color: "white",
+            backgroundColor: "white",
+            color: "black",
             fontWeight: "bold",
           }}
         >
