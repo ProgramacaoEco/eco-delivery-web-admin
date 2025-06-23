@@ -168,7 +168,7 @@ export default function Page() {
               </Card>
             </Stack>
           </Stack>
-          <div className={containerLineChart}>
+{/*           <div className={containerLineChart}>
             <LineChartDefault
             xData={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', "Sab", "Dom"]}
             yData={[10, 20, 5, 12, 8, 9, 10]}
@@ -182,9 +182,8 @@ export default function Page() {
             labelStyle: { fill: 'lightgreen' },
             tickLabelStyle: { fill: 'lightgreen' },
             }}
-
           />
-          </div>
+          </div> */}
         </div>
       </LoadingContainer>
     </>
