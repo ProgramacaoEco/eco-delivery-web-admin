@@ -72,14 +72,13 @@ export default function Page() {
         <div
           style={{
             textAlign: "center",
-            backgroundColor: "lightblue",
-            color: themeVars.color.background,
+            backgroundColor: "black",
+            color: "white",
             fontWeight: "bold",
           }}
         >
-          Olá! Obrigado por utilizar nossos sistemas! No momento, este sistema
-          encontra-se em fase de desenvolvimento. Se houverem quaisquer erros,
-          por favor, contate nosso suporte.
+          Olá! Obrigado por utilizar nossos sistemas. Estamos em fase de desenvolvimento. 
+          Caso ocorra algum erro, por favor, entre em contato com o nosso suporte.
         </div>
 
         <div className={homeContainer}>
