@@ -24,6 +24,7 @@ export default function OrderProvider({ children }: PropsWithChildren) {
         html5: true,
         autoplay: true,
         loop: true,
+        volume: 0.3,
       }),
     []
   );
