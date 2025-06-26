@@ -33,10 +33,10 @@ export default function Page() {
   const { avgTicket, totalIncome, totalOrders } = useDashboard(onError);
   useEffect(() => {
     const remoteConfig = getRemoteConfig(app);
-   /*  remoteConfig.settings = {
+    remoteConfig.settings = {
       minimumFetchIntervalMillis: 0,        // força buscar sempre no dev
       fetchTimeoutMillis: 10000,            // espera no máximo 10 segundos
-    }; */
+    };
     fetchAndActivate(remoteConfig).then((_) => {
       const title = getString(remoteConfig, "title");
       const icon = getString(remoteConfig, "favicon");
